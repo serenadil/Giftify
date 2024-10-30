@@ -1,0 +1,28 @@
+Funzionalità applicazione
+⦁	Registrazione e login
+⦁	Creazione di gruppi (nome descrizione budget partecipanti data scambio regalo)
+⦁	WishList
+⦁	Estrazione nomi
+⦁	Consultazione WishList di tutti i membri del gruppo
+
+
+Giftify 
+
+Avviare il server di sviluppo con il comando: 
+ng serve 
+http://localhost:4200/
+Se non funziona:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser 
+   
+src/app : Dove saranno salvati tutti i componenti, servizi, moduli, ecc.
+app.component.ts: Logica del componente radice.
+app.component.html: Template HTML del componente.
+app.component.css: Stili specifici per il componente.
+app.component.spec.ts: Test automatizzati per il componente.
+app.config.ts: Configurazioni generali (opzionale).
+app.config.service.ts: Servizio per gestire configurazioni.
+app-routing.module.ts: Gestione delle rotte dell'applicazione.
+
+Per generare le componenti
+ng generate component 
+crea, file .ts, .html, e .cssper ogni componente. 
