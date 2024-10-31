@@ -1,5 +1,8 @@
-package it.unicam.cs.Giftify.Model;
+package it.unicam.cs.Giftify.Model.Services;
 
+import it.unicam.cs.Giftify.Model.Entity.User;
+import it.unicam.cs.Giftify.Model.Repository.WishListRepository;
+import it.unicam.cs.Giftify.Model.Entity.WishList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

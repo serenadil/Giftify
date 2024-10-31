@@ -1,14 +1,17 @@
-package it.unicam.cs.Giftify.Model;
+package it.unicam.cs.Giftify.Model.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Getter
 @Entity
+@EqualsAndHashCode
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,25 +24,11 @@ public class User {
     private String password;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-
     public void setEmail(String email) {
         if (validaEmail(email)) {
             throw new IllegalArgumentException("Email non valida.");
         }
         this.email = email;
-    }
-
-
-    public String getPassword() {
-        return password;
     }
 
 
@@ -60,15 +49,5 @@ public class User {
         return password == null || password.length() < 8 || !password.matches(".*[0-9].*");
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        return Objects.equals(email, email);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(email);
-    }
 }

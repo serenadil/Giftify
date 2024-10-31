@@ -1,4 +1,4 @@
-package it.unicam.cs.Giftify.Model;
+package it.unicam.cs.Giftify.Model.Util;
 
 import java.util.HashSet;
 import java.util.Set;

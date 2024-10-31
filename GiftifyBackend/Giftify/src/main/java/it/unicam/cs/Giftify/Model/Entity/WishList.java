@@ -1,4 +1,4 @@
-package it.unicam.cs.Giftify.Model;
+package it.unicam.cs.Giftify.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
