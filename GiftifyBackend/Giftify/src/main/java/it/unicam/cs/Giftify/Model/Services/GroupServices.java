@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 public class GroupServices {
+
     @Autowired
     private GroupRepository groupRepository;
 
@@ -41,6 +42,26 @@ public class GroupServices {
             }
         }
 
+    }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteGroups() {
+        List<Group> inactiveGroups = groupRepository.findByActive(false);
+        LocalDate currentDate = LocalDate.now();
+        for (Group group : inactiveGroups) {
+            if (currentDate.isAfter(group.getDeadline().plusDays(30))) {
+                groupRepository.delete(group);
+            }
+        }
+    }
+
+
+    public Group getGroupById(long id) {
+        return groupRepository.findById(id).orElse(null);
+    }
+
+
+    public Group getGroupByAccessCode(String accessCode) {
+        return groupRepository.findByAccessCode(accessCode).orElse(null);
     }
 
 

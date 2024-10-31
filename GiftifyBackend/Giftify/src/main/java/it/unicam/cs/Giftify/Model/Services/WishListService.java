@@ -14,6 +14,7 @@ public class WishListService {
     @Autowired
     private WishService wishService;
 
+
     public WishList getWishList(User user) {
         return wishListRepository.findByUser(user);
     }
