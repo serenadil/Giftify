@@ -28,4 +28,14 @@ public class WishList {
     public WishList() {
     }
 
+    public void addWish(Wish wish) {
+        if (!wishes.contains(wish)) {
+            wishes.add(wish);
+        }
+    }
+
+    public boolean removeWish(Wish wish) {
+        return wishes.remove(wish);
+    }
+
 }

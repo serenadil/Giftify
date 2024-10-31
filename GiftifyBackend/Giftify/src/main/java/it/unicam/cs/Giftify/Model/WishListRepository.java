@@ -1,4 +1,7 @@
 package it.unicam.cs.Giftify.Model;
 
-public interface WishListRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface WishListRepository extends JpaRepository<WishList, Long> {
+    WishList findByUser(User user);
 }
