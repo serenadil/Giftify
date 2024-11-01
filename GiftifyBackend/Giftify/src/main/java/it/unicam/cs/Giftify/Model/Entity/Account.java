@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @Getter
 @Entity
 @EqualsAndHashCode
-public class User {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

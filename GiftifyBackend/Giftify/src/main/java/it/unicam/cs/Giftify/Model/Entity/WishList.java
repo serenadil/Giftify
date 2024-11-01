@@ -18,9 +18,9 @@ public class WishList {
     private List<Wish> wishes;
     @ManyToOne
     @Getter
-    private User user;
+    private Account user;
 
-    public WishList(User user) {
+    public WishList(Account user) {
         wishes= new ArrayList<>();
         this.user = user;
     }
