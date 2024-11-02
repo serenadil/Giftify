@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @EqualsAndHashCode
@@ -44,7 +45,11 @@ public class Community {
 
     @Setter
     private boolean active;
+    @Setter
+    private boolean close;
 
+    @OneToMany
+    private Map<Account, Account> giftAssignments;
 
     public Community(AccessCodeGeneretor codeGeneretor, Account admin, String communityName, String communityDescription, String communityNote, double budget, LocalDate deadline) {
         userList = new ArrayList<>();
@@ -60,6 +65,7 @@ public class Community {
             throw new IllegalArgumentException("");
         }
         this.active = true;
+        this.close = false;
     }
 
 
@@ -79,6 +85,11 @@ public class Community {
 
     public boolean verifyDeadline(LocalDate deadline) {
         return this.deadline.isAfter(LocalDate.now());
+    }
+
+
+    public Account getGiftReceiver(Account giver) {
+        return giftAssignments.get(giver);
     }
 
 
