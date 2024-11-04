@@ -2,6 +2,7 @@ package it.unicam.cs.Giftify.Model.Services;
 
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
+import it.unicam.cs.Giftify.Model.Entity.WishList;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import lombok.NonNull;
@@ -10,9 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CommunityServices {
@@ -22,6 +21,9 @@ public class CommunityServices {
 
     @Autowired
     private AccountServices accountServices;
+
+    @Autowired
+    private WishListService wishListService;
 
     public void createCommunity(AccessCodeGeneretor codeGeneretor, Account admin, String name,
                                 String description, String note, double budget, LocalDate deadline) {
@@ -78,7 +80,8 @@ public class CommunityServices {
 
     public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
         if (!community.getUserList().contains(user)) {
-            community.addUser(user);
+            WishList wishList = wishListService.createWishList(user);
+            community.addUser(user, wishList);
             user.addCommunity(community);
             accountServices.saveAccount(user);
             communityRepository.save(community);
@@ -99,14 +102,15 @@ public class CommunityServices {
         if (community.getUserList().size() % 2 != 0) {
             throw new IllegalArgumentException("Il numero di partecipanti deve essere pari per effettuare l'estrazione.");
         }
+        Map<Account, Account> accountMap = new HashMap<>();
         List<Account> shuffledUsers = new ArrayList<>(community.getUserList());
         Collections.shuffle(shuffledUsers);
         for (int i = 0; i < shuffledUsers.size(); i++) {
             Account giver = shuffledUsers.get(i);
             Account receiver = shuffledUsers.get((i + 1) % shuffledUsers.size());
-            community.getGiftAssignments().put(giver, receiver);
+            accountMap.put(giver, receiver);
         }
-
+        community.setGiftAssignments(accountMap);
         community.setClose(true);
     }
 

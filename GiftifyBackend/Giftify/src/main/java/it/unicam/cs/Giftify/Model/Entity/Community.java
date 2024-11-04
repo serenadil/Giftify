@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,10 @@ public class Community {
     private boolean close;
 
     @OneToMany
+    @Setter
     private Map<Account, Account> giftAssignments;
+    @OneToMany
+    private Map<Account, WishList> wishlists;
 
     public Community(@NonNull AccessCodeGeneretor codeGeneretor, @NonNull Account admin,
                      @NonNull String communityName, @NonNull String communityDescription, String communityNote,
@@ -61,6 +65,7 @@ public class Community {
         this.communityDescription = communityDescription;
         this.communityNote = communityNote;
         this.budget = budget;
+        this.wishlists = new HashMap<>();
         if (this.verifyDeadline(deadline)) {
             this.deadline = deadline;
         } else {
@@ -71,13 +76,16 @@ public class Community {
     }
 
 
-    public void addUser(@NonNull Account user) {
+    public void addUser(@NonNull Account user, WishList wishList) {
         userList.add(user);
+        wishlists.put(user,wishList );
+
     }
 
 
     public void removeUser(@NonNull Account user) {
         userList.remove(user);
+        wishlists.remove(user);
     }
 
 
@@ -88,6 +96,10 @@ public class Community {
 
     public Account getGiftReceiver(@NonNull Account giver) {
         return giftAssignments.get(giver);
+    }
+
+    public WishList getuserWishList(@NonNull Account user) {
+        return wishlists.get(user);
     }
 
 
