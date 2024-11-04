@@ -14,13 +14,16 @@ public class WishService {
     @Autowired
     private WishListService wishListService;
 
-    public Wish createWish(String name, String imagePath, WishList wishList) {
-        return new Wish(name, imagePath, wishList);
+    public void createWish(String name, String imagePath, WishList wishList) {
+        Wish wish = new Wish(name, imagePath, wishList);
+        wishRepository.save(wish);
+        wishListService.addWish(wish);
     }
 
     public Wish getWish(String name) {
         return wishRepository.findByName(name);
     }
+
 
     public void deleteWish(Wish wish, WishList wishList) {
         wishList.removeWish(wish);

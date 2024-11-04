@@ -2,7 +2,6 @@ package it.unicam.cs.Giftify.Model.Services;
 
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
-import it.unicam.cs.Giftify.Model.Entity.WishList;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import lombok.NonNull;
@@ -77,11 +76,13 @@ public class CommunityServices {
         return communityRepository.findByAccessCode(accessCode).orElse(null);
     }
 
+    public void updateCommunity (Community community) {
+        communityRepository.save(community);
+    }
 
     public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
         if (!community.getUserList().contains(user)) {
-            WishList wishList = wishListService.createWishList(user);
-            community.addUser(user, wishList);
+            community.addUser(user, wishListService.createWishList(user));
             user.addCommunity(community);
             accountServices.saveAccount(user);
             communityRepository.save(community);
