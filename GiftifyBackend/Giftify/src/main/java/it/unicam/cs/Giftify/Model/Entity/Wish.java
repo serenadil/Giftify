@@ -1,16 +1,12 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +17,14 @@ public class Wish {
     @Getter
     @Setter
     private String imagePath;
+    @Getter
+    @Setter
+    @ManyToOne
+    private WishList wishList;
 
-    public Wish(String name, String imagePath) {
+    public Wish(@NonNull String name, @NonNull String imagePath, @NonNull WishList wishList) {
         this.name = name;
         this.imagePath = imagePath;
-    }
-
-    public Wish() {
+        this.wishList = wishList;
     }
 }

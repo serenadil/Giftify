@@ -14,6 +14,9 @@ public class WishListService {
     @Autowired
     private WishService wishService;
 
+    public WishList createWishList(Account user) {
+        return new WishList(user);
+    }
 
     public WishList getWishList(Account user) {
         return wishListRepository.findByUser(user);
@@ -22,5 +25,7 @@ public class WishListService {
     public void updateWishList(WishList wishList) {
         this.wishListRepository.save(wishList);
     }
+
+    public void deleteWishList(WishList wishList) { this.wishListRepository.delete(wishList); }
 
 }

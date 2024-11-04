@@ -1,6 +1,5 @@
 package it.unicam.cs.Giftify.Model.Services;
 
-import it.unicam.cs.Giftify.Model.Repository.WishListRepository;
 import it.unicam.cs.Giftify.Model.Repository.WishRepository;
 import it.unicam.cs.Giftify.Model.Entity.Wish;
 import it.unicam.cs.Giftify.Model.Entity.WishList;
@@ -13,10 +12,10 @@ public class WishService {
     @Autowired
     private WishRepository wishRepository;
     @Autowired
-    private WishListRepository wishListRepository;
+    private WishListService wishListService;
 
-    public Wish createWish(String name, String imagePath) {
-        return new Wish(name, imagePath);
+    public Wish createWish(String name, String imagePath, WishList wishList) {
+        return new Wish(name, imagePath, wishList);
     }
 
     public Wish getWish(String name) {
@@ -24,8 +23,7 @@ public class WishService {
     }
 
     public void deleteWish(Wish wish, WishList wishList) {
-        wishRepository.delete(wish);
         wishList.removeWish(wish);
-        wishListRepository.save(wishList);
+        wishListService.updateWishList(wishList);
     }
 }
