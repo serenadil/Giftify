@@ -1,9 +1,10 @@
 package it.unicam.cs.Giftify.Model.Services;
 
-import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Account;
+import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,22 @@ public class CommunityServices {
     @Autowired
     private CommunityRepository communityRepository;
 
+    @Autowired
+    private AccountServices accountServices;
+
     public void createCommunity(AccessCodeGeneretor codeGeneretor, Account admin, String name,
                                 String description, String note, double budget, LocalDate deadline) {
         Community community = new Community(codeGeneretor, admin, name, description, note, budget, deadline);
+        admin.addCommunity(community);
+        accountServices.saveAccount(admin);
         communityRepository.save(community);
     }
 
 
-    public void deleteGroup(Community Community) {
+    public void deleteGroup(@NonNull Community Community) {
         communityRepository.delete(Community);
     }
+
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void checkDeadline() {
@@ -49,6 +56,11 @@ public class CommunityServices {
         for (Community community : inactiveGroups) {
             if (currentDate.isAfter(community.getDeadline().plusDays(30))) {
                 this.deleteGroup(community);
+                List<Account> users = community.getUserList();
+                for (Account account : users) {
+                    account.removeCommunity(community);
+                    accountServices.saveAccount(account);
+                }
             }
         }
     }
@@ -59,27 +71,31 @@ public class CommunityServices {
     }
 
 
-    public Community getCommunityByAccessCode(String accessCode) {
+    public Community getCommunityByAccessCode(@NonNull String accessCode) {
         return communityRepository.findByAccessCode(accessCode).orElse(null);
     }
 
 
-    public void addUserToCommunity(Account user, Community community) {
+    public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
         if (!community.getUserList().contains(user)) {
             community.addUser(user);
+            user.addCommunity(community);
+            accountServices.saveAccount(user);
             communityRepository.save(community);
         } else throw new IllegalArgumentException("Sei già iscritto a questo gruppo!");
     }
 
-    public void removeUserFromCommunity(Account user, Community community) {
+    public void removeUserFromCommunity(@NonNull Account user, @NonNull Community community) {
         if (community.getUserList().contains(user)) {
             community.removeUser(user);
+            user.removeCommunity(community);
+            accountServices.saveAccount(user);
             communityRepository.save(community);
         } else throw new IllegalArgumentException("Impossibile rimuovere, utente non presente.");
 
     }
 
-    public void drawNames(Community community) {
+    public void drawNames(@NonNull Community community) {
         if (community.getUserList().size() % 2 != 0) {
             throw new IllegalArgumentException("Il numero di partecipanti deve essere pari per effettuare l'estrazione.");
         }

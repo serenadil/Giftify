@@ -2,9 +2,7 @@ package it.unicam.cs.Giftify.Model.Entity;
 
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ import java.util.Map;
 
 @Getter
 @EqualsAndHashCode
+@NoArgsConstructor
 @Entity
 public class Community {
 
@@ -45,13 +44,16 @@ public class Community {
 
     @Setter
     private boolean active;
+
     @Setter
     private boolean close;
 
     @OneToMany
     private Map<Account, Account> giftAssignments;
 
-    public Community(AccessCodeGeneretor codeGeneretor, Account admin, String communityName, String communityDescription, String communityNote, double budget, LocalDate deadline) {
+    public Community(@NonNull AccessCodeGeneretor codeGeneretor, @NonNull Account admin,
+                     @NonNull String communityName, @NonNull String communityDescription, String communityNote,
+                     double budget, @NonNull LocalDate deadline) {
         userList = new ArrayList<>();
         this.accessCode = codeGeneretor.generateCode();
         this.admin = admin;
@@ -69,26 +71,22 @@ public class Community {
     }
 
 
-    public Community() {
-
-    }
-
-    public void addUser(Account user) {
+    public void addUser(@NonNull Account user) {
         userList.add(user);
     }
 
 
-    public void removeUser(Account user) {
+    public void removeUser(@NonNull Account user) {
         userList.remove(user);
     }
 
 
-    public boolean verifyDeadline(LocalDate deadline) {
+    public boolean verifyDeadline(@NonNull LocalDate deadline) {
         return this.deadline.isAfter(LocalDate.now());
     }
 
 
-    public Account getGiftReceiver(Account giver) {
+    public Account getGiftReceiver(@NonNull Account giver) {
         return giftAssignments.get(giver);
     }
 
