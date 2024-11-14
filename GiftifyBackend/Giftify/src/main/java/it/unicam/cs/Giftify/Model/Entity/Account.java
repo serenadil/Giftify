@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +66,5 @@ public class Account {
     public void removeCommunity(@NonNull Community community) {
         userCommunities.remove(community);
     }
-
 
 }

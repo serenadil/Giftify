@@ -12,8 +12,6 @@ public class WishListService {
 
     @Autowired
     private WishListRepository wishListRepository;
-    @Autowired
-    private WishService wishService;
 
     public WishList createWishList(Account user) {
         WishList wishList = new WishList(user);
