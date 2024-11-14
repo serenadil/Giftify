@@ -3,9 +3,9 @@ package it.unicam.cs.Giftify.Model.Services;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 
 import java.security.Key;
 import java.util.Date;
@@ -16,8 +16,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private String key;
-
+    @Value("${app.jwt.key}")
+    private String
+            key;
+    @Value("${app.jwt.expiration}")
     private long expiration;
 
     public String generateToken(UserDetails userDetails) {

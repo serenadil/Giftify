@@ -23,7 +23,7 @@ public class AppConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> accountServices.getAccount(username)
-                .orElse(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Nesssun account trovato"));
     }
 
     @Bean

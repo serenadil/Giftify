@@ -32,9 +32,6 @@ public class Community {
     private String communityName;
 
     @Setter
-    private String communityDescription;
-
-    @Setter
     private String communityNote;
 
     @Setter
@@ -62,7 +59,6 @@ public class Community {
         this.accessCode = codeGeneretor.generateCode();
         this.admin = admin;
         this.communityName = communityName;
-        this.communityDescription = communityDescription;
         this.communityNote = communityNote;
         this.budget = budget;
         this.wishlists = new HashMap<>();
