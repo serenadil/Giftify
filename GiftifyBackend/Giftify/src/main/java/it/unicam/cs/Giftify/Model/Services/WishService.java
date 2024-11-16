@@ -6,6 +6,8 @@ import it.unicam.cs.Giftify.Model.Entity.WishList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class WishService {
 
@@ -20,13 +22,24 @@ public class WishService {
         wishListService.addWish(wish);
     }
 
-    public Wish getWish(String name) {
-        return wishRepository.findByName(name);
+    public Optional<Wish> getWish(Long id) {
+        return wishRepository.findById(id);
     }
 
 
     public void deleteWish(Wish wish, WishList wishList) {
         wishList.removeWish(wish);
         wishListService.updateWishList(wishList);
+    }
+
+    public void editWish(Long id, String name, String imagePath) {
+        Wish wish = wishRepository.findById(id).orElse(null);
+        assert wish != null;
+        if (wish.getWishList().getWishes().contains(wish)) {
+            wish.setName(name);
+            wish.setImagePath(imagePath);
+            wishRepository.save(wish);
+            wishListService.updateWishList(wish.getWishList());
+        }
     }
 }
