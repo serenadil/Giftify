@@ -13,13 +13,13 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class CommunityServices {
+public class CommunityService {
 
     @Autowired
     private CommunityRepository communityRepository;
 
     @Autowired
-    private AccountServices accountServices;
+    private AccountService accountServices;
 
     @Autowired
     private WishListService wishListService;
@@ -28,6 +28,7 @@ public class CommunityServices {
                                 String description, String note, double budget, LocalDate deadline) {
         Community community = new Community(codeGeneretor, admin, name, description, note, budget, deadline);
         admin.addCommunity(community);
+
         accountServices.saveAccount(admin);
         communityRepository.save(community);
     }
@@ -116,4 +117,7 @@ public class CommunityServices {
     }
 
 
+    public Account findAccountById(Long id) {
+        return accountServices.getAccountById(id);
+    }
 }

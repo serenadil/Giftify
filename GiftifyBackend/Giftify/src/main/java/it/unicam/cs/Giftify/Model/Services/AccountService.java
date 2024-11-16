@@ -8,15 +8,12 @@ import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Repository.AccountRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class AccountServices {
+public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -45,5 +42,9 @@ public class AccountServices {
 
     public Optional<Account> getAccount(String email) {
         return accountRepository.findByEmail(email);
+    }
+
+    public Account getAccountById(Long id) {
+        return accountRepository.findById(id).orElseThrow();
     }
 }

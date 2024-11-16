@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
@@ -30,6 +31,9 @@ public class Account implements UserDetails {
 
     @OneToMany
     private List<Community> userCommunities;
+
+    @OneToMany
+    private List<AccountCommunityRole> communityRoles;
 
     public Account(@NonNull String email, @NonNull String password) {
         setEmail(email);
@@ -70,13 +74,46 @@ public class Account implements UserDetails {
         userCommunities.remove(community);
     }
 
+
+    public Role getRoleForCommunity(Community community) {
+        return communityRoles.stream()
+                .filter(role -> role.getCommunity().equals(community))
+                .map(AccountCommunityRole::getRole)
+                .findFirst()
+                .orElse(Role.STANDARD);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (communityRoles == null || communityRoles.isEmpty()) {
+            return List.of(new SimpleGrantedAuthority("ROLE_STANDARD"));
+        }
+        return communityRoles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().name()))
+                .toList();
     }
 
     @Override
     public String getUsername() {
         return getEmail();
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

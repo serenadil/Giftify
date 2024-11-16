@@ -32,8 +32,8 @@ public class WishList {
         }
     }
 
-    public boolean removeWish(@NonNull Wish wish) {
-        return wishes.remove(wish);
+    public void removeWish(@NonNull Wish wish) {
+        wishes.remove(wish);
     }
 
 }

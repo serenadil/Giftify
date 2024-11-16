@@ -4,7 +4,7 @@ import it.unicam.cs.Giftify.Model.Auth.AuthResponse;
 import it.unicam.cs.Giftify.Model.Auth.ExistingUserException;
 import it.unicam.cs.Giftify.Model.Auth.LoginRequest;
 import it.unicam.cs.Giftify.Model.Auth.RegisterRequest;
-import it.unicam.cs.Giftify.Model.Services.AccountServices;
+import it.unicam.cs.Giftify.Model.Services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AutenticationController {
 
     @Autowired
-    private AccountServices accountServices;
+    private AccountService accountServices;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) throws ExistingUserException {
