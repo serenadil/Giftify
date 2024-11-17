@@ -1,9 +1,11 @@
 package it.unicam.cs.Giftify.Model.Util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
+@Component
 public class AccessCodeGeneretor {
     private final Set<String> generatedCode;
 

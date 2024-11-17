@@ -8,6 +8,7 @@ import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Repository.AccountRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,20 +19,16 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private JwtService jwtService;
 
 
-    public AuthResponse register(RegisterRequest request) throws ExistingUserException {
-        if (accountRepository.existsAccountByEmail(request.email())) throw new ExistingUserException();
-        Account user = new Account();
-        accountRepository.save(user);
-        return new AuthResponse(jwtService.generateToken(user));
-    }
-
-    public AuthResponse login(LoginRequest request) {
-        var user = accountRepository.findByEmail(request.email()).orElseThrow();
-        return new AuthResponse(jwtService.generateToken(user));
+    public Account createAccount(String email, String password) throws ExistingUserException {
+        Optional<Account> account = accountRepository.findByEmail(email);
+        if (account.isPresent()) {
+            throw new ExistingUserException();
+        }
+        Account newAccount = new Account(email, password);
+        accountRepository.save(newAccount);
+        return newAccount;
     }
 
 

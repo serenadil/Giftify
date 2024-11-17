@@ -1,21 +1,16 @@
-package it.unicam.cs.Giftify.Model.DTOClass;
+package it.unicam.cs.Giftify.Model.Util.DTOClasses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityCreateDTO {
+public class CommunityUpdateDTO {
     private String communityName;
-    private String description;
     private String note;
-    private double budget;
-    private LocalDate deadline;
-    private Long adminId;
+    private Double budget;
 }

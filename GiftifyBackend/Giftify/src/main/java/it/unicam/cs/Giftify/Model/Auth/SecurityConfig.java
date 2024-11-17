@@ -1,10 +1,9 @@
 package it.unicam.cs.Giftify.Model.Auth;
 
-import it.unicam.cs.Giftify.Model.Services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,37 +11,35 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired
+    private AuthFilter jwtAuthenticationFilter;
 
     @Autowired
-    private AuthFilter authFilter;
+    private CommunityContextFilter communityContextFilter;
     @Autowired
-    private AuthenticationProvider authenticationProvider;
-    @Autowired
-    private AccountService accountServices;
+    private LogoutHandlerImpl logoutHandler;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> accountServices.getAccount(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Nesssun account trovato"));
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
@@ -57,24 +54,37 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/createCommunity").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/closeCommunity").permitAll()
-
+                        // Permetti l'accesso a login, register e refresh_token senza autenticazione
+                        .requestMatchers("/login/**", "/register/**", "/refresh_token/**").permitAll()
+                        // Aggiungi controlli per le operazioni su una comunità specifica
+                        .requestMatchers("/api/community/{communityId}/removeUser").hasRole("ADMIN")
+                        .requestMatchers("/api/community/{communityId}/close").hasRole("ADMIN")
+                        // Tutte le altre richieste devono essere autenticate
                         .anyRequest().authenticated()
-                );
-
-        return http.build();
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                // Aggiungi il filtro JWT per l'autenticazione
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // Aggiungi il filtro per il contesto della comunità
+                .addFilterBefore(communityContextFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(e -> e
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                response.setStatus(HttpStatus.FORBIDDEN.value()))
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler((request, response, authentication) ->
+                                SecurityContextHolder.clearContext()))
+                .build();
     }
 
-
 }
+

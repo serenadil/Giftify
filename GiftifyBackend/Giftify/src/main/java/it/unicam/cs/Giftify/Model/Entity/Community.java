@@ -1,5 +1,6 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,8 +26,9 @@ public class Community {
 
     private String accessCode;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Account admin;
+
 
     @Setter
     private String communityName;
@@ -38,6 +40,7 @@ public class Community {
     private double budget;
 
     @Setter
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
     @Setter
@@ -53,7 +56,7 @@ public class Community {
     private Map<Account, WishList> wishlists;
 
     public Community(@NonNull AccessCodeGeneretor codeGeneretor, @NonNull Account admin,
-                     @NonNull String communityName, @NonNull String communityDescription, String communityNote,
+                     @NonNull String communityName, String communityNote,
                      double budget, @NonNull LocalDate deadline) {
         userList = new ArrayList<>();
         this.accessCode = codeGeneretor.generateCode();
@@ -62,10 +65,10 @@ public class Community {
         this.communityNote = communityNote;
         this.budget = budget;
         this.wishlists = new HashMap<>();
-        if (this.verifyDeadline(deadline)) {
+        if (!this.verifyDeadline(deadline)) {
             this.deadline = deadline;
         } else {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("deadline non valida");
         }
         this.active = true;
         this.close = false;
@@ -74,7 +77,7 @@ public class Community {
 
     public void addUser(@NonNull Account user, WishList wishList) {
         userList.add(user);
-        wishlists.put(user,wishList );
+        wishlists.put(user, wishList);
 
     }
 
@@ -86,7 +89,7 @@ public class Community {
 
 
     public boolean verifyDeadline(@NonNull LocalDate deadline) {
-        return this.deadline.isAfter(LocalDate.now());
+        return deadline.isBefore(LocalDate.now());
     }
 
 

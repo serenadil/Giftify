@@ -32,17 +32,18 @@ public class Account implements UserDetails {
     @OneToMany
     private List<Community> userCommunities;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<AccountCommunityRole> communityRoles;
 
     public Account(@NonNull String email, @NonNull String password) {
         setEmail(email);
         setPassword(password);
         userCommunities = new ArrayList<>();
+        communityRoles= new ArrayList<>();
     }
 
     public void setEmail(@NonNull String email) {
-        if (checkEmail(email)) {
+        if (!checkEmail(email)) {
             throw new IllegalArgumentException("Email non valida.");
         }
         this.email = email;
@@ -59,7 +60,7 @@ public class Account implements UserDetails {
     private static boolean checkEmail(@NonNull String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         Pattern pattern = Pattern.compile(emailRegex);
-        return !pattern.matcher(email).matches();
+        return pattern.matcher(email).matches();
     }
 
     private static boolean checkPassword(@NonNull String password) {
@@ -85,12 +86,14 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (communityRoles == null || communityRoles.isEmpty()) {
-            return List.of(new SimpleGrantedAuthority("ROLE_STANDARD"));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_STANDARD"));
+        if (communityRoles != null) {
+            for (AccountCommunityRole role : communityRoles) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().name() + "_" + role.getCommunity().getId()));
+            }
         }
-        return communityRoles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().name()))
-                .toList();
+        return authorities;
     }
 
     @Override

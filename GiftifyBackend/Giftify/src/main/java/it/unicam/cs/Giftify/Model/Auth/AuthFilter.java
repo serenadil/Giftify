@@ -57,12 +57,13 @@ public class AuthFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             // Se il token è valido, imposta l'autenticazione nel SecurityContext
-            if (jwtService.isTokenValid(token)) {
+
+
+            if (jwtService.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,  // Non stiamo usando la password in questo caso
-                        userDetails.getAuthorities()
+                        userDetails, null, userDetails.getAuthorities()
                 );
+
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -74,5 +75,6 @@ public class AuthFilter extends OncePerRequestFilter {
         // Continua con la catena di filtri
         filterChain.doFilter(request, response);
     }
+
 }
 

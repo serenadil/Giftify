@@ -2,11 +2,14 @@ package it.unicam.cs.Giftify.Model.Services;
 
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
+import it.unicam.cs.Giftify.Model.Entity.WishList;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,14 +26,15 @@ public class CommunityService {
 
     @Autowired
     private WishListService wishListService;
-
+    @Transactional
     public void createCommunity(AccessCodeGeneretor codeGeneretor, Account admin, String name,
-                                String description, String note, double budget, LocalDate deadline) {
-        Community community = new Community(codeGeneretor, admin, name, description, note, budget, deadline);
-        admin.addCommunity(community);
-
-        accountServices.saveAccount(admin);
+                                String note, double budget, LocalDate deadline) {
+        Community community = new Community(codeGeneretor, admin, name, note, budget, deadline);
+        WishList wishList=wishListService.createWishList(admin);
+        community.addUser(admin, wishList);
         communityRepository.save(community);
+        admin.addCommunity(community);
+        accountServices.saveAccount(admin);
     }
 
 
@@ -77,7 +81,7 @@ public class CommunityService {
         return communityRepository.findByAccessCode(accessCode).orElse(null);
     }
 
-    public void updateCommunity (Community community) {
+    public void updateCommunity(Community community) {
         communityRepository.save(community);
     }
 
@@ -90,14 +94,13 @@ public class CommunityService {
         } else throw new IllegalArgumentException("Sei già iscritto a questo gruppo!");
     }
 
-    public void removeUserFromCommunity(@NonNull Account user, @NonNull Community community) {
+    public void removeUserFromCommunity( @NonNull Account user, @NonNull Community community) {
         if (community.getUserList().contains(user)) {
             community.removeUser(user);
             user.removeCommunity(community);
             accountServices.saveAccount(user);
             communityRepository.save(community);
         } else throw new IllegalArgumentException("Impossibile rimuovere, utente non presente.");
-
     }
 
     public void drawNames(@NonNull Community community) {
@@ -120,4 +123,10 @@ public class CommunityService {
     public Account findAccountById(Long id) {
         return accountServices.getAccountById(id);
     }
+    public boolean isUserParticipantOfCommunity(long communityId, Object principal) {
+        Account account = (Account) principal;
+        Community community = getCommunityById(communityId);
+        return community != null && community.getUserList().contains(account);
+    }
+
 }
