@@ -72,6 +72,10 @@ public class CommunityService {
         return communityRepository.findById(id).orElse(null);
     }
 
+    public List<Community> getAllCommunities() {
+        return communityRepository.findAll();
+    }
+
 
     public Community getCommunityByAccessCode(@NonNull String accessCode) {
         return communityRepository.findByAccessCode(accessCode).orElse(null);
