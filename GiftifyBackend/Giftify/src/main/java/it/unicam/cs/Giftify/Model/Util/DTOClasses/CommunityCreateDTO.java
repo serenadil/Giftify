@@ -16,5 +16,4 @@ public class CommunityCreateDTO {
     private String note;
     private double budget;
     private LocalDate deadline;
-    private Long adminId;
 }

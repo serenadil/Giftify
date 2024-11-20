@@ -1,15 +1,13 @@
 package it.unicam.cs.Giftify.Model.Services;
 
-import it.unicam.cs.Giftify.Model.Entity.Account;
-import it.unicam.cs.Giftify.Model.Entity.Community;
-import it.unicam.cs.Giftify.Model.Entity.WishList;
+import it.unicam.cs.Giftify.Model.Entity.*;
+import it.unicam.cs.Giftify.Model.Repository.AccountCommunityRoleRepository;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,25 +19,47 @@ public class CommunityService {
     @Autowired
     private CommunityRepository communityRepository;
 
+
+    @Autowired
+    private AccountCommunityRoleRepository accountCommunityRoleRepository;
+
     @Autowired
     private AccountService accountServices;
 
     @Autowired
     private WishListService wishListService;
+
     @Transactional
     public void createCommunity(AccessCodeGeneretor codeGeneretor, Account admin, String name,
                                 String note, double budget, LocalDate deadline) {
         Community community = new Community(codeGeneretor, admin, name, note, budget, deadline);
-        WishList wishList=wishListService.createWishList(admin);
+        WishList wishList = wishListService.createWishList(admin);
         community.addUser(admin, wishList);
         communityRepository.save(community);
+        AccountCommunityRole accountCommunityRole = new AccountCommunityRole(admin, community, Role.ADMIN);
+        accountCommunityRoleRepository.save(accountCommunityRole);
+        admin.addOrUpdateRoleForCommunity(accountCommunityRole);
         admin.addCommunity(community);
         accountServices.saveAccount(admin);
     }
 
 
-    public void deleteGroup(@NonNull Community Community) {
-        communityRepository.delete(Community);
+    public void deleteGroup(@NonNull Community community) {
+        List<Account> users = community.getUserList();
+        for (Account account : users) {
+            account.removeCommunity(community);
+            account.removeRoleForCommunity(community);
+            List<AccountCommunityRole> roles = account.getCommunityRoles();
+            for (AccountCommunityRole role : roles) {
+                if (role.getCommunity().equals(community)) {
+                    account.removeRoleForCommunity(community);
+                    roles.remove(role);
+                    accountCommunityRoleRepository.delete(role);
+                }
+                accountServices.saveAccount(account);
+            }
+            communityRepository.delete(community);
+        }
     }
 
 
@@ -56,7 +76,7 @@ public class CommunityService {
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteGroups() {
+    public void deleteExpiredGroups() {
         List<Community> inactiveGroups = communityRepository.findByActive(false);
         LocalDate currentDate = LocalDate.now();
         for (Community community : inactiveGroups) {
@@ -65,7 +85,17 @@ public class CommunityService {
                 List<Account> users = community.getUserList();
                 for (Account account : users) {
                     account.removeCommunity(community);
-                    accountServices.saveAccount(account);
+                    account.removeRoleForCommunity(community);
+                    List<AccountCommunityRole> roles = account.getCommunityRoles();
+                    for (AccountCommunityRole role : roles) {
+                        if (role.getCommunity().equals(community)) {
+                            account.removeRoleForCommunity(community);
+                            roles.remove(role);
+                            accountCommunityRoleRepository.delete(role);
+                        }
+                        accountServices.saveAccount(account);
+                    }
+
                 }
             }
         }
@@ -92,16 +122,27 @@ public class CommunityService {
     public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
         if (!community.getUserList().contains(user)) {
             community.addUser(user, wishListService.createWishList(user));
-            user.addCommunity(community);
-            accountServices.saveAccount(user);
             communityRepository.save(community);
+            user.addCommunity(community);
+            AccountCommunityRole accountCommunityRole = new AccountCommunityRole(user, community, Role.MEMBER);
+            accountCommunityRoleRepository.save(accountCommunityRole);
+            user.addOrUpdateRoleForCommunity(accountCommunityRole);
+            accountServices.saveAccount(user);
         } else throw new IllegalArgumentException("Sei già iscritto a questo gruppo!");
     }
 
-    public void removeUserFromCommunity( @NonNull Account user, @NonNull Community community) {
+    public void removeUserFromCommunity(@NonNull Account user, @NonNull Community community) {
         if (community.getUserList().contains(user)) {
             community.removeUser(user);
             user.removeCommunity(community);
+            List<AccountCommunityRole> roles = user.getCommunityRoles();
+            for (AccountCommunityRole role : roles) {
+                if (role.getCommunity().equals(community)) {
+                    user.removeRoleForCommunity(community);
+                    roles.remove(role);
+                    accountCommunityRoleRepository.delete(role);
+                }
+            }
             accountServices.saveAccount(user);
             communityRepository.save(community);
         } else throw new IllegalArgumentException("Impossibile rimuovere, utente non presente.");
@@ -127,6 +168,7 @@ public class CommunityService {
     public Account findAccountById(Long id) {
         return accountServices.getAccountById(id);
     }
+
     public boolean isUserParticipantOfCommunity(long communityId, Object principal) {
         Account account = (Account) principal;
         Community community = getCommunityById(communityId);

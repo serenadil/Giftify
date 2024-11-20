@@ -14,13 +14,13 @@ public class AccountCommunityRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Setter
     @ManyToOne
     private Account account;
-
+    @Setter
     @ManyToOne
     private Community community;
-
+    @Setter
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -3,7 +3,6 @@ package it.unicam.cs.Giftify.Model.Services;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Repository.TokenRepository;
@@ -44,7 +43,6 @@ public class JwtService {
     private String generateToken(Account user, long expireTime) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("role", user.getAuthorities().iterator().next().getAuthority());
-
         return generateToken(extraClaims, user, expireTime);
     }
 
@@ -106,7 +104,6 @@ public class JwtService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
 
 
     public Key getSignInKey() {

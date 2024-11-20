@@ -27,8 +27,7 @@ public class SecurityConfig {
     @Autowired
     private AuthFilter jwtAuthenticationFilter;
 
-    @Autowired
-    private CommunityContextFilter communityContextFilter;
+
     @Autowired
     private LogoutHandlerImpl logoutHandler;
 
@@ -59,11 +58,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Permetti l'accesso a login, register e refresh_token senza autenticazione
-                        .requestMatchers("/login/**", "/register/**", "/refresh_token/**").permitAll()
+                        // Permetti l'accesso a login, register senza autenticazione
+                        .requestMatchers("/login/**", "/register/**").permitAll()
                         // Aggiungi controlli per le operazioni su una comunità specifica
-                        .requestMatchers("/api/community/{communityId}/removeUser").hasRole("ADMIN")
-                        .requestMatchers("/api/community/{communityId}/close").hasRole("ADMIN")
+                        .requestMatchers("/community/removeUser/{id}").hasRole("ADMIN")
+                        .requestMatchers("/community/close/{id}").hasRole("ADMIN")
                         // Tutte le altre richieste devono essere autenticate
                         .anyRequest().authenticated()
                 )
@@ -72,8 +71,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 // Aggiungi il filtro JWT per l'autenticazione
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                // Aggiungi il filtro per il contesto della comunità
-                .addFilterBefore(communityContextFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .exceptionHandling(e -> e
                         .accessDeniedHandler((request, response, accessDeniedException) ->
                                 response.setStatus(HttpStatus.FORBIDDEN.value()))

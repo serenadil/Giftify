@@ -9,10 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Getter
@@ -39,7 +39,7 @@ public class Account implements UserDetails {
         setEmail(email);
         setPassword(password);
         userCommunities = new ArrayList<>();
-        communityRoles= new ArrayList<>();
+        communityRoles = new ArrayList<>();
     }
 
     public void setEmail(@NonNull String email) {
@@ -84,6 +84,21 @@ public class Account implements UserDetails {
                 .orElse(Role.STANDARD);
     }
 
+
+    public void addOrUpdateRoleForCommunity(AccountCommunityRole accountCommunityRole) {
+        communityRoles.add(accountCommunityRole);
+
+    }
+
+
+    public void removeRoleForCommunity(@NonNull Community community) {
+        Optional<AccountCommunityRole> roleToRemove = communityRoles.stream()
+                .filter(role -> role.getCommunity().equals(community))
+                .findFirst();
+        roleToRemove.ifPresent(communityRoles::remove);
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -100,6 +115,7 @@ public class Account implements UserDetails {
     public String getUsername() {
         return getEmail();
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
