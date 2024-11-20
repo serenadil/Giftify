@@ -22,7 +22,7 @@ public class AccountController {
     @Autowired
     private CommunityService communityService;
 
-    @GetMapping("/getgroups")
+    @GetMapping("/getgroups/{id}")
     public ResponseEntity<List<Community>> getAllCommunities(@PathVariable Long userId) {
         Account account = accountService.getAccountById(userId);
         if (account == null) {

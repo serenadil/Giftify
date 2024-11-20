@@ -55,7 +55,7 @@ public class CommunityController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN_' + #communityId)")
-    @PostMapping("/close")
+    @PostMapping("/close/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable long id) {
         Community community = communityService.getCommunityById(id);
         if (community != null) {
