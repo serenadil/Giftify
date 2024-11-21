@@ -14,12 +14,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping
 public class AccountController {
     @Autowired
     private AccountService accountService;
     @Autowired
     private CommunityService communityService;
+
+
+
+    @GetMapping("/accountInfo")
+    public ResponseEntity<Account> getAccountInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        account = accountService.getAccountById(account.getId());
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(account);
+
+    }
 
     @GetMapping("/getCommunities")
     public ResponseEntity<List<Community>> getAllCommunities() {
@@ -32,20 +46,16 @@ public class AccountController {
         return ResponseEntity.ok(communityService.getAllCommunities());
     }
 
-    @PostMapping("/join{communityAccessCode}")
-    public ResponseEntity<String> joinCommunity ( @PathVariable String communityAccessCode) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account account = (Account) authentication.getPrincipal();
-            account = accountService.getAccountById(account.getId());
-            Community community = communityService.getCommunityByAccessCode(communityAccessCode);
-            if (community == null || account == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            communityService.addUserToCommunity(account, community);
-            return ResponseEntity.ok("Unione alla community effettuata con successo");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @PostMapping("/join/{communityAccessCode}")
+    public ResponseEntity<String> joinCommunity(@PathVariable String communityAccessCode) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        account = accountService.getAccountById(account.getId());
+        Community community = communityService.getCommunityByAccessCode(communityAccessCode);
+        if (community == null || account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        communityService.addUserToCommunity(account, community);
+        return ResponseEntity.ok("Unione alla community effettuata con successo");
     }
 }

@@ -37,7 +37,7 @@ public class AuthService {
 
 
     public AuthResponse register(RegisterRequest request) throws ExistingUserException {
-        Account account = accountService.createAccount(request.email(), passwordEncoder.encode(request.password()));
+        Account account = accountService.createAccount(request.email(), passwordEncoder.encode(request.password()), request.username());
         String accessToken = jwtService.generateAccessToken(account);
         String refreshToken = jwtService.generateRefreshToken(account);
         saveUserToken(accessToken, refreshToken, account);

@@ -1,8 +1,8 @@
 package it.unicam.cs.Giftify.Model.Services;
 
-import it.unicam.cs.Giftify.Model.Repository.WishRepository;
 import it.unicam.cs.Giftify.Model.Entity.Wish;
 import it.unicam.cs.Giftify.Model.Entity.WishList;
+import it.unicam.cs.Giftify.Model.Repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,19 +27,15 @@ public class WishService {
     }
 
 
-    public void deleteWish(Wish wish, WishList wishList) {
-        wishList.removeWish(wish);
-        wishListService.updateWishList(wishList);
+    public void deleteWish(Wish wish) {
+        wish.getWishList().removeWish(wish);
+        wishListService.updateWishList(wish.getWishList());
     }
 
-    public void editWish(Long id, String name, String imagePath) {
-        Wish wish = wishRepository.findById(id).orElse(null);
-        assert wish != null;
-        if (wish.getWishList().getWishes().contains(wish)) {
-            wish.setName(name);
-            wish.setImagePath(imagePath);
-            wishRepository.save(wish);
-            wishListService.updateWishList(wish.getWishList());
-        }
+
+    public void updateWish(Wish wish) {
+        wishRepository.save(wish);
+        wishListService.updateWishList(wish.getWishList());
     }
+
 }

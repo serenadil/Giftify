@@ -20,12 +20,12 @@ public class AccountService {
     private AccountRepository accountRepository;
 
 
-    public Account createAccount(String email, String password) throws ExistingUserException {
+    public Account createAccount(String email, String password, String username) throws ExistingUserException {
         Optional<Account> account = accountRepository.findByEmail(email);
         if (account.isPresent()) {
             throw new ExistingUserException();
         }
-        Account newAccount = new Account(email, password);
+        Account newAccount = new Account(email, password, username);
         accountRepository.save(newAccount);
         return newAccount;
     }

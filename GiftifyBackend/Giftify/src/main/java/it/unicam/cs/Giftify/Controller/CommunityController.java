@@ -3,9 +3,9 @@ package it.unicam.cs.Giftify.Controller;
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Role;
+import it.unicam.cs.Giftify.Model.Entity.WishList;
 import it.unicam.cs.Giftify.Model.Services.AccountService;
 import it.unicam.cs.Giftify.Model.Services.CommunityService;
-import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityCreateDTO;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
-@RestController("/community")
+@RestController
 public class CommunityController {
 
     @Autowired
@@ -27,16 +28,13 @@ public class CommunityController {
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private AccessCodeGeneretor accessCodeGeneretor;
 
-    @PostMapping("/create")
+    @PostMapping("/createCommunity")
     public ResponseEntity<String> createCommunity(@RequestBody CommunityCreateDTO communityDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account admin = (Account) authentication.getPrincipal();
         admin = accountService.getAccountById(admin.getId());
         communityService.createCommunity(
-                accessCodeGeneretor,
                 admin,
                 communityDto.getCommunityName(),
                 communityDto.getNote(),
@@ -64,7 +62,7 @@ public class CommunityController {
     }
 
 
-    @PostMapping("/close/{id}")
+    @PostMapping("/closeCommunity/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account admin = (Account) authentication.getPrincipal();
@@ -80,7 +78,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/deleteCommunity/{id}")
     public ResponseEntity<String> deleteCommunity(@PathVariable long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account admin = (Account) authentication.getPrincipal();
@@ -96,7 +94,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/updateCommunity/{id}")
     public ResponseEntity<String> updateCommunity(
             @PathVariable long id,
             @RequestBody CommunityUpdateDTO communityUpdateDto) {
@@ -139,7 +137,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @GetMapping("/info/{id}")
+    @GetMapping("/infoCommunity/{id}")
     public ResponseEntity<Community> getGeneralInfo(@PathVariable long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account account = (Account) authentication.getPrincipal();
@@ -154,27 +152,56 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @GetMapping("/draw/{id}")
-    public ResponseEntity<Account> viewDrawnName(@PathVariable long id, @RequestParam long userId) {
+    @GetMapping("/drawedName/{id}")
+    public ResponseEntity<String> viewDrawnName(@PathVariable long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account admin = (Account) authentication.getPrincipal();
-        admin = accountService.getAccountById(admin.getId());
+        Account account = (Account) authentication.getPrincipal();
+        account = accountService.getAccountById(account.getId());
         Community community = communityService.getCommunityById(id);
-        if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        if (community != null) {
-            Account user = community.getUserList().stream()
-                    .filter(u -> u.getId().equals(userId))
-                    .findFirst()
-                    .orElse(null);
-            if (user != null) {
-                Account receiver = community.getGiftReceiver(user);
-                return ResponseEntity.ok(receiver);
+        if (community != null && account.getRoleForCommunity(community) == Role.MEMBER) {
+            if (account != null) {
+                Account receiver = community.getGiftReceiver(account);
+                return ResponseEntity.ok(receiver.getUsername());
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+
+    @GetMapping("/drawedNameList/{id}")
+    public ResponseEntity<WishList> viewDrawnNameList(@PathVariable long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        account = accountService.getAccountById(account.getId());
+        Community community = communityService.getCommunityById(id);
+        if (community != null && account.getRoleForCommunity(community) == Role.MEMBER) {
+            if (account != null) {
+                Account receiver = community.getGiftReceiver(account);
+                WishList wishList = community.getuserWishList(receiver);
+                return ResponseEntity.ok(wishList);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+
+    @GetMapping("/wishlists/{id}")
+    public ResponseEntity<Map<Account, WishList>> getWishlists(@PathVariable long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        account = accountService.getAccountById(account.getId());
+        Community community = communityService.getCommunityById(id);
+        if (account.getRoleForCommunity(community) == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        if (community != null) {
+            Map<Account, WishList> wishlists = community.getWishlists();
+            return ResponseEntity.ok(wishlists);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 
 }

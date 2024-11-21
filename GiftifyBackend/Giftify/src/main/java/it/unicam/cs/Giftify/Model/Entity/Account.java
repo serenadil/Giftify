@@ -1,5 +1,7 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,19 +27,22 @@ public class Account implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
+
     private String email;
 
     private String password;
 
-    @OneToMany
+    @ManyToMany @JsonIgnore
     private List<Community> userCommunities;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER) @JsonIgnore
     private List<AccountCommunityRole> communityRoles;
 
-    public Account(@NonNull String email, @NonNull String password) {
+    public Account(@NonNull String email, @NonNull String password, @NonNull String username) {
         setEmail(email);
         setPassword(password);
+        this.username = username;
         userCommunities = new ArrayList<>();
         communityRoles = new ArrayList<>();
     }

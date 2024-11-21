@@ -19,7 +19,6 @@ public class CommunityService {
     @Autowired
     private CommunityRepository communityRepository;
 
-
     @Autowired
     private AccountCommunityRoleRepository accountCommunityRoleRepository;
 
@@ -29,8 +28,11 @@ public class CommunityService {
     @Autowired
     private WishListService wishListService;
 
+    @Autowired
+    private AccessCodeGeneretor codeGeneretor;
+
     @Transactional
-    public void createCommunity(AccessCodeGeneretor codeGeneretor, Account admin, String name,
+    public void createCommunity(Account admin, String name,
                                 String note, double budget, LocalDate deadline) {
         Community community = new Community(codeGeneretor, admin, name, note, budget, deadline);
         WishList wishList = wishListService.createWishList(admin);
@@ -58,6 +60,7 @@ public class CommunityService {
                 }
                 accountServices.saveAccount(account);
             }
+            codeGeneretor.removeCode(community.getAccessCode());
             communityRepository.delete(community);
         }
     }
@@ -82,21 +85,6 @@ public class CommunityService {
         for (Community community : inactiveGroups) {
             if (currentDate.isAfter(community.getDeadline().plusDays(30))) {
                 this.deleteGroup(community);
-                List<Account> users = community.getUserList();
-                for (Account account : users) {
-                    account.removeCommunity(community);
-                    account.removeRoleForCommunity(community);
-                    List<AccountCommunityRole> roles = account.getCommunityRoles();
-                    for (AccountCommunityRole role : roles) {
-                        if (role.getCommunity().equals(community)) {
-                            account.removeRoleForCommunity(community);
-                            roles.remove(role);
-                            accountCommunityRoleRepository.delete(role);
-                        }
-                        accountServices.saveAccount(account);
-                    }
-
-                }
             }
         }
     }
@@ -162,17 +150,9 @@ public class CommunityService {
         }
         community.setGiftAssignments(accountMap);
         community.setClose(true);
+        communityRepository.save(community);
     }
 
 
-    public Account findAccountById(Long id) {
-        return accountServices.getAccountById(id);
-    }
-
-    public boolean isUserParticipantOfCommunity(long communityId, Object principal) {
-        Account account = (Account) principal;
-        Community community = getCommunityById(communityId);
-        return community != null && community.getUserList().contains(account);
-    }
 
 }

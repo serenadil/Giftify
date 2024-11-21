@@ -16,7 +16,7 @@ public class AccessCodeGeneretor {
     public String generateCode() {
         String newCode;
         do {
-            newCode = UUID.randomUUID().toString();
+            newCode = UUID.randomUUID().toString().substring(0, 8);
         } while (generatedCode.contains(newCode));
         generatedCode.add(newCode);
         return newCode;

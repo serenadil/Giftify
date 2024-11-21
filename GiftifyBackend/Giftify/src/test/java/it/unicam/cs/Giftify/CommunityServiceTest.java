@@ -43,7 +43,7 @@ public class CommunityServiceTest {
         String note = "No special notes";
         double budget = 100.0;
         LocalDate deadline = LocalDate.now().plusDays(10);
-        communityService.createCommunity(codeGenerator, admin, name, note, budget, deadline);
+        communityService.createCommunity(admin, name, note, budget, deadline);
         List<Community> communities = communityRepository.findAll();
         assertEquals(1, communities.size());
         Community createdCommunity = communities.get(0);

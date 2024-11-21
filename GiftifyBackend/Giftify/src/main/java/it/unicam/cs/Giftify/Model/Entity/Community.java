@@ -1,6 +1,9 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,11 +25,13 @@ public class Community {
     private Long id;
 
     @OneToMany
+    @JsonManagedReference
     private List<Account> userList;
 
     private String accessCode;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JsonBackReference
     private Account admin;
 
 
@@ -51,8 +56,10 @@ public class Community {
 
     @OneToMany
     @Setter
+    @JsonIgnore
     private Map<Account, Account> giftAssignments;
     @OneToMany
+    @JsonIgnore
     private Map<Account, WishList> wishlists;
 
     public Community(@NonNull AccessCodeGeneretor codeGeneretor, @NonNull Account admin,
