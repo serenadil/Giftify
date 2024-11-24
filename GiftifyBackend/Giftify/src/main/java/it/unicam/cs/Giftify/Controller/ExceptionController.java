@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 
-@ControllerAdvice
-@RestController
+@RestControllerAdvice
 public class ExceptionController {
 
     @ExceptionHandler(ExistingUserException.class)
@@ -33,4 +33,5 @@ public class ExceptionController {
     public ResponseEntity<String> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Si è verificato un errore.");
     }
+
 }

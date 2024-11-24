@@ -5,19 +5,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@EqualsAndHashCode
 @NoArgsConstructor
+@Getter
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Getter
+
     @Setter
     private String name;
-    @Getter
+
     @Setter
     private String imagePath;
-    @Getter
+
     @Setter
     @ManyToOne
     private WishList wishList;

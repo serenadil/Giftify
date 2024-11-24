@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
 @Service
 public class WishService {
 
@@ -29,9 +28,8 @@ public class WishService {
 
     public void deleteWish(Wish wish) {
         wish.getWishList().removeWish(wish);
-        wishListService.updateWishList(wish.getWishList());
-    }
 
+    }
 
     public void updateWish(Wish wish) {
         wishRepository.save(wish);
