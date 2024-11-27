@@ -3,6 +3,7 @@ package it.unicam.cs.Giftify.Model.Services;
 import it.unicam.cs.Giftify.Model.Entity.*;
 import it.unicam.cs.Giftify.Model.Repository.AccountCommunityRoleRepository;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
+import it.unicam.cs.Giftify.Model.Repository.GiftAssigmentRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CommunityService {
@@ -31,6 +33,9 @@ public class CommunityService {
     @Autowired
     private AccessCodeGeneretor codeGeneretor;
 
+    @Autowired
+    private GiftAssigmentRepository giftAssigmentRepository;
+
     @Transactional
     public void createCommunity(Account admin, String name,
                                 String note, double budget, LocalDate deadline) {
@@ -46,23 +51,24 @@ public class CommunityService {
     }
 
 
+    @Transactional
     public void deleteGroup(@NonNull Community community) {
-        List<Account> users = community.getUserList();
-        for (Account account : users) {
+        for (Account account : community.getUserList()) {
+            Set<AccountCommunityRole> rolesToRemove = account.getCommunityRoles()
+                    .stream()
+                    .filter(role -> role.getCommunity().equals(community))
+                    .collect(Collectors.toSet());
+
+            rolesToRemove.forEach(role -> {
+                account.removeRoleForCommunity(community);
+                accountCommunityRoleRepository.delete(role);
+            });
+
             account.removeCommunity(community);
-            account.removeRoleForCommunity(community);
-            List<AccountCommunityRole> roles = account.getCommunityRoles();
-            for (AccountCommunityRole role : roles) {
-                if (role.getCommunity().equals(community)) {
-                    account.removeRoleForCommunity(community);
-                    roles.remove(role);
-                    accountCommunityRoleRepository.delete(role);
-                }
-                accountServices.saveAccount(account);
-            }
-            codeGeneretor.removeCode(community.getAccessCode());
-            communityRepository.delete(community);
+            accountServices.saveAccount(account);
         }
+        codeGeneretor.removeCode(community.getAccessCode());
+        communityRepository.delete(community);
     }
 
 
@@ -108,6 +114,9 @@ public class CommunityService {
     }
 
     public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
+        if (community.isClose()) {
+            throw new IllegalArgumentException("Impossibile unirsi il gruppo è chiuso!");
+        }
         if (!community.getUserList().contains(user)) {
             community.addUser(user, wishListService.createWishList(user));
             communityRepository.save(community);
@@ -120,10 +129,13 @@ public class CommunityService {
     }
 
     public void removeUserFromCommunity(@NonNull Account user, @NonNull Community community) {
+        if (community.isClose()) {
+            throw new IllegalArgumentException("Impossibile rimuovere un utente se la community è chiusa");
+        }
         if (community.getUserList().contains(user)) {
             community.removeUser(user);
             user.removeCommunity(community);
-            List<AccountCommunityRole> roles = user.getCommunityRoles();
+            Set<AccountCommunityRole> roles = user.getCommunityRoles();
             for (AccountCommunityRole role : roles) {
                 if (role.getCommunity().equals(community)) {
                     user.removeRoleForCommunity(community);
@@ -140,19 +152,20 @@ public class CommunityService {
         if (community.getUserList().size() % 2 != 0) {
             throw new IllegalArgumentException("Il numero di partecipanti deve essere pari per effettuare l'estrazione.");
         }
-        Map<Account, Account> accountMap = new HashMap<>();
+        Set<GiftAssignment> accountMap = new HashSet<>();
         List<Account> shuffledUsers = new ArrayList<>(community.getUserList());
         Collections.shuffle(shuffledUsers);
         for (int i = 0; i < shuffledUsers.size(); i++) {
             Account giver = shuffledUsers.get(i);
             Account receiver = shuffledUsers.get((i + 1) % shuffledUsers.size());
-            accountMap.put(giver, receiver);
+            GiftAssignment giftAssignment = new GiftAssignment(giver.getEmail(), receiver.getEmail(), community);
+            giftAssigmentRepository.save(giftAssignment);
+            accountMap.add(giftAssignment);
         }
         community.setGiftAssignments(accountMap);
         community.setClose(true);
         communityRepository.save(community);
     }
-
 
 
 }

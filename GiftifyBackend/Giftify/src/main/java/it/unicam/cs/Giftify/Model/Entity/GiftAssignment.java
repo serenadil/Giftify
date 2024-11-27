@@ -4,30 +4,28 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
-public class AccountCommunityRole {
+public class GiftAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Setter
-    @ManyToOne
-    private Account account;
-    @Setter
+
+
+    private String giverEmail;
+
+
+    private String receiverEmail;
+
     @ManyToOne
     private Community community;
-    @Setter
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
-    public AccountCommunityRole(Account account, Community community, Role role) {
-        this.account = account;
+    public GiftAssignment(String giver, String receiver, Community community) {
+        this.giverEmail = giver;
+        this.receiverEmail = receiver;
         this.community = community;
-        this.role = role;
     }
-
-
 }

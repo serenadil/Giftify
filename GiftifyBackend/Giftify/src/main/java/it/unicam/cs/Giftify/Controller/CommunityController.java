@@ -16,8 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class CommunityController {
@@ -31,176 +31,227 @@ public class CommunityController {
 
     @PostMapping("/createCommunity")
     public ResponseEntity<String> createCommunity(@RequestBody CommunityCreateDTO communityDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account admin = (Account) authentication.getPrincipal();
-        admin = accountService.getAccountById(admin.getId());
-        communityService.createCommunity(
-                admin,
-                communityDto.getCommunityName(),
-                communityDto.getNote(),
-                communityDto.getBudget(),
-                communityDto.getDeadline()
-        );
-        return ResponseEntity.ok("Community creata con successo.");
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account admin = (Account) authentication.getPrincipal();
+            admin = accountService.getAccountById(admin.getId());
+            communityService.createCommunity(
+                    admin,
+                    communityDto.getCommunityName(),
+                    communityDto.getNote(),
+                    communityDto.getBudget(),
+                    communityDto.getDeadline()
+            );
+            return ResponseEntity.ok("Community creata con successo.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+        }
     }
 
 
-    @DeleteMapping("/removeUser/{id}")
-    public ResponseEntity<Void> removeUserFromCommunity(@PathVariable Long communityId, @RequestBody Account user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account admin = (Account) authentication.getPrincipal();
-        admin = accountService.getAccountById(admin.getId());
-        Community community = communityService.getCommunityById(communityId);
-        if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    @DeleteMapping("/removeUser/{communityId}/{userId}")
+    public ResponseEntity<String> removeUserFromCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account admin = (Account) authentication.getPrincipal();
+            admin = accountService.getAccountById(admin.getId());
+            Community community = communityService.getCommunityById(communityId);
+            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (admin == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            Account user = accountService.getAccountById(userId);
+            communityService.removeUserFromCommunity(user, community);
+            return ResponseEntity.ok("Abbiamo rimosso l'utente selezionato");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        if (admin == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        communityService.removeUserFromCommunity(user, community);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
     @PostMapping("/closeCommunity/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account admin = (Account) authentication.getPrincipal();
-        admin = accountService.getAccountById(admin.getId());
-        Community community = communityService.getCommunityById(id);
-        if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account admin = (Account) authentication.getPrincipal();
+            admin = accountService.getAccountById(admin.getId());
+            Community community = communityService.getCommunityById(id);
+            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (community != null) {
+                communityService.drawNames(community);
+                return ResponseEntity.ok("Community chiusa con successo.");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore durante la registrazione" + e.getMessage());
         }
-        if (community != null) {
-            communityService.drawNames(community);
-            return ResponseEntity.ok("Community chiusa con successo.");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
     }
 
     @DeleteMapping("/deleteCommunity/{id}")
     public ResponseEntity<String> deleteCommunity(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account admin = (Account) authentication.getPrincipal();
-        admin = accountService.getAccountById(admin.getId());
-        Community community = communityService.getCommunityById(id);
-        if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account admin = (Account) authentication.getPrincipal();
+            admin = accountService.getAccountById(admin.getId());
+            Community community = communityService.getCommunityById(id);
+            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (community != null) {
+                communityService.deleteGroup(community);
+                return ResponseEntity.ok("Community eliminata con successo.");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        if (community != null) {
-            communityService.deleteGroup(community);
-            return ResponseEntity.ok("Community eliminata con successo.");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
     }
 
     @PutMapping("/updateCommunity/{id}")
     public ResponseEntity<String> updateCommunity(
             @PathVariable long id,
             @RequestBody CommunityUpdateDTO communityUpdateDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account admin = (Account) authentication.getPrincipal();
-        admin = accountService.getAccountById(admin.getId());
-        Community community = communityService.getCommunityById(id);
-        if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account admin = (Account) authentication.getPrincipal();
+            admin = accountService.getAccountById(admin.getId());
+            Community community = communityService.getCommunityById(id);
+            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (community != null) {
+                if (communityUpdateDto.getCommunityName() != null) {
+                    community.setCommunityName(communityUpdateDto.getCommunityName());
+                }
+                if (communityUpdateDto.getBudget() != null) {
+                    community.setBudget(communityUpdateDto.getBudget());
+                }
+                if (communityUpdateDto.getNote() != null) {
+                    community.setCommunityNote(communityUpdateDto.getNote());
+                }
+                communityService.updateCommunity(community);
+                return ResponseEntity.ok("Community aggiornata con successo.");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        if (community != null) {
-            if (communityUpdateDto.getCommunityName() != null) {
-                community.setCommunityName(communityUpdateDto.getCommunityName());
-            }
-            if (communityUpdateDto.getBudget() != null) {
-                community.setBudget(communityUpdateDto.getBudget());
-            }
-            if (communityUpdateDto.getNote() != null) {
-                community.setCommunityNote(communityUpdateDto.getNote());
-            }
-            communityService.updateCommunity(community);
-            return ResponseEntity.ok("Community aggiornata con successo.");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
     }
 
 
     @GetMapping("/participants/{id}")
-    public ResponseEntity<List<Account>> getParticipants(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-        account = accountService.getAccountById(account.getId());
-        Community community = communityService.getCommunityById(id);
-        if (account.getRoleForCommunity(community) == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> getParticipants(@PathVariable long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
+            Community community = communityService.getCommunityById(id);
+            if (account.getRoleForCommunity(community) == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (community != null) {
+                return ResponseEntity.ok(community.getUserList());
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        if (community != null) {
-            return ResponseEntity.ok(community.getUserList());
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping("/infoCommunity/{id}")
-    public ResponseEntity<Community> getGeneralInfo(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-        account = accountService.getAccountById(account.getId());
-        Community community = communityService.getCommunityById(id);
-        if (account.getRoleForCommunity(community) == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> getGeneralInfo(@PathVariable long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
+            Community community = communityService.getCommunityById(id);
+            if (account.getRoleForCommunity(community) == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (community != null) {
+                return ResponseEntity.ok(community);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        if (community != null) {
-            return ResponseEntity.ok(community);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping("/drawedName/{id}")
     public ResponseEntity<String> viewDrawnName(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-        account = accountService.getAccountById(account.getId());
-        Community community = communityService.getCommunityById(id);
-        if (community != null && account.getRoleForCommunity(community) == Role.MEMBER) {
-            if (account != null) {
-                Account receiver = community.getGiftReceiver(account);
-                return ResponseEntity.ok(receiver.getUsername());
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
+            Community community = communityService.getCommunityById(id);
+            if (community == null || account.getRoleForCommunity(community) != Role.MEMBER) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community not found or unauthorized");
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
+            if (optionalReceiver.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gift receiver not found");
+            }
+            return ResponseEntity.ok(optionalReceiver.get().getUsername());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 
     @GetMapping("/drawedNameList/{id}")
-    public ResponseEntity<WishList> viewDrawnNameList(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-        account = accountService.getAccountById(account.getId());
-        Community community = communityService.getCommunityById(id);
-        if (community != null && account.getRoleForCommunity(community) == Role.MEMBER) {
-            if (account != null) {
-                Account receiver = community.getGiftReceiver(account);
-                WishList wishList = community.getuserWishList(receiver);
-                return ResponseEntity.ok(wishList);
+    public ResponseEntity<?> viewDrawnNameList(@PathVariable long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
+            Community community = communityService.getCommunityById(id);
+            if (community == null || account.getRoleForCommunity(community) != Role.MEMBER) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
+            if (optionalReceiver.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            WishList wishList = community.getuserWishList(optionalReceiver.get());
+            return ResponseEntity.ok(wishList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 
     @GetMapping("/wishlists/{id}")
-    public ResponseEntity<Map<Account, WishList>> getWishlists(@PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-        account = accountService.getAccountById(account.getId());
-        Community community = communityService.getCommunityById(id);
-        if (account.getRoleForCommunity(community) == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> getWishlists(@PathVariable long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
+            Community community = communityService.getCommunityById(id);
+            if (account.getRoleForCommunity(community) == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            if (community != null) {
+                Set<WishList> wishlists = community.getWishlists();
+                return ResponseEntity.ok(wishlists);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        if (community != null) {
-            Map<Account, WishList> wishlists = community.getWishlists();
-            return ResponseEntity.ok(wishlists);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 

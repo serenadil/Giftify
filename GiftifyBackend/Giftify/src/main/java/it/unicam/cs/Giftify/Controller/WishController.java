@@ -32,45 +32,58 @@ public class WishController {
 
     @PostMapping("/addWish/{id}")
     public ResponseEntity<String> addWish(@RequestBody WishDTO wishDTO, @PathVariable long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account user = (Account) authentication.getPrincipal();
-        user = accountService.getAccountById(user.getId());
-        Community community = communityService.getCommunityById(id);
-        if (user.getRoleForCommunity(community) == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account user = (Account) authentication.getPrincipal();
+            user = accountService.getAccountById(user.getId());
+            Community community = communityService.getCommunityById(id);
+            if (user.getRoleForCommunity(community) == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            wishService.createWish(wishDTO.getName(), wishDTO.getImagePath(), community.getuserWishList(user));
+            return ResponseEntity.status(HttpStatus.CREATED).body("Desiderio aggiunto con successo alla tua lista");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-        wishService.createWish(wishDTO.getName(), wishDTO.getImagePath(), community.getuserWishList(user));
-        return ResponseEntity.status(HttpStatus.CREATED).body("Wish created successfully");
 
     }
 
     @DeleteMapping("/deleteWish/{id}")
     public ResponseEntity<String> deleteWish(@PathVariable Long id) {
-        Optional<Wish> wish = wishService.getWish(id);
-        if (wish.isPresent()) {
-            wishService.deleteWish(wish.get());
-            return ResponseEntity.ok("Wish deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wish not found");
+        try {
+            Optional<Wish> wish = wishService.getWish(id);
+            if (wish.isPresent()) {
+                wishService.deleteWish(wish.get());
+                return ResponseEntity.ok("Wish deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("desiderio non trovato");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
 
     }
 
     @PutMapping("/editWish/{id}")
     public ResponseEntity<String> editWish(@RequestBody WishDTO wishDTO, @PathVariable Long id) {
-        Optional<Wish> wishOptional = wishService.getWish(id);
-        if (wishOptional.isPresent()) {
-            Wish wish = wishOptional.get();
-            if (wishDTO.getName() != null) {
-                wish.setName(wishDTO.getName());
+        try {
+            Optional<Wish> wishOptional = wishService.getWish(id);
+
+            if (wishOptional.isPresent()) {
+                Wish wish = wishOptional.get();
+                if (wishDTO.getName() != null) {
+                    wish.setName(wishDTO.getName());
+                }
+                if (wishDTO.getImagePath() != null) {
+                    wish.setImagePath(wishDTO.getImagePath());
+                }
+                wishService.updateWish(wish);
+                return ResponseEntity.ok("desiderio aggiornato con successo");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("desiderio non trovato");
             }
-            if (wishDTO.getImagePath() != null) {
-                wish.setImagePath(wishDTO.getImagePath());
-            }
-            wishService.updateWish(wish);
-            return ResponseEntity.ok("Wish updated successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wish not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
     }
 
