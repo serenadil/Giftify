@@ -1,9 +1,6 @@
 package it.unicam.cs.Giftify.Model.Services;
 
-import it.unicam.cs.Giftify.Model.Auth.AuthResponse;
-import it.unicam.cs.Giftify.Model.Auth.ExistingUserException;
-import it.unicam.cs.Giftify.Model.Auth.LoginRequest;
-import it.unicam.cs.Giftify.Model.Auth.RegisterRequest;
+import it.unicam.cs.Giftify.Model.Auth.*;
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Token;
 import it.unicam.cs.Giftify.Model.Repository.TokenRepository;
@@ -15,10 +12,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 
 @Service
@@ -41,7 +40,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(account);
         String refreshToken = jwtService.generateRefreshToken(account);
         saveUserToken(accessToken, refreshToken, account);
-        return new AuthResponse(accessToken, refreshToken, "User registration was successful");
+        return new AuthResponse(accessToken, refreshToken, "Utente registrato con successo");
     }
 
     public AuthResponse authenticate(LoginRequest request) {
@@ -51,13 +50,14 @@ public class AuthService {
                         request.password()
                 )
         );
-        Account account = accountService.getAccount(request.email()).orElseThrow();
+        Account account = accountService.getAccount(request.email())
+                .orElseThrow(() -> new BadCredentialsException(request.email()));;
         String accessToken = jwtService.generateAccessToken(account);
         String refreshToken = jwtService.generateRefreshToken(account);
 
         revokeAllTokenByUser(account);
         saveUserToken(accessToken, refreshToken, account);
-        return new AuthResponse(accessToken, refreshToken, "User login was successful");
+        return new AuthResponse(accessToken, refreshToken, "Bentornato!");
 
     }
 

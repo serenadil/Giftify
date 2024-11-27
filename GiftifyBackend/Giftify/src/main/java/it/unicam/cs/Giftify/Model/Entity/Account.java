@@ -1,50 +1,47 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Getter
 @Entity
-@EqualsAndHashCode
 @NoArgsConstructor
 public class Account implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Setter
     private String username;
 
     private String email;
 
     private String password;
 
-    @ManyToMany @JsonIgnore
-    private List<Community> userCommunities;
+    @ManyToMany
+    @JsonIgnore
+    private Set<Community> userCommunities;
 
-    @OneToMany(fetch = FetchType.EAGER) @JsonIgnore
-    private List<AccountCommunityRole> communityRoles;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<AccountCommunityRole> communityRoles;
 
     public Account(@NonNull String email, @NonNull String password, @NonNull String username) {
         setEmail(email);
         setPassword(password);
         this.username = username;
-        userCommunities = new ArrayList<>();
-        communityRoles = new ArrayList<>();
+        userCommunities = new HashSet<>();
+        communityRoles = new HashSet<>();
     }
 
     public void setEmail(@NonNull String email) {

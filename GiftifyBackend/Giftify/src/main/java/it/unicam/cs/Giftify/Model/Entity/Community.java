@@ -6,16 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
-@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
 public class Community {
@@ -26,14 +26,13 @@ public class Community {
 
     @OneToMany
     @JsonManagedReference
-    private List<Account> userList;
+    private Set<Account> userList;
 
     private String accessCode;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JsonBackReference
     private Account admin;
-
 
     @Setter
     private String communityName;
@@ -57,21 +56,22 @@ public class Community {
     @OneToMany
     @Setter
     @JsonIgnore
-    private Map<Account, Account> giftAssignments;
-    @OneToMany
+    private Set<GiftAssignment> giftAssignments;
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
-    private Map<Account, WishList> wishlists;
+    private Set<WishList> wishlists;
 
     public Community(@NonNull AccessCodeGeneretor codeGeneretor, @NonNull Account admin,
                      @NonNull String communityName, String communityNote,
                      double budget, @NonNull LocalDate deadline) {
-        userList = new ArrayList<>();
+        userList = new HashSet<>();
         this.accessCode = codeGeneretor.generateCode();
         this.admin = admin;
         this.communityName = communityName;
         this.communityNote = communityNote;
         this.budget = budget;
-        this.wishlists = new HashMap<>();
+        this.giftAssignments = new HashSet<>();
+        this.wishlists = new HashSet<>();
         if (!this.verifyDeadline(deadline)) {
             this.deadline = deadline;
         } else {
@@ -84,7 +84,7 @@ public class Community {
 
     public void addUser(@NonNull Account user, WishList wishList) {
         userList.add(user);
-        wishlists.put(user, wishList);
+        wishlists.add(wishList);
 
     }
 
@@ -100,13 +100,25 @@ public class Community {
     }
 
 
-    public Account getGiftReceiver(@NonNull Account giver) {
-        return giftAssignments.get(giver);
+    public String getGiftReceiver(@NonNull Account giver) {
+        String receiver = null;
+        for (GiftAssignment giftAssignment : giftAssignments) {
+            if (giftAssignment.getGiverEmail().equals(giver.getEmail())) {
+                receiver = giftAssignment.getReceiverEmail();
+            }
+        }
+        return receiver;
     }
 
     public WishList getuserWishList(@NonNull Account user) {
-        return wishlists.get(user);
+        Set<WishList> wishLists = wishlists;
+        WishList wishListUser = null;
+        for (WishList wishList : wishLists) {
+            if (wishList.getUser().equals(user)) {
+                wishListUser = wishList;
+            }
+        }
+        return wishListUser;
     }
-
 
 }
