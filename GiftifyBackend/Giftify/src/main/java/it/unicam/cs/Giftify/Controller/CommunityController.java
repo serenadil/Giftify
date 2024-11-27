@@ -44,7 +44,6 @@ public class CommunityController {
         return ResponseEntity.ok("Community creata con successo.");
     }
 
-
     @DeleteMapping("/removeUser/{id}")
     public ResponseEntity<Void> removeUserFromCommunity(@PathVariable Long communityId, @RequestBody Account user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,7 +59,6 @@ public class CommunityController {
         communityService.removeUserFromCommunity(user, community);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 
     @PostMapping("/closeCommunity/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable long id) {
