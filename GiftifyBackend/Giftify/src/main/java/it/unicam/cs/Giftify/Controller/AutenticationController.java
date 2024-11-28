@@ -19,7 +19,7 @@ public class AutenticationController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
             AuthResponse response = authService.register(request);
@@ -34,7 +34,7 @@ public class AutenticationController {
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             AuthResponse response = authService.authenticate(request);
@@ -47,7 +47,7 @@ public class AutenticationController {
     }
 
 
-    @PostMapping("/refresh_token")
+    @PostMapping("/auth/refresh_token")
     public ResponseEntity refreshToken(
             HttpServletRequest request,
             HttpServletResponse response

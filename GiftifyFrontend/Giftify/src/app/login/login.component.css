@@ -1,0 +1,83 @@
+
+/* Card */
+.card {
+  background-color: #00664e; /* Sfondo della card */
+  border: 1px solid #00b88d; /* Bordo della card */
+  border-radius: 8px;
+  padding: 60px;
+  max-width: 400px;
+  width: 100%; /* Card responsiva */
+  text-align: center; /* Allineamento del contenuto della card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px); /* Effetto sollevamento */
+}
+
+/* Intestazioni */
+h1, h2, h3, h4, h5, h6 {
+  color: #00664e;
+  margin-bottom: 20px;
+}
+
+/* Link */
+a {
+  color: #00b88d;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #00664e;
+}
+
+/* Pulsanti */
+button {
+  background-color: #00b88d;
+  color: #f8fcee;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #00664e;
+  transform: scale(1.05); /* Leggero ingrandimento */
+}
+
+/* Campi di input */
+input, textarea {
+
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #00664e;
+}
+
+/* Footer */
+footer {
+  background-color: #00664e;
+  color: #f8fcee;
+  text-align: center;
+  padding: 20px 0;
+}
+
+footer a {
+  color: #00b88d;
+}
+
+footer a:hover {
+  color: #f8fcee;
+}
