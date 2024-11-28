@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @Configuration
@@ -35,13 +37,6 @@ public class SecurityConfig {
     private UserDetailsService userDetailsService;
 
 
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userDetailsService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder());
-//        return authenticationProvider;
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -54,12 +49,23 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:8080", "http://localhost:4200");
+            }
+        };
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Permetti l'accesso a login, register senza autenticazione
-                        .requestMatchers("/login/**", "/register/**").permitAll()
+                        .requestMatchers("/login/**", "/register/**", "/api/hello" ).permitAll()
                         // Aggiungi controlli per le operazioni su una comunità specifica
                         .requestMatchers("/community/removeUser/{id}").hasRole("ADMIN")
                         .requestMatchers("/community/close/{id}").hasRole("ADMIN")
