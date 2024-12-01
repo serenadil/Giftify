@@ -4,13 +4,13 @@ import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token.service';
 import { Router } from '@angular/router';
 import {FormsModule} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   imports: [
-    FormsModule, CommonModule
+    FormsModule, CommonModule, NgOptimizedImage
   ],
   styleUrls: ['./login.component.css']
 })
