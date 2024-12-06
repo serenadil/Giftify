@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import it.unicam.cs.Giftify.Model.Entity.Account;
+import it.unicam.cs.Giftify.Model.Entity.RevokedToken;
+import it.unicam.cs.Giftify.Model.Repository.RevokedTokenRepository;
 import it.unicam.cs.Giftify.Model.Repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -28,8 +31,12 @@ public class JwtService {
 
     @Value("${application.security.jwt.refresh-token-expiration}")
     private long refreshTokenExpire;
+
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private RevokedTokenRepository revokedTokenRepository;
 
 
     public String generateAccessToken(Account user) {
@@ -59,13 +66,19 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails user) {
         String username = extractUsername(token);
-
+        if (isTokenRevoked(token)) {
+            return false;
+        }
         boolean validToken = tokenRepository
                 .findByAccessToken(token)
                 .map(t -> !t.isLoggedOut())
                 .orElse(false);
-
         return username.equals(user.getUsername()) && !isTokenExpired(token) && validToken;
+    }
+
+    boolean isTokenRevoked(String token) {
+        Optional<RevokedToken> revokedToken = revokedTokenRepository.findByToken(token);
+        return revokedToken.isPresent();
     }
 
     public boolean isValidRefreshToken(String token, Account user) {

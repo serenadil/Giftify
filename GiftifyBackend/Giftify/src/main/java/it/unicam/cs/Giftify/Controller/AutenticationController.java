@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,11 @@ import javax.security.auth.login.AccountNotFoundException;
 public class AutenticationController {
     @Autowired
     private AuthService authService;
+
+
+    @Autowired
+    private LogoutHandlerImpl logoutHandler;
+
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
@@ -54,6 +60,19 @@ public class AutenticationController {
     ) {
         return authService.refreshToken(request, response);
     }
+
+
+    @PostMapping("/auth/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+            return ResponseEntity.ok("Logout eseguito con successo.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Errore durante il logout: " + e.getMessage());
+        }
+    }
+
 }
 
 

@@ -91,6 +91,9 @@ public class AuthService {
         String username = jwtService.extractUsername(token);
         Account account = accountService.getAccount(username)
                 .orElseThrow(() -> new RuntimeException("No user found"));
+        if (jwtService.isTokenRevoked(token)) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         if (jwtService.isValidRefreshToken(token, account)) {
             String accessToken = jwtService.generateAccessToken(account);
             String refreshToken = jwtService.generateRefreshToken(account);

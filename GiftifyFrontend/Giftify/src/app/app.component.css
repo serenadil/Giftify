@@ -1,4 +1,7 @@
-
+@font-face {
+  font-family: 'Afacad Flux';
+  src: url('../assets/fonts/AfacadFlux/AfacadFlux.ttf') format('truetype');
+}
 body {
   font-family: Afacad Flux, sans-serif;
   background-color: #00664e;
@@ -7,6 +10,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+button {
+  font-family: Afacad Flux, sans-serif;
 }
 
 

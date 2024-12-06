@@ -4,12 +4,12 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
-import { LoginComponent } from './login/login.component';
+import {LoginComponent} from './login/login.component';
 import {FormsModule} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { AddWishComponent } from './wish/add-wish/add-wish.component';
-import { EditWishComponent } from './wish/edit-wish/edit-wish.component';
-import { DeleteWishComponent } from './wish/delete-wish/delete-wish.component';
+import {CommonModule} from '@angular/common';
+import {AddWishComponent} from './wish/add-wish/add-wish.component';
+import {EditWishComponent} from './wish/edit-wish/edit-wish.component';
+import {DeleteWishComponent} from './wish/delete-wish/delete-wish.component';
 
 
 @NgModule({
@@ -17,14 +17,15 @@ import { DeleteWishComponent } from './wish/delete-wish/delete-wish.component';
     AppComponent,
     AddWishComponent,
     EditWishComponent,
-    DeleteWishComponent
+    DeleteWishComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    LoginComponent, CommonModule
+    CommonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

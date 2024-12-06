@@ -1,48 +1,60 @@
-/* Contenitore principale per la componente Login */
+/* Centrare il logo */
+.card-container img {
+  display: block;
+  margin: 0 auto 20px auto; /* Centra l'immagine e lascia uno spazio sotto */
+  max-width: 250px; /* Puoi aumentare la dimensione del logo se necessario */
+  height: auto;
+}
+
+/* Contenitore principale */
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center; /* Allinea orizzontalmente */
   align-items: center;    /* Allinea verticalmente */
-  min-height: 100vh;
+  min-height: 80vh;
   min-width: 60vh;
   background-color: #00664e; /* Colore di sfondo per Login */
   padding: 20px;
 }
 
-/* Card della Login */
-/* Card più grande */
+/* Card di login */
 .card {
   background-color: #f8fcee;
   border: 1px solid #00b88d;
   border-radius: 25px;
-  padding: 75px; /* Più spazio interno */
-  max-width: 700px; /* Aumentata la larghezza massima */
-  width: 100%;
+  padding: 60px; /* Più spazio interno */
+  max-width: 800px; /* Aumentata la larghezza massima della card */
+  width: 80%; /* Più larga, si adatta dinamicamente */
+  height: auto; /* Rimuove l'altezza fissa */
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+/* Hover effect per la card */
 .card:hover {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-3px);
 }
 
-/* Pulsanti */
+/* Pulsante Login */
 button {
+  font-family: Afacad Flux, sans-serif;
   background-color: #00b88d;
   color: #f8fcee;
   border: none;
   border-radius: 18px;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   width: 100%;
-  height: 45px;/* Pulsante blocco */
+  height: 45px; /* Pulsante blocco */
   margin-bottom: 15px; /* Spazio tra i pulsanti */
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+/* Hover effect per il pulsante */
 button:hover {
   background-color: #00664e;
   transform: scale(1.05);
@@ -58,9 +70,9 @@ button.btn-secondary:hover {
   background-color: #004232;
 }
 
-
-/* Intestazioni per la Login */
+/* Intestazione per la Login */
 h2 {
+  font-family: Afacad Flux, sans-serif;
   color: #00664e;
   margin-bottom: 20px;
   font-size: 24px;
@@ -69,33 +81,28 @@ h2 {
 
 /* Campi di input nella Login */
 input, textarea {
+  font-family: Afacad Flux, sans-serif;
   border: 1px solid #ccc;
   padding: 12px;
-  font-size: 16px;
+  font-size: 18px;
   width: 100%;
   margin-bottom: 15px;
   box-sizing: border-box;
   border-radius: 18px;
 }
 
+/* Focus sugli input */
 input:focus, textarea:focus {
   outline: none;
   border-color: #00664e;
   box-shadow: 0 0 5px rgba(0, 102, 78, 0.5);
 }
 
-
-/* Messaggi di errore nella Login */
+/* Alert per gli errori */
 .alert {
-  color: #fff;
-  background-color: #e74c3c;
+  color: #00664e;
+  background-color: #fff;
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 4px;
-}
-.logo {
-  max-width: 100%; /* Adatta l'immagine alla larghezza del contenitore */
-  height: auto; /* Mantiene il rapporto di aspetto */
-  display: block; /* Evita spazi vuoti intorno all'immagine */
-  margin: 0 auto; /* Centra l'immagine */
 }

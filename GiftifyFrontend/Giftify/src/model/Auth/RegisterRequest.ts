@@ -1,5 +1,7 @@
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  username: string;
+export class RegisterRequest {
+  constructor(
+    public email: string,
+    public password: string,
+    public username: string
+  ) {}
 }

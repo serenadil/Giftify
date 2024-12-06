@@ -35,8 +35,7 @@ public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-
+    
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -74,10 +73,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authenticationProvider(authenticationProvider())
-                // Aggiungi il filtro JWT per l'autenticazione
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .exceptionHandling(e -> e
                         .accessDeniedHandler((request, response, accessDeniedException) ->
                                 response.setStatus(HttpStatus.FORBIDDEN.value()))

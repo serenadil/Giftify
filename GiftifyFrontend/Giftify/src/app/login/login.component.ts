@@ -1,55 +1,32 @@
-// login.component.ts
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { TokenStorageService } from '../services/token.service';
 import { Router } from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { LoginRequest } from '../../model/Auth/LoginRequest';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  imports: [
-    FormsModule, CommonModule, NgOptimizedImage
-  ],
+  standalone: false,
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  form: any = {
-    email: null,
-    password: null
-  };
-  isLoggedIn = false;
-  isLoginFailed = false;
-  errorMessage = '';
+  email: string = '';
+  password: string = '';
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-    if (this.tokenStorage.getToken()) {
-      this.isLoggedIn = true;
-    }
-  }
-
-  onSubmit(): void {
-    const { email, password } = this.form;
-
-    this.authService.login({ email, password }).subscribe({
-      next: data => {
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveRefreshToken(data.refreshToken);
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.reloadPage();
+  onLogin(): void {
+    const loginRequest = new LoginRequest(this.email, this.password);
+    this.authService.login(loginRequest).subscribe({
+      next: (response) => {
+        this.authService.saveTokens(response);
+        this.router.navigate(['/dashboard']);
       },
-      error: err => {
-        this.errorMessage = err.error.message;
-        this.isLoginFailed = true;
-      }
+      error: () => {
+        this.errorMessage = 'Credenziali non valide';
+      },
     });
   }
-
-  reloadPage(): void {
-    window.location.reload();
-  }
 }
+
