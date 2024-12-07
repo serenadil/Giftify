@@ -1,10 +1,10 @@
-<div class="login-container">
-  <div class="logo animate__animated animate__tada">
+<div class="register-container">
+  <div class="logo animate__animated animate__bounceInDown">
     <img src="assets/pics/whiteLogo.png" class="logo" height="110" width="225">
   </div>
   <div class="card card-container">
-    <h2>Bentornato!</h2>
-    <form (ngSubmit)="onLogin()">
+    <h2>Crea un nuovo account</h2>
+    <form (ngSubmit)="onRegister()">
       <div class="form-group">
         <input
           type="email"
@@ -23,15 +23,22 @@
           required
         />
       </div>
-      <button type="submit" class="btn">Login</button>
+      <div class="form-group">
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="username"
+          placeholder="Inserisci il tuo username"
+          required
+        />
+      </div>
+      <button type="submit" class="btn">Registrati</button>
     </form>
     <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    <div class="register-link">
-      <p>Non hai un account?
-        <a routerLink="/register">Registrati</a>
+    <div class="login-link">
+      <p>Hai già un account?
+        <a routerLink="/login">Accedi</a>
       </p>
     </div>
   </div>
 </div>
-
-

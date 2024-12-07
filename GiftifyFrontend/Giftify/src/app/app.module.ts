@@ -10,6 +10,7 @@ import {CommonModule} from '@angular/common';
 import {AddWishComponent} from './wish/add-wish/add-wish.component';
 import {EditWishComponent} from './wish/edit-wish/edit-wish.component';
 import {DeleteWishComponent} from './wish/delete-wish/delete-wish.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {DeleteWishComponent} from './wish/delete-wish/delete-wish.component';
     AddWishComponent,
     EditWishComponent,
     DeleteWishComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

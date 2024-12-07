@@ -1,3 +1,4 @@
+@import 'animate.css/animate.min.css';
 @font-face {
   font-family: 'Afacad Flux';
   src: url('assets/fonts/AfacadFlux/AfacadFlux.ttf') format('truetype');
@@ -18,4 +19,86 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.card {
+  background-color: #f8fcee;
+  border: 1px solid #00b88d;
+  border-radius: 25px;
+  padding: 50px; /* Più spazio interno */
+  min-width: 280px; /* Aumentata la larghezza massima della card */
+  /*width: 80%; !* Più larga, si adatta dinamicamente *!*/
+  height: auto; /* Rimuove l'altezza fissa */
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Pulsante Login */
+button {
+  font-family: Afacad Flux, sans-serif;
+  background-color: #00b88d;
+  color: #f8fcee;
+  border: none;
+  border-radius: 18px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  width: 100%;
+  height: 45px; /* Pulsante blocco */
+  margin-bottom: 15px; /* Spazio tra i pulsanti */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #00664e;
+  transform: scale(1.05);
+}
+
+button.btn-secondary {
+  background-color: #00664e; /* Colore arancione per distinguere */
+  color: #fff;
+}
+
+button.btn-secondary:hover {
+  background-color: #004232;
+}
+
+h2 {
+  font-family: Afacad Flux, sans-serif;
+  color: #00664e;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+input, textarea {
+  font-family: Afacad Flux, sans-serif;
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 18px;
+  width: 100%;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  border-radius: 18px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #00664e;
+  box-shadow: 0 0 5px rgba(0, 102, 78, 0.5);
+}
+
+.alert {
+  color: #00664e;
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
 
