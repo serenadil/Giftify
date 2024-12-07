@@ -11,6 +11,7 @@ import {AddWishComponent} from './wish/add-wish/add-wish.component';
 import {EditWishComponent} from './wish/edit-wish/edit-wish.component';
 import {DeleteWishComponent} from './wish/delete-wish/delete-wish.component';
 import { RegisterComponent } from './register/register.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { RegisterComponent } from './register/register.component';
     EditWishComponent,
     DeleteWishComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

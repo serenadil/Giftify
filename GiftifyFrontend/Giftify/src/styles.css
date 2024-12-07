@@ -59,14 +59,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-button.btn-secondary {
-  background-color: #00664e; /* Colore arancione per distinguere */
-  color: #fff;
-}
-
-button.btn-secondary:hover {
-  background-color: #004232;
-}
 
 h2 {
   font-family: Afacad Flux, sans-serif;
@@ -75,6 +67,15 @@ h2 {
   font-size: 24px;
   font-weight: bold;
 }
+
+h3 {
+  font-family: Afacad Flux, sans-serif;
+  color: #00664e;
+  margin-bottom: 20px;
+  font-size: 18px;
+
+}
+
 
 input, textarea {
   font-family: Afacad Flux, sans-serif;
