@@ -63,12 +63,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Permetti l'accesso a login, register senza autenticazione
-                        .requestMatchers("/login/**", "/register/**", "/api/hello" ).permitAll()
-                        // Aggiungi controlli per le operazioni su una comunità specifica
-                        .requestMatchers("/community/removeUser/{id}").hasRole("ADMIN")
-                        .requestMatchers("/community/close/{id}").hasRole("ADMIN")
-                        // Tutte le altre richieste devono essere autenticate
+                        .requestMatchers("/auth/login", "/auth/register", "/api/hello" ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

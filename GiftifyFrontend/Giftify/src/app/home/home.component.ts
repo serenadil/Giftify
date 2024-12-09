@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { HomeService } from '../services/home.service';
+import {Component, OnInit} from '@angular/core';
+import {HomeService} from '../services/home.service';
+import {
+  AuthService
+} from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +19,12 @@ export class HomeComponent implements OnInit {
   newCommunity = {
     name: '',
     description: '',
-    budget: 0,
-    deadline: '',
+    budget: null,
+    deadline: null,
   };
 
-  constructor(private homeService: HomeService) {}
+  constructor(private homeService: HomeService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.loadAccountInfo();
@@ -51,7 +55,7 @@ export class HomeComponent implements OnInit {
       next: (message) => {
         alert(message);
         this.joinErrorMessage = '';
-        this.loadCommunities(); // Ricarica l'elenco delle community
+        this.loadCommunities();
       },
       error: (err) =>
         (this.joinErrorMessage =
@@ -91,6 +95,6 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    alert('Logout effettuato.');
+    this.authService.logout();
   }
 }

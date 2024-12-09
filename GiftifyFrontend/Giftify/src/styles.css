@@ -26,7 +26,7 @@ body {
   border-radius: 25px;
   padding: 50px; /* Più spazio interno */
   min-width: 280px; /* Aumentata la larghezza massima della card */
-  /*width: 80%; !* Più larga, si adatta dinamicamente *!*/
+  width: 80%; /* Più larga, si adatta dinamicamente */
   height: auto; /* Rimuove l'altezza fissa */
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -72,7 +72,7 @@ h3 {
   font-family: Afacad Flux, sans-serif;
   color: #00664e;
   margin-bottom: 20px;
-  font-size: 18px;
+  font-size: 20px;
 
 }
 

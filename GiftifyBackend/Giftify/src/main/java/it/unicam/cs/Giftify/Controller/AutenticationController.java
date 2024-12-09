@@ -28,6 +28,7 @@ public class AutenticationController {
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
+            System.out.println("Dati di registrazione ricevuti: " + request);
             AuthResponse response = authService.register(request);
             return ResponseEntity.ok(response);
         } catch (ExistingUserException e) {
@@ -43,6 +44,7 @@ public class AutenticationController {
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
+            System.out.println("Dati di registrazione ricevuti: " + request);
             AuthResponse response = authService.authenticate(request);
             return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {

@@ -1,8 +1,6 @@
 <div class="home-container">
-  <!-- Intestazione con l'icona del profilo e le immagini -->
   <div class="header">
-
-    <div class="logo-gift-container  animate__animated animate__bounceInLeft ">
+    <div class="logo-gift-container animate__animated animate__bounceInLeft">
       <img src="assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img">
       <img src="assets/pics/whiteLogo.png" alt="Logo" class="logo-img">
       <img src="assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img">
@@ -11,63 +9,56 @@
     <div class="profile-info" (click)="toggleDropdown()">
       <img src="assets/pics/profile.png" alt="Profilo" class="profile-img">
       <h3>{{ accountInfo?.name }}</h3>
+      <ul class="dropdown-menu" *ngIf="isDropdownOpen">
+        <li>Profilo: {{ accountInfo?.email }}</li>
+        <li>
+          <button (click)="loadAccountInfo()">Account</button>
+        </li>
+        <li>
+          <button (click)="logout()">Logout</button>
+        </li>
+      </ul>
     </div>
   </div>
 
-  <ul class="dropdown-menu" *ngIf="isDropdownOpen">
-    <li>Profilo: {{ accountInfo?.email }}</li>
-    <li>
-      <button (click)="openSettings()">Impostazioni</button>
-    </li>
-    <li>
-      <button (click)="logout()">Logout</button>
-    </li>
+  <div class="main-content">
+    <div class="card card-join">
+      <h3>Unisciti a una Community</h3>
+      <br>
+      <input
+        type="text"
+        [(ngModel)]="joinCode"
+        placeholder="Inserisci il codice della community"
 
-  </ul>
-</div>
+      />
+      <button (click)="joinCommunity()" class="btn btn-primary">Unisciti</button>
+      <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
+    </div>
 
-<!-- Contenuto principale con le due card -->
-<div class="main-content">
-  <!-- Card per unirsi a una Community -->
-  <div class="card card-join">
-    <h2>Unisciti a una Community</h2>
-    <br>
-    <input
-      type="text"
-      [(ngModel)]="joinCode"
-      placeholder="Inserisci il codice della community"
-      class="form-control"
-    />
-    <button (click)="joinCommunity()" class="btn btn-primary">Unisciti</button>
-    <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
-  </div>
+    <div class="card card-create">
+      <h3>Crea una nuova Community</h3>
+      <br>
+      <input
+        type="text"
+        [(ngModel)]="newCommunity.name"
+        placeholder="Nome della community"
 
-  <!-- Card per creare una nuova Community -->
-  <div class="card card-create">
-    <h2>Crea una nuova Community</h2>
-    <br>
-    <input
-      type="text"
-      [(ngModel)]="newCommunity.name"
-      placeholder="Nome della community"
-      class="form-control"
-    />
-    <textarea
-      [(ngModel)]="newCommunity.description"
-      placeholder="Descrizione"
-      class="form-control"
-    ></textarea>
-    <input
-      type="number"
-      [(ngModel)]="newCommunity.budget"
-      placeholder="Budget"
-      class="form-control"
-    />
-    <input
-      type="date"
-      [(ngModel)]="newCommunity.deadline"
-      class="form-control"
-    />
-    <button (click)="createCommunity()" class="btn btn-success">Crea</button>
+      />
+      <textarea
+        [(ngModel)]="newCommunity.description"
+        placeholder="Descrizione"
+      ></textarea>
+      <input
+        type="number"
+        [(ngModel)]="newCommunity.budget"
+        placeholder="Budget"
+      />
+      <input
+        type="date"
+        [(ngModel)]="newCommunity.deadline"
+        placeholder="deadline"
+      />
+      <button (click)="createCommunity()" class="btn btn-success">Crea</button>
+    </div>
   </div>
 </div>

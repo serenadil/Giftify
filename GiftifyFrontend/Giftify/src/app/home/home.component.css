@@ -1,31 +1,34 @@
 
 .home-container {
-  padding: 20px;
-  display: flex;
+  padding: 5px;
+  /*display: flex;*/
+  justify-content: space-between;
   flex-direction: column;
   align-items: center;
   width: 100%;
   height: 100%;
 }
 
-/* Intestazione */
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: 800px;
+  /* Posiziona gli elementi agli estremi */
+  align-items: normal;
   width: 100%;
   margin-bottom: 2px;
 }
 
 .profile-info {
   display: flex;
-  align-items: flex-end;
+  align-items: center; /* Allinea il contenuto al centro */
   cursor: pointer;
+  position: relative; /* Necessario per il posizionamento del menu a tendina */
+  margin-left: auto; /* Spinge l'icona del profilo a destra */
 }
 
 .profile-img {
-  width: 50px;
-  height: 50px;
+  width: 40px;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -33,22 +36,22 @@
 .logo-gift-container {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 2px;
+  margin-right: auto; /* Spinge il logo a sinistra */
 }
 
 .logo-img {
-  height: 150px;
+  height: 105px;
 }
 
 .gift-img {
-  height: 100px;
+  height: 90px;
 }
 
-
 .dropdown-menu {
-  position: fixed;
-  top: 70px;
-  left: 10px;
+  position: absolute; /* Cambiato da fixed a absolute */
+  top: 100%; /* Posiziona il menu subito sotto l'immagine del profilo */
+  right: 0; /* Allinea il menu a sinistra rispetto al contenitore relativo */
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 20px;
@@ -72,20 +75,28 @@
 }
 
 .card {
-  display: flex;
   flex-direction: column;
-  align-items: center;
+
+  width: 20px; /* Cambia la larghezza della card */
+  padding: 20px; /* Modifica il padding se necessario */
+
 }
 
 
-/*!* Input e pulsanti *!*/
-/*.form-control {*/
-/*  display: block;*/
-/*  width: 100%;*/
-/*  padding: 10px;*/
-/*  margin-bottom: 10px;*/
-/*  border: 1px solid #ddd;*/
-/*  border-radius: 18px;*/
-/*}*/
+.card input, .card textarea, .card button {
+  width: 100%; /* Rendi gli input e i pulsanti larghi quanto la card */
+  margin-bottom: 10px; /* Spazio tra gli elementi */
+}
+
+
+.main-content {
+  justify-content: space-between;
+  gap: 80px; /* Spazio tra le card orizzontalmente */
+  margin-top: 20px;
+  width: 100%;
+}
+
+
+
 
 
