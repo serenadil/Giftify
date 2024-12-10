@@ -12,8 +12,8 @@ export class WishService {
 
   constructor(private http: HttpClient) {}
 
-  addWish(communityId : number, wish: Wish) : Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/addWish/${communityId}`, wish);
+  addWish(communityId : number, name : string, imagePath : string) : Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/addWish/${communityId}`, {name, imagePath});
   }
 
   deleteWish(wishId: number) : Observable<string> {
@@ -23,4 +23,5 @@ export class WishService {
   editWish(wishId : number, wish : Wish) : Observable<string> {
     return this.http.put<string>(`${this.apiUrl}/editWish/${wishId}`, wish);
   }
+
 }
