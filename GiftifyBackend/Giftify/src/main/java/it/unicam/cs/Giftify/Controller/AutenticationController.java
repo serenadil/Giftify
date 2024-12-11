@@ -1,6 +1,9 @@
 package it.unicam.cs.Giftify.Controller;
 
 import it.unicam.cs.Giftify.Model.Auth.*;
+import it.unicam.cs.Giftify.Model.Repository.AccountRepository;
+import it.unicam.cs.Giftify.Model.Repository.RevokedTokenRepository;
+import it.unicam.cs.Giftify.Model.Services.AccountService;
 import it.unicam.cs.Giftify.Model.Services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,12 +27,21 @@ public class AutenticationController {
     @Autowired
     private LogoutHandlerImpl logoutHandler;
 
+    @Autowired
+    private RevokedTokenRepository tokenRepository;
+
+
+    @Autowired
+    private AccountRepository accountRepository;
+
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
             System.out.println("Dati di registrazione ricevuti: " + request);
             AuthResponse response = authService.register(request);
+
+            System.out.println(accountRepository.findAll().get(0).getEmail());
             return ResponseEntity.ok(response);
         } catch (ExistingUserException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

@@ -22,7 +22,7 @@ public class Account implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
-    private String username;
+    private String name;
 
     private String email;
 
@@ -39,7 +39,7 @@ public class Account implements UserDetails {
     public Account(@NonNull String email, @NonNull String password, @NonNull String username) {
         setEmail(email);
         setPassword(password);
-        this.username = username;
+        this.name = username;
         userCommunities = new HashSet<>();
         communityRoles = new HashSet<>();
     }
@@ -115,8 +115,9 @@ public class Account implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return this.getEmail();
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

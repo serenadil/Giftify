@@ -1,28 +1,28 @@
 import {Component} from '@angular/core';
-import {AuthService} from '../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {LoginRequest} from '../../model/Auth/LoginRequest';
-import {HttpErrorResponse} from '@angular/common/http'
-
+import {RegisterRequest} from '../../../model/Auth/RegisterRequest';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
+  selector: 'app-register',
   standalone: false,
-  styleUrls: ['./login.component.css']
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
-export class LoginComponent {
+export class RegisterComponent {
   email: string = '';
+  username: string = '';
   password: string = '';
   errorMessage: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
   }
 
-  onLogin(): void {
+  onRegister(): void {
     this.errorMessage = null;
-    const loginRequest = new LoginRequest(this.email, this.password);
-    this.authService.login(loginRequest).subscribe({
+    const registerRequest = new RegisterRequest(this.email, this.password, this.username);
+    this.authService.register(registerRequest).subscribe({
       next: (response) => {
         this.authService.saveTokens(response);
         this.router.navigate(['/home']);
@@ -34,9 +34,6 @@ export class LoginComponent {
         }
       },
     });
-
   }
 
-
 }
-

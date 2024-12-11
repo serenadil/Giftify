@@ -50,7 +50,13 @@ public class WishController {
     @DeleteMapping("/wish/deleteWish/{id}")
     public ResponseEntity<String> deleteWish(@PathVariable Long id) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account user = (Account) authentication.getPrincipal();
+            user = accountService.getAccountById(user.getId());
             Optional<Wish> wish = wishService.getWish(id);
+            if (wish.get().getWishList().getUser().getId() != user.getId()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
             if (wish.isPresent()) {
                 wishService.deleteWish(wish.get());
                 return ResponseEntity.ok("Wish deleted successfully");
@@ -66,10 +72,15 @@ public class WishController {
     @PutMapping("/wish/editWish/{id}")
     public ResponseEntity<String> editWish(@RequestBody WishDTO wishDTO, @PathVariable Long id) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account user = (Account) authentication.getPrincipal();
+            user = accountService.getAccountById(user.getId());
             Optional<Wish> wishOptional = wishService.getWish(id);
-
             if (wishOptional.isPresent()) {
                 Wish wish = wishOptional.get();
+                if (wish.getWishList().getUser().getId() != user.getId()) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+                }
                 if (wishDTO.getName() != null) {
                     wish.setName(wishDTO.getName());
                 }

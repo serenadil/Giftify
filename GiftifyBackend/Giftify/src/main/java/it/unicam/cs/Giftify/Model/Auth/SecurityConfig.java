@@ -57,17 +57,46 @@ public class SecurityConfig {
             }
         };
     }
+    /**
+     * Configura la catena di sicurezza per l'applicazione.
+     *
+     * Questo metodo definisce diverse configurazioni di sicurezza:
+     * - Disabilita la protezione CSRF, poiché viene utilizzato un sistema di autenticazione basato su token.
+     * - Consente l'accesso non autenticato a endpoint pubblici come "/auth/login" e "/auth/register".
+     * - Richiede l'autenticazione per tutte le altre richieste.
+     * - Imposta una gestione senza stato delle sessioni per garantire che ogni richiesta sia autenticata tramite token JWT.
+     * - Aggiunge un filtro personalizzato per l'autenticazione JWT prima del filtro standard di Spring Security.
+     * - Configura una Content Security Policy (CSP) per mitigare gli attacchi XSS e altre vulnerabilità legate al contenuto.
+     * - Imposta gli header di sicurezza, inclusi il blocco di frame embedding (frame options) per prevenire attacchi di clickjacking.
+     * - Gestisce gli errori di autenticazione e autorizzazione restituendo i codici di stato HTTP appropriati.
+     * - Definisce un gestore di logout personalizzato per pulire il contesto di sicurezza.
+     *
+     * @param http il builder di configurazione di Spring Security
+     * @return la catena di filtri di sicurezza configurata
+     * @throws Exception se si verifica un errore durante la configurazione
+     */
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register", "/api/hello" ).permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/api/hello").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .headers(headers -> headers
+//                        .contentSecurityPolicy(csp -> csp
+//                                .policyDirectives("default-src 'self'; " +
+//                                        "script-src 'self'; " +
+//                                        "style-src 'self' 'unsafe-inline'; " +
+//                                        "img-src 'self' data:; " +
+//                                        "connect-src 'self' http://localhost:8080 http://localhost:4200; " +
+//                                        "font-src 'self'; " +
+//                                        "frame-ancestors 'none'; " +
+//                                        "object-src 'none';"))
+//                        .frameOptions(frame -> frame.deny()))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e
                         .accessDeniedHandler((request, response, accessDeniedException) ->

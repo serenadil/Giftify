@@ -3,14 +3,13 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HttpClientModule} from '@angular/common/http';
-import {LoginComponent} from './login/login.component';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {LoginComponent} from './components/login/login.component';
 import {FormsModule} from '@angular/forms';
-import { RegisterComponent } from './register/register.component';
-import { HomeComponent } from './home/home.component';
-import { WishlistComponent } from './wishlist/wishlist.component';
 import {CommonModule} from '@angular/common';
-import { CommunityComponent } from './community/community.component';
+import {RegisterComponent} from './components/register/register.component';
+import {HomeComponent} from './components/home/home.component';
+import {TokenInterceptor} from './authUtil/tokenInterceptor';
 
 
 @NgModule({
@@ -18,9 +17,7 @@ import { CommunityComponent } from './community/community.component';
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent,
-    WishlistComponent,
-    CommunityComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +26,11 @@ import { CommunityComponent } from './community/community.component';
     FormsModule,
     CommonModule,
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

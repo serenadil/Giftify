@@ -34,7 +34,9 @@ public class CommunityController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
+            System.out.println("Utente autenticato: " + admin.getEmail());
             admin = accountService.getAccountById(admin.getId());
+
             communityService.createCommunity(
                     admin,
                     communityDto.getCommunityName(),
@@ -205,7 +207,7 @@ public class CommunityController {
             if (optionalReceiver.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gift receiver not found");
             }
-            return ResponseEntity.ok(optionalReceiver.get().getUsername());
+            return ResponseEntity.ok(optionalReceiver.get().getName());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }

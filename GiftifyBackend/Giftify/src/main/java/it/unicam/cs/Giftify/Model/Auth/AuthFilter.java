@@ -58,7 +58,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
             // Se il token è valido, imposta l'autenticazione nel SecurityContext
 
-
             if (jwtService.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()

@@ -10,19 +10,22 @@ export class HomeService {
 
   constructor(private http: HttpClient) {}
 
+
   getAccountInfo(): Observable<any> {
     return this.http.get(`${this.apiUrl}/accountInfo`);
   }
 
+
   getUserCommunities(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/getCommunities`);
   }
+
 
   joinCommunity(accessCode: string): Observable<string> {
     return this.http.post(`${this.apiUrl}/join/${accessCode}`, null, { responseType: 'text' });
   }
 
   createCommunity(communityData: any): Observable<string> {
-    return this.http.post(`${this.apiUrl}/createCommunity`, communityData, { responseType: 'text' });
+    return this.http.post(`${this.apiUrl}/community/createCommunity`, communityData, { responseType: 'text' });
   }
 }

@@ -1,13 +1,15 @@
 <div class="home-container">
   <div class="header">
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
-      <img src="assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img">
-      <img src="assets/pics/whiteLogo.png" alt="Logo" class="logo-img">
-      <img src="assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img">
+      <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
+      <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
+      <img src="../../../assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img"/>
     </div>
-
+    <div>
+      <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="Impostazioni">
+    </div>
     <div class="profile-info" (click)="toggleDropdown()">
-      <img src="assets/pics/profile.png" alt="Profilo" class="profile-img">
+      <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
       <h3>{{ accountInfo?.name }}</h3>
       <ul class="dropdown-menu" *ngIf="isDropdownOpen">
         <li>Profilo: {{ accountInfo?.email }}</li>
@@ -17,32 +19,37 @@
         <li>
           <button (click)="logout()">Logout</button>
         </li>
+        <li>
+          <button (click)="loadCommunities()">My communities</button>
+        </li>
       </ul>
     </div>
+
   </div>
 
   <div class="main-content">
     <div class="card card-join">
       <h3>Unisciti a una Community</h3>
-      <br>
+      <br/>
       <input
         type="text"
         [(ngModel)]="joinCode"
         placeholder="Inserisci il codice della community"
-
       />
-      <button (click)="joinCommunity()" class="btn btn-primary">Unisciti</button>
+      <button (click)="joinCommunity()" class="btn btn-primary">
+        Unisciti
+      </button>
       <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
     </div>
 
+
     <div class="card card-create">
       <h3>Crea una nuova Community</h3>
-      <br>
+      <br/>
       <input
         type="text"
         [(ngModel)]="newCommunity.name"
         placeholder="Nome della community"
-
       />
       <textarea
         [(ngModel)]="newCommunity.description"
@@ -56,9 +63,13 @@
       <input
         type="date"
         [(ngModel)]="newCommunity.deadline"
-        placeholder="deadline"
+        placeholder="Deadline"
       />
-      <button (click)="createCommunity()" class="btn btn-success">Crea</button>
+      <button (click)="createCommunity()" class="btn btn-success">
+        Crea
+      </button>
+      <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
     </div>
   </div>
 </div>
+

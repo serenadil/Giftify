@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BackendService} from './services/backend.service';
+
 
 @Component({
   selector: 'app-root',
@@ -7,16 +7,11 @@ import {BackendService} from './services/backend.service';
   standalone: false,
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'Giftify';
-  message: string = '';
 
-  constructor(private backendService: BackendService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.backendService.getHelloMessage().subscribe((response) => {
-      this.message = response;
-    });
-  }
+
 
 }

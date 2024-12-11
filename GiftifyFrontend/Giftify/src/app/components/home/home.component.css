@@ -12,7 +12,7 @@
 .header {
   display: flex;
   justify-content: space-between;
-  gap: 800px;
+  /*gap: 800px;*/
   /* Posiziona gli elementi agli estremi */
   align-items: normal;
   width: 100%;
@@ -29,6 +29,12 @@
 
 .profile-img {
   width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.Impostazioni {
+  width: 30px;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -68,7 +74,7 @@
 
 .main-content {
   display: flex;
-  gap: 40px;
+  /*gap: 40px;*/
   justify-content: center;
   margin-top: 20px;
   width: 100%;
@@ -91,7 +97,7 @@
 
 .main-content {
   justify-content: space-between;
-  gap: 80px; /* Spazio tra le card orizzontalmente */
+  /*gap: 80px; !* Spazio tra le card orizzontalmente *!*/
   margin-top: 20px;
   width: 100%;
 }

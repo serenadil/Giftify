@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {HomeService} from '../services/home.service';
-import {
-  AuthService
-} from '../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { HomeService } from '../../services/home.service';
+import { AuthService } from '../../services/auth.service';
+import {FormsModule} from '@angular/forms';
 
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  standalone: false
+
 })
 export class HomeComponent implements OnInit {
   accountInfo: any = null;
@@ -16,6 +16,8 @@ export class HomeComponent implements OnInit {
   joinCode = '';
   joinErrorMessage = '';
   isDropdownOpen = false;
+
+
   newCommunity = {
     name: '',
     description: '',
@@ -23,13 +25,13 @@ export class HomeComponent implements OnInit {
     deadline: null,
   };
 
-  constructor(private homeService: HomeService, private authService: AuthService) {
-  }
+  constructor(private homeService: HomeService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadAccountInfo();
     this.loadCommunities();
   }
+
 
   loadAccountInfo() {
     this.homeService.getAccountInfo().subscribe({
@@ -38,6 +40,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
+
   loadCommunities() {
     this.homeService.getUserCommunities().subscribe({
       next: (data) => (this.communities = data),
@@ -45,6 +48,7 @@ export class HomeComponent implements OnInit {
         console.error('Errore nel caricamento delle community:', err),
     });
   }
+
 
   joinCommunity() {
     if (!this.joinCode.trim()) {
@@ -63,36 +67,34 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  createCommunity() {
-    const communityData = {
-      communityName: prompt('Inserisci il nome della community:'),
-      note: prompt('Inserisci una descrizione per la community:'),
-      budget: parseFloat(prompt('Inserisci il budget:') || '0'),
-      deadline: prompt('Inserisci una data di scadenza (yyyy-MM-dd):'),
-    };
 
-    if (!communityData.communityName) {
+  createCommunity() {
+    if (!this.newCommunity.name) {
       alert('Il nome della community è obbligatorio.');
       return;
     }
 
-    this.homeService.createCommunity(communityData).subscribe({
+    this.homeService.createCommunity(this.newCommunity).subscribe({
       next: (message) => {
         alert(message);
         this.loadCommunities();
+        this.newCommunity = {
+          name: '',
+          description: '',
+          budget: null,
+          deadline: null,
+        };
       },
       error: (err) =>
         alert(err.error || 'Errore durante la creazione della community'),
     });
   }
 
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  openSettings() {
-    alert('Impostazioni non implementate.');
-  }
 
   logout() {
     this.authService.logout();

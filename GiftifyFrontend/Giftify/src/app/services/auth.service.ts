@@ -28,9 +28,8 @@ export class AuthService {
     );
   }
 
-
   refreshToken(): Observable<AuthResponse> {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = sessionStorage.getItem('refreshToken');
     if (!refreshToken) {
       throw new Error('No refresh token found');
     }
@@ -53,34 +52,24 @@ export class AuthService {
   }
 
 
-  saveTokens(authResponse
-             :
-             AuthResponse
-  ):
-    void {
-    localStorage.setItem('accessToken', authResponse.accessToken);
-    localStorage.setItem('refreshToken', authResponse.refreshToken);
+  saveTokens(authResponse: AuthResponse): void {
+    sessionStorage.setItem('accessToken', authResponse.accessToken);
+    sessionStorage.setItem('refreshToken', authResponse.refreshToken);
   }
 
-  logout()
-    :
-    void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+  logout(): void {
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('refreshToken');
     this.router.navigate(['/login']);
   }
 
-  isAuthenticated()
-    :
-    boolean {
-    return !!localStorage.getItem('accessToken');
+  isAuthenticated(): boolean {
+    return !!sessionStorage.getItem('accessToken');
   }
 
 
-  getAccessToken()
-    :
-    string | null {
-    return localStorage.getItem('accessToken');
+  getAccessToken(): string | null {
+    return sessionStorage.getItem('accessToken');
   }
 
 
