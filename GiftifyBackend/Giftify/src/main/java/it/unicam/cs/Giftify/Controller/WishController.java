@@ -29,7 +29,7 @@ public class WishController {
     @Autowired
     private CommunityService communityService;
 
-    @PostMapping("wish/addWish/{id}")
+    @PostMapping("/wish/addWish/{id}")
     public ResponseEntity<String> addWish(@RequestBody WishDTO wishDTO, @PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,7 +47,7 @@ public class WishController {
 
     }
 
-    @DeleteMapping("wish/deleteWish/{id}")
+    @DeleteMapping("/wish/deleteWish/{id}")
     public ResponseEntity<String> deleteWish(@PathVariable Long id) {
         try {
             Optional<Wish> wish = wishService.getWish(id);
@@ -63,7 +63,7 @@ public class WishController {
 
     }
 
-    @PutMapping("wish/editWish/{id}")
+    @PutMapping("/wish/editWish/{id}")
     public ResponseEntity<String> editWish(@RequestBody WishDTO wishDTO, @PathVariable Long id) {
         try {
             Optional<Wish> wishOptional = wishService.getWish(id);

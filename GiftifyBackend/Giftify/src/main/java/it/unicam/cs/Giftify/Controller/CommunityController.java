@@ -29,7 +29,7 @@ public class CommunityController {
     private AccountService accountService;
 
 
-    @PostMapping("/createCommunity")
+    @PostMapping("/community/createCommunity")
     public ResponseEntity<String> createCommunity(@RequestBody CommunityCreateDTO communityDto) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,7 +51,7 @@ public class CommunityController {
     }
 
 
-    @DeleteMapping("/removeUser/{communityId}/{userId}")
+    @DeleteMapping("/community/removeUser/{communityId}/{userId}")
     public ResponseEntity<String> removeUserFromCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -75,7 +75,7 @@ public class CommunityController {
     }
 
 
-    @PostMapping("/closeCommunity/{id}")
+    @PostMapping("/community/closeCommunity/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -97,7 +97,7 @@ public class CommunityController {
         }
     }
 
-    @DeleteMapping("/deleteCommunity/{id}")
+    @DeleteMapping("/community/deleteCommunity/{id}")
     public ResponseEntity<String> deleteCommunity(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -118,7 +118,7 @@ public class CommunityController {
         }
     }
 
-    @PutMapping("/updateCommunity/{id}")
+    @PutMapping("/community/updateCommunity/{id}")
     public ResponseEntity<String> updateCommunity(
             @PathVariable long id,
             @RequestBody CommunityUpdateDTO communityUpdateDto) {
@@ -152,7 +152,7 @@ public class CommunityController {
     }
 
 
-    @GetMapping("/participants/{id}")
+    @GetMapping("/community/participants/{id}")
     public ResponseEntity<?> getParticipants(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -171,7 +171,7 @@ public class CommunityController {
         }
     }
 
-    @GetMapping("/infoCommunity/{id}")
+    @GetMapping("/community/infoCommunity/{id}")
     public ResponseEntity<?> getGeneralInfo(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -190,7 +190,7 @@ public class CommunityController {
         }
     }
 
-    @GetMapping("/drawedName/{id}")
+    @GetMapping("/community/drawnName/{id}")
     public ResponseEntity<String> viewDrawnName(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -212,7 +212,7 @@ public class CommunityController {
     }
 
 
-    @GetMapping("/drawedNameList/{id}")
+    @GetMapping("/community/drawnNameList/{id}")
     public ResponseEntity<?> viewDrawnNameList(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -234,7 +234,7 @@ public class CommunityController {
     }
 
 
-    @GetMapping("/wishlists/{id}")
+    @GetMapping("/community/wishlists/{id}")
     public ResponseEntity<?> getWishlists(@PathVariable long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
