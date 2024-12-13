@@ -10,6 +10,8 @@ import {CommonModule} from '@angular/common';
 import {RegisterComponent} from './components/register/register.component';
 import {HomeComponent} from './components/home/home.component';
 import {TokenInterceptor} from './authUtil/tokenInterceptor';
+import {CommunityComponent} from './components/community/community.component';
+import {WishlistComponent} from './components/wishlist/wishlist.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import {TokenInterceptor} from './authUtil/tokenInterceptor';
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    CommunityComponent,
+    WishlistComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,41 @@
-<p>community works!</p>
+<div class="community-container">
+  <div class="header">
+    <div class="logo-gift-container animate__animated animate__bounceInLeft">
+      <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
+      <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
+      <img src="../../../assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img"/>
+    </div>
+  </div>
+  <div>
+    <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="Impostazioni">
+  </div>
+  <div class="profile-info" (click)="toggleDropdown()">
+    <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
+    <h3>{{ accountInfo?.name }}</h3>
+    <ul class="dropdown-menu" *ngIf="isDropdownOpen">
+      <li>Profilo: {{ accountInfo?.email }}</li>
+      <li>
+        <button (click)="loadAccountInfo()">Account</button>
+      </li>
+      <li>
+        <button (click)="logout()">Logout</button>
+      </li>
+      <li>
+        <button (click)="loadCommunities()">My communities</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <div class="card card-my-community">
+      <h3>{{ communityInfo?.name }}</h3>
+      <ul class="community-info">
+        <li>Descrizione: {{communityInfo?.description}}</li>
+        <li>Budget: {{ communityInfo?.budget }}</li>
+        <li>Deadline: {{ communityInfo?.deadline }}</li>
+        <li>Il mio nome estratto: {{viewDrawnName()}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
