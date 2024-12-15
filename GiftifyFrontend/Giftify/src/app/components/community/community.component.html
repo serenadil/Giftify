@@ -30,11 +30,35 @@
     <div class="card card-my-community">
       <h3>{{ communityInfo?.name }}</h3>
       <ul class="community-info">
-        <li>Descrizione: {{communityInfo?.description}}</li>
-        <li>Budget: {{ communityInfo?.budget }}</li>
-        <li>Deadline: {{ communityInfo?.deadline }}</li>
-        <li>Il mio nome estratto: {{viewDrawnName()}}
+        <li>Descrizione</li>
+        <li>{{ communityInfo?.description }}</li>
+        <li>Budget</li>
+        <li>{{ communityInfo?.budget }}</li>
+        <li>Deadline</li>
+        <li>{{ communityInfo?.deadline }}</li>
+      </ul>
+    </div>
+
+    <div class="card card-extracted-name">
+      <ul>
+        <li>Il mio nome estratto</li>
+        <li>
+          <button (click)="viewDrawnName()">Nome estratto</button>
         </li>
+      </ul>
+    </div>
+
+    <div class="card card-my-wishlist">
+      <ul>
+        <li>La mia lista</li>
+        <li> {{communityInfo.myWishList}}</li>
+      </ul>
+    </div>
+
+    <div class="card card-participants">
+      <ul>
+        <li>Partecipanti</li>
+        <li>{{loadParticipants()}}</li>
       </ul>
     </div>
   </div>

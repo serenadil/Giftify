@@ -20,6 +20,7 @@ export class CommunityComponent {
   participants: any[] = [];
   communityId: number = 0;
   drawnNameWishList: any[] = [];
+  myWishList: any = null;
 
   errorMessage: string = '';
 
@@ -37,13 +38,13 @@ export class CommunityComponent {
     });
   }
 
-  // loadCommunity() {
-  //   this.communityService.getGeneralInfo(this.communityId).subscribe({
-  //     next: (data) => (this.community = data),
-  //     error: (err) =>
-  //       console.error('Errore nel caricamento della community:', err),
-  //   });
-  // }
+  loadCommunity() {
+    this.communityService.getGeneralInfo(this.communityId).subscribe({
+      next: (data) => (this.communityInfo = data),
+      error: (err) =>
+        console.error('Errore nel caricamento della community:', err),
+    });
+  }
 
   viewDrawnName(): void {
     this.communityService.viewDrawnName(this.communityId).subscribe({
@@ -76,6 +77,14 @@ export class CommunityComponent {
       error: (err) =>
         console.error('Errore nel caricamento delle community:', err),
     });
+  }
+
+  loadParticipants(){
+    this.communityService.getParticipants(this.communityId).subscribe({
+      next: (data) => (this.participants = data),
+      error: (err) =>
+        console.error('Errore nel caricamento dei partecipanti: ', err),
+    })
   }
 
 
