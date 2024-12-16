@@ -1,153 +1,107 @@
-
+/* Reset per rimuovere margini e padding predefiniti */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-body, html {
-  height: 100%;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f4f4f4;
-}
-
 .login-container {
-  width: 100%;
-
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  height: 90vh; /* Altezza intera dello schermo */
+  background: #00664e; /* Verde scuro */
   text-align: center;
+  gap: 0; /* Ridotto lo spazio tra elementi */
+  padding: 0 1rem; /* Leggero padding laterale */
 }
 
-/* Logo */
 .logo {
-  margin-bottom: 20px;
-  animation-duration: 1s;
-  animation-timing-function: ease-in-out;
-
+  margin-bottom: 1rem; /* Ridotto lo spazio tra logo e card */
 }
 
-.logo.animate__tada {
-  animation-name: tada;
+.logo img {
+  max-width: 100%;
+  height: 8rem; /* Altezza più piccola per bilanciare */
+  animation: float 3s ease-in-out infinite;
 }
 
-
-.card-container {
-  background-color:white;
-  border-radius:25px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+.card {
+  color: #00664e;
   width: 100%;
-  max-width: 400px;
+  max-width: 400px; /* Limite massimo larghezza */
+  background-color: #f8fcee; /* Sfondo */
+  padding: 1.8rem; /* Ridotto leggermente il padding */
+  border-radius: 25px;
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
 }
 
 
-.card-container h2 {
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-  color: #333;
-}
-
-
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-input[type="email"], input[type="password"] {
+.form-group input {
+  font-family: 'Afacad Flux', serif;
   width: 100%;
-  border-radius:18px;
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-
-  font-size: 1rem;
+  padding: 0.7rem; /* Dimensione input */
+  margin: 0.7rem 0; /* Spaziatura tra input */
+  border: 1px solid  #f8fcee;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  background: #f8fcee;
 }
 
-/* Bottone di login */
-button[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background-color: #4CAF50;
+.form-group input:focus {
+  outline: none;
+  border-color: #00b88d;
+  box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
+}
+
+
+.btn {
+  text-align: center;
+  font-size: 1.1rem;
+  background: #00b88d;
   color: white;
   border: none;
-  border-radius:18px;
-  font-size: 1rem;
+  padding: 0.7rem;
+  margin-top: 1rem; /* Spaziatura tra ultimo input e bottone */
+  width: 100%;
+  border-radius: 10px;
+
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s ease;
 }
 
-button[type="submit"]:hover {
-  background-color: #45a049;
+.btn:hover {
+  background: #008a69;
 }
 
-/* Messaggio di errore */
-.error {
-  color: red;
-  margin-top: 10px;
-  font-size: 0.9rem;
+.login-link {
+  margin-top: 1rem;
+  color: #003f35; /* Verde scuro per il testo */
 }
 
-/* Link per la registrazione */
-.register-link {
-  margin-top: 20px;
-  font-size: 1rem;
-}
-
-.register-link a {
-  color: #4CAF50;
+.login-link a {
+  color: #003f35; /* Verde scuro */
   text-decoration: none;
+  font-weight: bold;
 }
 
-.register-link a:hover {
+.login-link a:hover {
   text-decoration: underline;
+}
 
 @media (max-width: 768px) {
-  .card-container {
-    padding: 20px;
-    width: 200%;
-  }
-
   .logo img {
-    height: 80px;
-    width: auto;
+    height: 7rem; /* Dimensione logo ridotta su dispositivi piccoli */
   }
 
-  .card-container h2 {
-    font-size: 12rem;
-  }
-
-  button[type="submit"] {
-    font-size: 12rem;
+  .card {
+    padding: 1.5rem; /* Ridotto il padding */
   }
 }
-
-@media (max-width: 480px) {
-  .card-container {
-    padding: 15px;
-    width: 95%;
-  }
-
-  .logo img {
-    height: 60px;
-    width: auto;
-  }
-
-  .card-container h2 {
-    font-size: 1.4rem;
-  }
-
-  button[type="submit"] {
-    font-size: 0.9rem;
-  }
-
-  .register-link {
-    font-size: 0.9rem;
-  }
-}}
