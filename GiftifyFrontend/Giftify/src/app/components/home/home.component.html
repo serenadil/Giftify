@@ -6,28 +6,38 @@
       <img src="../../../assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img"/>
     </div>
     <div>
-      <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="Impostazioni">
+      <div class="profile-settings">
+        <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="Impostazioni">
+      </div>
+      <div class="profile-info" (click)="toggleDropdown()">
+        <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
+        <h3>{{ accountInfo?.name }}</h3>
+        <ul class="dropdown-menu" *ngIf="isDropdownOpen">
+          <li>Profilo: {{ accountInfo?.email }}</li>
+          <li>
+            <button (click)="loadAccountInfo()">Account</button>
+          </li>
+          <li>
+            <button (click)="logout()">Logout</button>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="profile-info" (click)="toggleDropdown()">
-      <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
-      <h3>{{ accountInfo?.name }}</h3>
-      <ul class="dropdown-menu" *ngIf="isDropdownOpen">
-        <li>Profilo: {{ accountInfo?.email }}</li>
-        <li>
-          <button (click)="loadAccountInfo()">Account</button>
-        </li>
-        <li>
-          <button (click)="logout()">Logout</button>
-        </li>
-        <li>
-          <button (click)="loadCommunities()">My communities</button>
-        </li>
-      </ul>
-    </div>
-
   </div>
 
   <div class="main-content">
+    <div class="card card-user-communities">
+      <h3>Le tue community:</h3>
+      <ul *ngIf="communities.length > 0; else noCommunities">
+        <li *ngFor="let community of communities">
+          {{ community.communityName }}
+        </li>
+      </ul>
+      <ng-template #noCommunities>
+        <p>Non appartieni a nessuna community! Dobbiamo rimediare...</p>
+      </ng-template>
+    </div>
+
     <div class="card card-join">
       <h3>Unisciti a una Community</h3>
       <br/>
@@ -48,13 +58,12 @@
       <br/>
       <input
         type="text"
-        [(ngModel)]="newCommunity.name"
+        [(ngModel)]="newCommunity.communityName"
         placeholder="Nome della community"
       />
       <textarea
-        [(ngModel)]="newCommunity.description"
-        placeholder="Descrizione"
-      ></textarea>
+        [(ngModel)]="newCommunity.communityNote"
+        placeholder="Descrizione"></textarea>
       <input
         type="number"
         [(ngModel)]="newCommunity.budget"

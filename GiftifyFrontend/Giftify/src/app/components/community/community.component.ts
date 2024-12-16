@@ -96,4 +96,7 @@ export class CommunityComponent {
     this.authService.logout();
   }
 
+
+
+
 }

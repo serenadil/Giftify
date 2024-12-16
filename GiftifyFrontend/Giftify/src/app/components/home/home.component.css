@@ -1,108 +1,224 @@
+/* Reset di base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+/* Impostazioni generali */
+body, html {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+/* Contenitore principale della home */
 .home-container {
-  padding: 5px;
-  /*display: flex;*/
-  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 30px;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  height: 100%;
 }
 
+/* Header */
 .header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  /*gap: 800px;*/
-  /* Posiziona gli elementi agli estremi */
-  align-items: normal;
-  width: 100%;
-  margin-bottom: 2px;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
 }
 
-.profile-info {
-  display: flex;
-  align-items: center; /* Allinea il contenuto al centro */
-  cursor: pointer;
-  position: relative; /* Necessario per il posizionamento del menu a tendina */
-  margin-left: auto; /* Spinge l'icona del profilo a destra */
-}
-
-.profile-img {
-  width: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.Impostazioni {
-  width: 30px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
+/* Container con logo e pacchi regalo */
 .logo-gift-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 2px;
-  margin-right: auto; /* Spinge il logo a sinistra */
-}
-
-.logo-img {
-  height: 105px;
+  flex: 1;
 }
 
 .gift-img {
-  height: 90px;
+  height: 50px;
+  width: auto;
 }
 
-.dropdown-menu {
-  position: absolute; /* Cambiato da fixed a absolute */
-  top: 100%; /* Posiziona il menu subito sotto l'immagine del profilo */
-  right: 0; /* Allinea il menu a sinistra rispetto al contenitore relativo */
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 10px;
+.logo-img {
+  height: 80px;
+  width: auto;
+}
+
+.profile-settings,
+.profile-info {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+/* Immagine del profilo */
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Dropdown del profilo */
+ul.dropdown-menu {
   list-style: none;
-  width: 200px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  min-width: 150px;
 }
 
-.dropdown-menu li {
+ul.dropdown-menu li {
   padding: 10px;
   cursor: pointer;
 }
 
-.main-content {
-  display: flex;
-  /*gap: 40px;*/
-  justify-content: center;
-  margin-top: 20px;
-  width: 100%;
+ul.dropdown-menu li:hover {
+  background-color: #f0f0f0;
 }
 
 .card {
-  flex-direction: column;
-
-  width: 20px; /* Cambia la larghezza della card */
-  padding: 20px; /* Modifica il padding se necessario */
-
-}
-
-
-.card input, .card textarea, .card button {
-  width: 100%; /* Rendi gli input e i pulsanti larghi quanto la card */
-  margin-bottom: 10px; /* Spazio tra gli elementi */
-}
-
-
-.main-content {
-  justify-content: space-between;
-  /*gap: 80px; !* Spazio tra le card orizzontalmente *!*/
-  margin-top: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
   width: 100%;
+  max-width: 600px;
 }
 
+.card h3 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #333;
+}
 
+.card input,
+.card textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
 
+.card button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
+.card button:hover {
+  background-color: #45a049;
+}
 
+/* Messaggio di errore */
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Media Queries per la responsività */
+@media (max-width: 1024px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo-gift-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logo-img {
+    margin: 10px 0;
+  }
+
+  .profile-settings,
+  .profile-info {
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-gift-container {
+    margin-bottom: 20px;
+  }
+
+  .profile-info h3 {
+    font-size: 1.2rem;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .card h3 {
+    font-size: 1.4rem;
+  }
+
+  .card input,
+  .card textarea {
+    font-size: 1rem;
+  }
+
+  .card button {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-img {
+    height: 60px;
+  }
+
+  .profile-info h3 {
+    font-size: 1rem;
+  }
+
+  .profile-img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .card {
+    padding: 10px;
+  }
+
+  .card h3 {
+    font-size: 1.2rem;
+  }
+
+  .card input,
+  .card textarea {
+    font-size: 0.9rem;
+  }
+
+  .card button {
+    font-size: 0.9rem;
+  }
+}

@@ -17,13 +17,13 @@ export class HomeComponent implements OnInit {
   joinErrorMessage = '';
   isDropdownOpen = false;
 
-
   newCommunity = {
-    name: '',
-    description: '',
+    communityName: '',
+    communityNote: '',
     budget: null,
     deadline: null,
   };
+
 
   constructor(private homeService: HomeService, private authService: AuthService) {}
 
@@ -43,11 +43,15 @@ export class HomeComponent implements OnInit {
 
   loadCommunities() {
     this.homeService.getUserCommunities().subscribe({
-      next: (data) => (this.communities = data),
+      next: (data) => {
+        console.log('Community Data:', data);
+        this.communities = data;
+      },
       error: (err) =>
         console.error('Errore nel caricamento delle community:', err),
     });
   }
+
 
 
   joinCommunity() {
@@ -69,18 +73,17 @@ export class HomeComponent implements OnInit {
 
 
   createCommunity() {
-    if (!this.newCommunity.name) {
+    if (!this.newCommunity.communityName) {
       alert('Il nome della community è obbligatorio.');
       return;
     }
-
     this.homeService.createCommunity(this.newCommunity).subscribe({
       next: (message) => {
         alert(message);
         this.loadCommunities();
         this.newCommunity = {
-          name: '',
-          description: '',
+          communityName: '',
+          communityNote: '',
           budget: null,
           deadline: null,
         };
@@ -94,7 +97,6 @@ export class HomeComponent implements OnInit {
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-
 
   logout() {
     this.authService.logout();
