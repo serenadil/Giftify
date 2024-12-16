@@ -36,7 +36,6 @@ public class CommunityController {
             Account admin = (Account) authentication.getPrincipal();
             System.out.println("Utente autenticato: " + admin.getEmail());
             admin = accountService.getAccountById(admin.getId());
-
             communityService.createCommunity(
                     admin,
                     communityDto.getCommunityName(),
@@ -62,9 +61,6 @@ public class CommunityController {
             Community community = communityService.getCommunityById(communityId);
             if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-            if (admin == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
             Account user = accountService.getAccountById(userId);
             communityService.removeUserFromCommunity(user, community);
@@ -204,10 +200,7 @@ public class CommunityController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community not found or unauthorized");
             }
             Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
-            if (optionalReceiver.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gift receiver not found");
-            }
-            return ResponseEntity.ok(optionalReceiver.get().getName());
+            return optionalReceiver.map(value -> ResponseEntity.ok(value.getName())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gift receiver not found"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }

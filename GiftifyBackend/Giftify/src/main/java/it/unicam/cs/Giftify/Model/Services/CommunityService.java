@@ -37,8 +37,7 @@ public class CommunityService {
     private GiftAssigmentRepository giftAssigmentRepository;
 
     @Transactional
-    public void createCommunity(Account admin, String name,
-                                String note, double budget, LocalDate deadline) {
+    public void createCommunity(Account admin, String name, String note, double budget, LocalDate deadline) {
         Community community = new Community(codeGeneretor, admin, name, note, budget, deadline);
         WishList wishList = wishListService.createWishList(admin);
         community.addUser(admin, wishList);
@@ -58,12 +57,10 @@ public class CommunityService {
                     .stream()
                     .filter(role -> role.getCommunity().equals(community))
                     .collect(Collectors.toSet());
-
             rolesToRemove.forEach(role -> {
                 account.removeRoleForCommunity(community);
                 accountCommunityRoleRepository.delete(role);
             });
-
             account.removeCommunity(community);
             accountServices.saveAccount(account);
         }
@@ -166,6 +163,11 @@ public class CommunityService {
         community.setClose(true);
         communityRepository.save(community);
     }
+
+
+
+
+
 
 
 }

@@ -27,8 +27,6 @@ public class AutenticationController {
     @Autowired
     private LogoutHandlerImpl logoutHandler;
 
-    @Autowired
-    private RevokedTokenRepository tokenRepository;
 
 
     @Autowired

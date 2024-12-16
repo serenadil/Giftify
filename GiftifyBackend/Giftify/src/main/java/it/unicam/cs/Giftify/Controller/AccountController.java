@@ -46,7 +46,7 @@ public class AccountController {
             if (account == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            return ResponseEntity.ok(communityService.getAllCommunities());
+            return ResponseEntity.ok(account.getUserCommunities());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }

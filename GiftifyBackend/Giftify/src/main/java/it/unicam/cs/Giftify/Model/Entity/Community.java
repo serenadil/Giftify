@@ -24,7 +24,7 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @ManyToMany
     @JsonManagedReference
     private Set<Account> userList;
 
