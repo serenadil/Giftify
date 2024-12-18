@@ -12,9 +12,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  {path: 'community', component: CommunityComponent}
-
-
+  { path: 'community/:id', component: CommunityComponent }
 ];
 
 @NgModule({
