@@ -15,7 +15,11 @@ export class HomeComponent implements OnInit {
   communities: any[] = [];
   joinCode = '';
   joinErrorMessage = '';
-  isDropdownOpen = false;
+  isProfileModalOpen = false;
+  isSettingsModalOpen = false;
+  successMessage: string = '';
+  isSuccessPopupVisible: boolean = false;
+
 
   newCommunity = {
     communityName: '',
@@ -93,12 +97,32 @@ export class HomeComponent implements OnInit {
     });
   }
 
-
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
+  openProfileModal() {
+    this.isProfileModalOpen = true;
   }
+
+  closeProfileModal() {
+    this.isProfileModalOpen = false;
+  }
+
+  openSettingsModal() {
+    this.isSettingsModalOpen = true;
+  }
+
+  closeSettingsModal() {
+    this.isSettingsModalOpen = false;
+  }
+
+
 
   logout() {
     this.authService.logout();
+  }
+
+  showSuccessPopup() {
+    this.isSuccessPopupVisible = true;
+    setTimeout(() => {
+      this.isSuccessPopupVisible = false; // Nasconde automaticamente il popup dopo 3 secondi
+    }, 3000);
   }
 }

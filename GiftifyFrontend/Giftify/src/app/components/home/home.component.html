@@ -3,6 +3,12 @@
   <title></title>
 </head>
 <body>
+<div *ngIf="isSuccessPopupVisible" class="success-popup">
+  <div class="popup-content">
+    <span class="close-btn" (click)="isSuccessPopupVisible = false">&times;</span>
+    <p>{{ successMessage }}</p>
+  </div>
+</div>
 <div class="home-container">
   <div class="header">
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
@@ -11,56 +17,77 @@
       <img src="../../../assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img"/>
     </div>
     <div>
-      <div class="profile-settings">
-        <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="Impostazioni">
+      <div class="profile-settings-container">
+        <div class="icon-settings" (click)="openSettingsModal()">
+          <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img" />
+        </div>
+        <div class="icon-profile" (click)="openProfileModal()">
+          <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img" />
+        </div>
       </div>
-      <div class="profile-info" (click)="toggleDropdown()">
-        <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
-        <h3>{{ accountInfo?.name }}</h3>
-        <ul class="dropdown-menu" *ngIf="isDropdownOpen">
-          <li>Profilo: {{ accountInfo?.email }}</li>
-          <li>
-            <button (click)="loadAccountInfo()">Account</button>
-          </li>
-          <li>
-            <button (click)="logout()">Logout</button>
-          </li>
-        </ul>
+      <div class="modal-overlay" *ngIf="isSettingsModalOpen">
+        <div class="modal-window">
+          <span class="close-btn" (click)="closeSettingsModal()">&times;</span>
+          <h3>Impostazioni</h3>
+          <p>Qui puoi gestire le impostazioni del tuo account.</p>
+        </div>
+      </div>
+      <div class="modal-overlay" *ngIf="isProfileModalOpen">
+        <div class="modal-window">
+          <span class="close-btn" (click)="closeProfileModal()">&times;</span>
+          <h3>Informazioni Profilo</h3>
+          <p><strong>Username:</strong> {{ accountInfo?.name }}</p>
+          <p><strong>Email:</strong> {{ accountInfo?.email }}</p>
+          <button (click)="logout()" class="logout-btn">Logout</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="main-content">
+  <div class="main-content  animate__animated animate__bounceInUp">
     <div class="card card-user-communities">
-      <h3>Le tue community:</h3>
+      <h3>Le tue community:</h3><br>
       <ul *ngIf="communities.length > 0; else noCommunities">
         <li *ngFor="let community of communities">
-          {{ community.communityName }}
+          <a [routerLink]="['/community', community.id]" class="community-link">
+            {{ community.communityName }}
+          </a>
         </li>
       </ul>
+
       <ng-template #noCommunities>
         <p>Non appartieni a nessuna community! Dobbiamo rimediare...</p>
+        <br>
+        <br>
+        <div class="rocket-container">
+          <img src="../../../assets/pics/rocket.png" alt="Razzo" class="rocket-img animate__animated animate__zoomInLeft">
+        </div>
       </ng-template>
     </div>
 
     <div class="card card-join">
       <h3>Unisciti a una Community</h3>
-      <br/>
-      <input
-        type="text"
-        [(ngModel)]="joinCode"
-        placeholder="Inserisci il codice della community"
-      />
-      <button (click)="joinCommunity()" class="btn btn-primary">
-        Unisciti
-      </button>
-      <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
+      <div  class="join-text">
+        <input
+          type="text"
+          [(ngModel)]="joinCode"
+          placeholder="Inserisci il codice della community"
+        />
+        <button (click)="joinCommunity()" class="btn btn-primary">
+          Unisciti
+        </button>
+        <div class="globe-container">
+          <img src="../../../assets/pics/globe.png" alt="globe" class="globe-img">
+        </div>
+        <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
+      </div>
+
     </div>
 
 
     <div class="card card-create">
       <h3>Crea una nuova Community</h3>
-      <br/>
+
       <input
         type="text"
         [(ngModel)]="newCommunity.communityName"
@@ -73,6 +100,7 @@
         type="number"
         [(ngModel)]="newCommunity.budget"
         placeholder="Budget"
+        min="1"
       />
       <input
         type="date"
@@ -86,5 +114,7 @@
     </div>
   </div>
 </div>
+
+
 </body>
 

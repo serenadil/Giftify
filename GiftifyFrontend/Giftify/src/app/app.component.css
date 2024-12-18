@@ -17,40 +17,4 @@ button {
 }
 
 
-/* Generale: Footer */
-footer {
-  background-color: #00664e;
-  color: #f8fcee;
-  text-align: center;
-  padding: 20px 0;
-}
-
-footer a {
-  color: #00b88d;
-}
-
-footer a:hover {
-  color: #f8fcee;
-}
-
-/* Generale: Pulsanti */
-button {
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Generale: Input */
-input, textarea {
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-/* Generale: Ombreggiature */
-.card {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card:hover {
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
-}
-
 

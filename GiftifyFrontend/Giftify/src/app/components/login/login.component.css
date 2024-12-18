@@ -10,29 +10,29 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90vh; /* Altezza intera dello schermo */
-  background: #00664e; /* Verde scuro */
+  height: 90vh;
+  background: #00664e;
   text-align: center;
-  gap: 0; /* Ridotto lo spazio tra elementi */
-  padding: 0 1rem; /* Leggero padding laterale */
+  gap: 0;
+  padding: 0 1rem;
 }
 
 .logo {
-  margin-bottom: 1rem; /* Ridotto lo spazio tra logo e card */
+  margin-bottom: 1rem;
 }
 
 .logo img {
   max-width: 100%;
-  height: 8rem; /* Altezza più piccola per bilanciare */
+  height: 8rem;
   animation: float 3s ease-in-out infinite;
 }
 
 .card {
   color: #00664e;
   width: 100%;
-  max-width: 400px; /* Limite massimo larghezza */
-  background-color: #f8fcee; /* Sfondo */
-  padding: 1.8rem; /* Ridotto leggermente il padding */
+  max-width: 400px;
+  background-color: #f8fcee;
+  padding: 1.8rem;
   border-radius: 25px;
   box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;

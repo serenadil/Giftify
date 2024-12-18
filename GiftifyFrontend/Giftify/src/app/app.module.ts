@@ -21,7 +21,8 @@ import {WishlistComponent} from './components/wishlist/wishlist.component';
     RegisterComponent,
     HomeComponent,
     CommunityComponent,
-    WishlistComponent
+    WishlistComponent,
+
   ],
   imports: [
     BrowserModule,
