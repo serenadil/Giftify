@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommunityService} from '../../services/community.service';
 import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
@@ -16,7 +16,7 @@ export class CommunityComponent {
   description: string = '';
   budget: any = null;
   deadline: any = null;
-  userWishList: any[] = [];
+  userWishList: any = null;
   participants: any[] = [];
   communityId: number = 0;
   drawnNameWishList: any[] = [];
@@ -29,6 +29,11 @@ export class CommunityComponent {
   communities: any[] = [];
 
   constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService) {
+  }
+
+  ngOnInit() {
+    this.loadAccountInfo();
+    this.loadCommunity();
   }
 
   loadAccountInfo() {

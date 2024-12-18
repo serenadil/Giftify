@@ -34,6 +34,7 @@ public class Community {
     @JsonBackReference
     private Account admin;
 
+    @Getter
     @Setter
     private String communityName;
 

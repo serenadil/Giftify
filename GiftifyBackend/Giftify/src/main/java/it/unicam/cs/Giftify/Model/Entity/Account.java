@@ -30,6 +30,7 @@ public class Account implements UserDetails {
 
     @ManyToMany
     @JsonIgnore
+    @Getter
     private Set<Community> userCommunities;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -138,4 +139,5 @@ public class Account implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

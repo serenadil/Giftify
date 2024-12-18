@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {AuthResponse} from '../../model/Auth/AuthResponse';
+import {Community} from '../../model/Community';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +46,15 @@ export class CommunityService {
 
   getWishlists(communityId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/wishlists/${communityId}`);
+  }
+
+  getUserCommunityByName(name: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/communityInfo/${name}`);
+  }
+
+  saveIds(community: Community): void {
+    sessionStorage.clear();
+    sessionStorage.setItem('id', String(community.id));
   }
 
 }
