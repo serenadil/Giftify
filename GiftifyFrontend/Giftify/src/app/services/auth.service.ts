@@ -51,10 +51,13 @@ export class AuthService {
     return throwError(() => new Error(errorMessage));
   }
 
-
   saveTokens(authResponse: AuthResponse): void {
-    sessionStorage.setItem('accessToken', authResponse.accessToken);
-    sessionStorage.setItem('refreshToken', authResponse.refreshToken);
+    sessionStorage.clear();
+    if (authResponse && authResponse.access_token && authResponse.refresh_token) {
+      sessionStorage.setItem('accessToken', authResponse.access_token);
+      sessionStorage.setItem('refreshToken', authResponse.refresh_token);
+
+    }
   }
 
   logout(): void {
@@ -64,9 +67,8 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!sessionStorage.getItem('accessToken');
+    return !!localStorage.getItem('accessToken');
   }
-
 
   getAccessToken(): string | null {
     return sessionStorage.getItem('accessToken');

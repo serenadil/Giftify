@@ -1,7 +1,7 @@
 
 export class AuthResponse {
-  constructor(public accessToken: string,
-              public refreshToken: string,
+  constructor(public access_token: string,
+              public refresh_token: string,
               public message: string) {
   }
 }

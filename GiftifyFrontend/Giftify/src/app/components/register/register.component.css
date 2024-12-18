@@ -1,7 +1,118 @@
+/* Reset per rimuovere margini e padding predefiniti */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 .register-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 90vh; /* Altezza intera dello schermo */
+  background: #00664e; /* Verde scuro */
+  text-align: center;
+  gap: 0; /* Ridotto lo spazio tra elementi */
+  padding: 0 1rem; /* Leggero padding laterale */
+}
+
+.logo {
+  margin-bottom: 1rem; /* Ridotto lo spazio tra logo e card */
+}
+
+.logo img {
+  max-width: 100%;
+  height: 8rem; /* Altezza più piccola per bilanciare */
+  animation: float 3s ease-in-out infinite;
+}
+
+.card {
+  color: #00664e;
+  width: 100%;
+  max-width: 400px; /* Limite massimo larghezza */
+  background-color: #f8fcee; /* Sfondo */
+  padding: 1.8rem; /* Ridotto leggermente il padding */
+  border-radius: 25px;
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+}
+.form-group input {
+  font-family: 'Afacad Flux', serif;
+  width: 100%;
+  padding: 0.7rem;
+  margin: 0.7rem 0;
+  border: 1px solid #f8fcee;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  background-color: #f8fcee;
+
+}
+
+
+
+.form-group input:focus {
+  outline: none;
+  border-color: #00b88d;
+}
+
+.form-group input:focus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid #00b88d; /* Bordo doppio */
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+
+.btn {
+  text-align: center;
+  font-size: 1.1rem;
+  background: #00b88d;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  margin-top: 1rem; /* Spaziatura tra ultimo input e bottone */
+  width: 100%;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #008a69;
+}
+
+.register-link {
+  margin-top: 1rem;
+  color: #003f35; /* Verde scuro per il testo */
+}
+
+.register-link a {
+  color: #003f35; /* Verde scuro */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .logo img {
+    height: 7rem; /* Dimensione logo ridotta su dispositivi piccoli */
+  }
+
+  .card {
+    padding: 1.5rem; /* Ridotto il padding */
+  }
 }

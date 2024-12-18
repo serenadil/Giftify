@@ -1,9 +1,14 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+</head>
+<body>
 <div class="register-container">
   <div class="logo animate__animated animate__bounceInDown">
-    <img src="../../../assets/pics/whiteLogo.png" class="logo" height="110" width="225">
+    <img src="../../../assets/pics/whiteLogo.png" class="logo">
   </div>
-  <div class="card card-container">
-    <h2>Crea un nuovo account</h2>
+  <div class="card card-container ">
+    <h2>Unisciti a noi!</h2>
     <form (ngSubmit)="onRegister()">
       <div class="form-group">
         <input
@@ -38,10 +43,11 @@
       <button type="submit" class="btn">Registrati</button>
     </form>
     <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    <div class="login-link">
+    <div class="register-link">
       <p>Hai già un account?
         <a routerLink="/login">Accedi</a>
       </p>
     </div>
   </div>
 </div>
+</body>
