@@ -14,11 +14,13 @@ export class HomeComponent implements OnInit {
   accountInfo: any = null;
   communities: any[] = [];
   joinCode = '';
-  joinErrorMessage = '';
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
-  successMessage: string = '';
+  joinErrorMessage = ''; // Per la card "Unisciti"
+  createErrorMessage = '';
+  createSuccessMessage = '';
   isSuccessPopupVisible: boolean = false;
+
 
 
   newCommunity = {
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit {
     budget: null,
     deadline: null,
   };
+
 
 
   constructor(private homeService: HomeService, private authService: AuthService) {}
@@ -78,12 +81,12 @@ export class HomeComponent implements OnInit {
 
   createCommunity() {
     if (!this.newCommunity.communityName) {
-      alert('Il nome della community è obbligatorio.');
+      this.createErrorMessage = 'Il nome della community è obbligatorio.';
       return;
     }
     this.homeService.createCommunity(this.newCommunity).subscribe({
       next: (message) => {
-        alert(message);
+        this.createSuccessMessage = message;
         this.loadCommunities();
         this.newCommunity = {
           communityName: '',
@@ -91,11 +94,18 @@ export class HomeComponent implements OnInit {
           budget: null,
           deadline: null,
         };
+        this.createErrorMessage = '';
+
+        setTimeout(() => {
+          this.createSuccessMessage = '';
+        }, 3000);
       },
       error: (err) =>
-        alert(err.error || 'Errore durante la creazione della community'),
+        (this.createErrorMessage =
+          err.error || 'Errore durante la creazione della community'),
     });
   }
+
 
   openProfileModal() {
     this.isProfileModalOpen = true;

@@ -6,7 +6,7 @@
 <div *ngIf="isSuccessPopupVisible" class="success-popup">
   <div class="popup-content">
     <span class="close-btn" (click)="isSuccessPopupVisible = false">&times;</span>
-    <p>{{ successMessage }}</p>
+
   </div>
 </div>
 <div class="home-container">
@@ -29,7 +29,12 @@
         <div class="modal-window">
           <span class="close-btn" (click)="closeSettingsModal()">&times;</span>
           <h3>Impostazioni</h3>
-          <p>Qui puoi gestire le impostazioni del tuo account.</p>
+          <ul>
+            <li><a href="">Privacy e Sicurezza</a></li>
+            <li><a href="">Informazioni</a></li>
+            <li><a href="">Accessibilità</a></li>
+            <li><a href="">Lingua</a></li>
+          </ul>
         </div>
       </div>
       <div class="modal-overlay" *ngIf="isProfileModalOpen">
@@ -78,7 +83,8 @@
         </button>
         <div class="globe-container">
           <img src="../../../assets/pics/globe.png" alt="globe" class="globe-img">
-        </div>
+        </div><br>
+        <br>
         <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
       </div>
 
@@ -110,11 +116,12 @@
       <button (click)="createCommunity()" class="btn btn-success">
         Crea
       </button>
-      <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
+      <br>
+      <br>
+      <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
+      <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
     </div>
   </div>
 </div>
-
-
 </body>
 

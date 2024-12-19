@@ -30,7 +30,7 @@ export class RegisterComponent {
         if (error.error && typeof error.error === 'string') {
           this.errorMessage = error.error;
         } else {
-          this.errorMessage = 'Error Code: ' + error.status + '\nMessage: ' + error.message;
+          this.errorMessage =  error.message;
         }
       },
     });

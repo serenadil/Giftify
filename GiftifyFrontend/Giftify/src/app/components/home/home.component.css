@@ -72,7 +72,12 @@ body {
   align-items: center;
 
 }
-
+.card-user-communities p {
+  font-size: 1.1rem;
+}
+.card input[type="date"]::placeholder {
+  content: "Inserisci la scadenza"; /* Nome specifico */
+}
 .globe-container {
   margin-top: 3rem;
   text-align: center;
@@ -139,6 +144,7 @@ body {
 
 
 .modal-window {
+  line-height: 1.8;
   font-family: 'Afacad Flux', serif;
   color: #696969;
   background: #f8fcee;
@@ -146,7 +152,7 @@ body {
   border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   width: 19rem;
-  height: 13rem;
+  height: 15rem;
   text-align: center;
   position: relative;
 }
@@ -160,7 +166,13 @@ body {
   border-radius: 15px;
   cursor: pointer;
 }
+.modal-window h3 {
+  margin-bottom: 1rem;
+}
 
+.modal-window p {
+  margin: 0.5rem 0;
+}
 .logout-btn {
   background: #dc3545;
   color: white;
@@ -277,10 +289,14 @@ ul {
   height: 2.5rem;
 }
 
+
+
+
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
+    gap: 1.5rem;
   }
 
   .main-content {
@@ -303,8 +319,25 @@ ul {
     height: 3.5rem;
   }
 
-  .profile-info img {
-    height: 1.8rem;
+  .profile-img{
+    height: 1rem;
   }
 
+  .Impostazioni{
+    height: 1rem;
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .main-content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-around;
+  }
+
+  .logo-img {
+    height: 8rem;
+  }
 }
