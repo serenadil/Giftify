@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {WishService} from '../../services/wish.service';
 import {Wish} from '../../../model/Wish';
-import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-wishlist',

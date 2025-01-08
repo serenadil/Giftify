@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {CommunityService} from '../../services/community.service';
 import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
@@ -14,24 +15,26 @@ export class CommunityComponent {
   communityInfo: any = null;
   name: string = '';
   description: string = '';
-  budget: any = null;
+  budget: number = 0;
   deadline: any = null;
   userWishList: any = null;
   participants: any[] = [];
-  communityId: number = 0;
-  drawnNameWishList: any[] = [];
+  drawnNameWishList: any = null;
   myWishList: any = null;
-
+  isProfileModalOpen = false;
+  isSettingsModalOpen = false;
   errorMessage: string = '';
-
-  isDropdownOpen = false;
+  communityId: number;
+  isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
   communities: any[] = [];
 
-  constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService) {
+  constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
+    this.communityId = +this.route.snapshot.paramMap.get('id');
     this.loadAccountInfo();
     this.loadCommunity();
   }
@@ -49,6 +52,10 @@ export class CommunityComponent {
       error: (err) =>
         console.error('Errore nel caricamento della community:', err),
     });
+  }
+
+  loadMyWishList() {
+
   }
 
   viewDrawnName(): void {
@@ -76,15 +83,7 @@ export class CommunityComponent {
     })
   }
 
-  loadCommunities() {
-    this.homeService.getUserCommunities().subscribe({
-      next: (data) => (this.communities = data),
-      error: (err) =>
-        console.error('Errore nel caricamento delle community:', err),
-    });
-  }
-
-  loadParticipants(){
+  loadParticipants() {
     this.communityService.getParticipants(this.communityId).subscribe({
       next: (data) => (this.participants = data),
       error: (err) =>
@@ -92,16 +91,48 @@ export class CommunityComponent {
     })
   }
 
-
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
+  loadUserList(): void {
+    const selectedUser = this.participants.find(participant => participant.isSelected);
+    if (selectedUser) {
+      this.communityService.viewParticipantList(this.communityId, selectedUser.id).subscribe(
+        (wishList) => {
+          this.userWishList = wishList;
+        },
+        (error) => {
+          console.error('Errore nel caricare la wishlist', error);
+        }
+      );
+    }
   }
 
-  logout() {
-    this.authService.logout();
+  onParticipantClick(participantId: number): void {
+    this.participants.forEach(participant => participant.isSelected = (participant.id === participantId));
+    this.loadUserList();
   }
 
 
+openProfileModal()
+{
+  this.isProfileModalOpen = true;
+}
 
+closeProfileModal()
+{
+  this.isProfileModalOpen = false;
+}
+
+openSettingsModal()
+{
+  this.isSettingsModalOpen = true;
+}
+
+closeSettingsModal()
+{
+  this.isSettingsModalOpen = false;
+}
+logout()
+{
+  this.authService.logout();
+}
 
 }

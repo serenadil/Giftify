@@ -29,9 +29,9 @@ public class WishListService {
         return wishListRepository.findByUser(user);
     }
 
-    public void removeWishFromWishList(WishList wishList, Wish wish) {
-        wishList.removeWish(wish);
-        wishListRepository.save(wishList);
+    public void removeWishFromWishList(Wish wish) {
+        wish.getWishList().removeWish(wish);
+        wishListRepository.save(wish.getWishList());
     }
 
     public void updateWishList(WishList wishList) {

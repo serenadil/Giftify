@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.wishlist-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #00664e;
+  color: #f8fcee;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.logo-gift-container {
+  display: flex;
+  align-items: center;
+  gap: 0rem;
+}
+
+.logo-img {
+  height: 7rem;
+
+}
+
+.gift-img {
+  height: 5rem;
+}
+
+.main-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+ul {
+  list-style: none; /* Rimuove i puntini */
+  padding: 0;
+}
+
+
+.card {
+  justify-content: center;
+  font-family: 'Afacad Flux', serif;
+  background-color: #f8fcee;
+  color: #00664e;
+  border-radius: 25px;
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  padding-left: 2.4rem;
+  padding-right: 2.2rem;
+  padding-top: 1.7rem;
+  padding-bottom: 2rem;
+  flex: 1 1 calc(33.33% - 2rem);
+  max-width: 400px;
+  min-width: 350px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  gap: 1rem;
+}
+
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .main-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .rocket-img {
+    max-height: 9rem;
+    width: auto;
+    height: auto;
+  }
+
+  .card {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .logo-gift-container img {
+    height: 3.5rem;
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .main-content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-around;
+  }
+
+  .logo-img {
+    height: 8rem;
+  }
+}
+

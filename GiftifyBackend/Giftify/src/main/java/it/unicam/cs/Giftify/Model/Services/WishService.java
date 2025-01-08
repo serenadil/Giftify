@@ -27,8 +27,7 @@ public class WishService {
 
 
     public void deleteWish(Wish wish) {
-        wish.getWishList().removeWish(wish);
-
+        wishListService.removeWishFromWishList(wish);
     }
 
     public void updateWish(Wish wish) {

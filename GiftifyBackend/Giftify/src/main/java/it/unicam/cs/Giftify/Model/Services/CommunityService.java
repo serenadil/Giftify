@@ -92,7 +92,6 @@ public class CommunityService {
         }
     }
 
-
     public Community getCommunityById(long id) {
         return communityRepository.findById(id).orElse(null);
     }
@@ -163,11 +162,5 @@ public class CommunityService {
         community.setClose(true);
         communityRepository.save(community);
     }
-
-
-
-
-
-
 
 }

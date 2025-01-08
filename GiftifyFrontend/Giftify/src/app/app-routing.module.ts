@@ -8,11 +8,12 @@ import {AuthGuard} from './authUtil/authGuard';
 
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'community/:id', component: CommunityComponent }
+  // {path: 'login', component: LoginComponent},
+  // {path: 'register', component: RegisterComponent},
+  // {path: '', redirectTo: '/login', pathMatch: 'full'},
+  // {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  // { path: 'community/:id', component: CommunityComponent },
+  {path: 'community', component: CommunityComponent},
 ];
 
 @NgModule({

@@ -44,13 +44,17 @@ export class CommunityService {
     return this.http.get<any[]>(`${this.apiUrl}/drawnNameList/${communityId}`);
   }
 
+  viewParticipantList(communityId: number, userId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/participantList/${communityId}/${userId}`);
+  }
+
   getWishlists(communityId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/wishlists/${communityId}`);
   }
 
-  getUserCommunityByName(name: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/communityInfo/${name}`);
-  }
+  // getUserCommunityByName(name: string): Observable<any> {
+  //   return this.http.get<any>(`${this.apiUrl}/communityInfo/${name}`);
+  // }
 
   saveIds(community: Community): void {
     sessionStorage.clear();

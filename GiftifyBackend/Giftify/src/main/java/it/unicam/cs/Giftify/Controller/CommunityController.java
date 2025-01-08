@@ -228,6 +228,37 @@ public class CommunityController {
         }
     }
 
+    @GetMapping("/community/participantList/{communityId}/{userId}")
+    public ResponseEntity<?> viewParticipantList(@PathVariable long communityId, @PathVariable long userId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
+
+            Community community = communityService.getCommunityById(communityId);
+            if (community == null || account.getRoleForCommunity(community) == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            Optional<Account> participant = community.getUserList().stream()
+                    .filter(user -> user.getId() == userId)
+                    .findFirst();
+
+            if (participant.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Partecipante non trovato nella community.");
+            }
+
+            WishList wishList = community.getuserWishList(participant.get());
+            if (wishList == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wishlist non trovata per il partecipante.");
+            }
+
+            return ResponseEntity.ok(wishList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore: " + e.getMessage());
+        }
+    }
+
 
     @GetMapping("/community/wishlists/{id}")
     public ResponseEntity<?> getWishlists(@PathVariable long id) {
@@ -248,6 +279,11 @@ public class CommunityController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
     }
+
+//    @GetMapping ("/community/wishlist/{id}")
+//    public ResponseEntity<?> getWishlist(@PathVariable long id) {
+//
+//    }
 
 //    @GetMapping("/community/infoCommunity/{name}")
 //    public ResponseEntity<?> getUserCommunityByName(@PathVariable String name) {

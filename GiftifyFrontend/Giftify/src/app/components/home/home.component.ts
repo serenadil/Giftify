@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../../services/home.service';
 import { AuthService } from '../../services/auth.service';
 import {FormsModule} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   standalone: false,
@@ -32,7 +33,7 @@ export class HomeComponent implements OnInit {
 
 
 
-  constructor(private homeService: HomeService, private authService: AuthService) {}
+  constructor(private homeService: HomeService, private authService: AuthService, private router : Router) {}
 
   ngOnInit(): void {
     this.loadAccountInfo();
