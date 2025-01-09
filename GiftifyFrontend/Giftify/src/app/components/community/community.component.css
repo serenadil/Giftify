@@ -76,33 +76,6 @@ body {
   justify-content: center;
 }
 
-.rocket-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-
-.globe-container {
-  margin-top: 3rem;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.rocket-img {
-  max-height: 13rem;
-  width: auto;
-  height: auto;
-}
-
-.globe-img {
-  max-height: 8rem;
-  width: auto;
-  height: auto;
-}
-
 .profile-settings-container {
   display: flex;
   align-items: center;

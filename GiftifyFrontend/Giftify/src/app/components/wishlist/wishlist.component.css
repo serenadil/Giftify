@@ -92,16 +92,28 @@ ul {
     gap: 1.5rem;
   }
 
-  .rocket-img {
-    max-height: 9rem;
-    width: auto;
-    height: auto;
-  }
 
   .card {
     flex: 1 1 100%;
     min-width: 100%;
   }
+
+  .card button {
+    font-size: 1.2rem;
+    width: 100%;
+    background: #00b88d;
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .card button:hover {
+    background: #008a69;
+  }
+
 
   .logo-gift-container img {
     height: 3.5rem;

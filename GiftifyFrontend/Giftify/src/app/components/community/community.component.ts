@@ -24,7 +24,7 @@ export class CommunityComponent {
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
   errorMessage: string = '';
-  communityId: number;
+  communityId: number = 0;
   isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
   communities: any[] = [];
@@ -34,7 +34,7 @@ export class CommunityComponent {
   }
 
   ngOnInit() {
-    this.communityId = +this.route.snapshot.paramMap.get('id');
+    // this.communityId = +this.route.snapshot.paramMap.get('id');
     this.loadAccountInfo();
     this.loadCommunity();
   }
