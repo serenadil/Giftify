@@ -6,13 +6,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
+/**
+ * Configurazione per il servizio di dettaglio dell'utente.
+ * Fornisce un bean `UserDetailsService` che carica un account utilizzando il servizio `AccountService`.
+ */
 @Configuration
 public class UserDetailServiceImpl {
 
     @Autowired
     private AccountService accountServices;
 
+    /**
+     * Configura il bean `UserDetailsService` per caricare i dettagli dell'utente
+     * in base all'email.
+     *
+     * @return un'implementazione di `UserDetailsService`.
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> accountServices.getAccount(email)

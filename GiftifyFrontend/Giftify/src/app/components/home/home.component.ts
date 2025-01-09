@@ -133,7 +133,7 @@ export class HomeComponent implements OnInit {
   showSuccessPopup() {
     this.isSuccessPopupVisible = true;
     setTimeout(() => {
-      this.isSuccessPopupVisible = false; // Nasconde automaticamente il popup dopo 3 secondi
+      this.isSuccessPopupVisible = false;
     }, 3000);
   }
 }

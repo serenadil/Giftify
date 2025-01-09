@@ -14,12 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping
 public class AccountController {
+
     @Autowired
     private AccountService accountService;
+
     @Autowired
     private CommunityService communityService;
 
-
+    /**
+     * Ottiene le informazioni dell'account dell'utente attualmente autenticato.
+     *
+     * @return Una risposta contenente le informazioni dell'account o un messaggio di errore.
+     */
     @GetMapping("/accountInfo")
     public ResponseEntity<?> getAccountInfo() {
         try {
@@ -33,14 +39,17 @@ public class AccountController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
         }
-
     }
 
+    /**
+     * Ottiene la lista delle community a cui l'utente autenticato appartiene.
+     *
+     * @return Una risposta contenente la lista delle community o un messaggio di errore.
+     */
     @GetMapping("/getCommunities")
     public ResponseEntity<?> getAllCommunities() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
             Account account = (Account) authentication.getPrincipal();
             account = accountService.getAccountById(account.getId());
             if (account == null) {
@@ -52,6 +61,12 @@ public class AccountController {
         }
     }
 
+    /**
+     * Consente all'utente autenticato di unirsi a una community utilizzando un codice di accesso.
+     *
+     * @param communityAccessCode Il codice di accesso della community.
+     * @return Una risposta che indica se l'utente è riuscito a unirsi alla community.
+     */
     @PostMapping("/join/{communityAccessCode}")
     public ResponseEntity<String> joinCommunity(@PathVariable String communityAccessCode) {
         try {

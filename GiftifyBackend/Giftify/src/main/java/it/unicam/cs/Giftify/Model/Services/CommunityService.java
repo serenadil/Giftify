@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Servizio per gestire le operazioni relative alle community, come la creazione, eliminazione, gestione degli utenti e altre funzionalità.
+ */
 @Service
 public class CommunityService {
 
@@ -36,6 +39,15 @@ public class CommunityService {
     @Autowired
     private GiftAssigmentRepository giftAssigmentRepository;
 
+    /**
+     * Crea una nuova community, assegnando un amministratore, un budget, una scadenza e una lista dei desideri.
+     *
+     * @param admin l'amministratore della community
+     * @param name il nome della community
+     * @param note una descrizione della community
+     * @param budget il budget della community
+     * @param deadline la data di scadenza della community
+     */
     @Transactional
     public void createCommunity(Account admin, String name, String note, double budget, LocalDate deadline) {
         Community community = new Community(codeGeneretor, admin, name, note, budget, deadline);
@@ -49,7 +61,11 @@ public class CommunityService {
         accountServices.saveAccount(admin);
     }
 
-
+    /**
+     * Elimina una community e rimuove tutti gli utenti associati.
+     *
+     * @param community la community da eliminare
+     */
     @Transactional
     public void deleteGroup(@NonNull Community community) {
         for (Account account : community.getUserList()) {
@@ -68,7 +84,9 @@ public class CommunityService {
         communityRepository.delete(community);
     }
 
-
+    /**
+     * Controlla se le community attive hanno superato la data di scadenza e le segna come inattive.
+     */
     @Scheduled(cron = "0 0 0 * * ?")
     public void checkDeadline() {
         List<Community> activeGroups = communityRepository.findByActive(true);
@@ -78,9 +96,11 @@ public class CommunityService {
                 communityRepository.save(community);
             }
         }
-
     }
 
+    /**
+     * Elimina le community inattive che sono scadute da più di 30 giorni.
+     */
     @Scheduled(cron = "0 0 0 * * ?")
     public void deleteExpiredGroups() {
         List<Community> inactiveGroups = communityRepository.findByActive(false);
@@ -92,26 +112,56 @@ public class CommunityService {
         }
     }
 
+
+    /**
+     * Recupera una community in base al suo ID.
+     *
+     * @param id l'ID della community
+     * @return la community trovata, oppure null se non esiste
+     */
+
     public Community getCommunityById(long id) {
         return communityRepository.findById(id).orElse(null);
     }
 
+    /**
+     * Recupera tutte le community esistenti.
+     *
+     * @return una lista di tutte le community
+     */
     public List<Community> getAllCommunities() {
         return communityRepository.findAll();
     }
 
-
+    /**
+     * Recupera una community in base al suo codice di accesso.
+     *
+     * @param accessCode il codice di accesso della community
+     * @return la community trovata, oppure null se non esiste
+     */
     public Community getCommunityByAccessCode(@NonNull String accessCode) {
         return communityRepository.findByAccessCode(accessCode).orElse(null);
     }
 
+    /**
+     * Aggiorna una community esistente.
+     *
+     * @param community la community da aggiornare
+     */
     public void updateCommunity(Community community) {
         communityRepository.save(community);
     }
 
+    /**
+     * Aggiunge un utente a una community. L'utente riceverà un ruolo di "MEMBER".
+     *
+     * @param user l'utente da aggiungere
+     * @param community la community a cui aggiungere l'utente
+     * @throws IllegalArgumentException se la community è chiusa o l'utente è già membro
+     */
     public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
         if (community.isClose()) {
-            throw new IllegalArgumentException("Impossibile unirsi il gruppo è chiuso!");
+            throw new IllegalArgumentException("Impossibile unirsi, il gruppo è chiuso!");
         }
         if (!community.getUserList().contains(user)) {
             community.addUser(user, wishListService.createWishList(user));
@@ -124,6 +174,13 @@ public class CommunityService {
         } else throw new IllegalArgumentException("Sei già iscritto a questo gruppo!");
     }
 
+    /**
+     * Rimuove un utente da una community.
+     *
+     * @param user l'utente da rimuovere
+     * @param community la community da cui rimuovere l'utente
+     * @throws IllegalArgumentException se la community è chiusa o l'utente non è presente nella community
+     */
     public void removeUserFromCommunity(@NonNull Account user, @NonNull Community community) {
         if (community.isClose()) {
             throw new IllegalArgumentException("Impossibile rimuovere un utente se la community è chiusa");
@@ -144,6 +201,12 @@ public class CommunityService {
         } else throw new IllegalArgumentException("Impossibile rimuovere, utente non presente.");
     }
 
+    /**
+     * Esegue un'estrazione dei nomi tra i partecipanti alla community per assegnare i regali.
+     *
+     * @param community la community su cui eseguire l'estrazione
+     * @throws IllegalArgumentException se il numero di partecipanti non è pari
+     */
     public void drawNames(@NonNull Community community) {
         if (community.getUserList().size() % 2 != 0) {
             throw new IllegalArgumentException("Il numero di partecipanti deve essere pari per effettuare l'estrazione.");

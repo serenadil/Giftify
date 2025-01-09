@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,11 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
+/**
+ * Configurazione di sicurezza per l'applicazione.
+ * Configura autenticazione, autorizzazione, gestione delle sessioni e politiche CORS.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -41,6 +41,11 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * Configura le impostazioni CORS per l'applicazione.
+     *
+     * @return configurazione della sorgente CORS.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -52,7 +57,13 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+    /**
+     * Configura il gestore di autenticazione.
+     *
+     * @param configuration la configurazione di autenticazione di Spring Security.
+     * @return l'oggetto `AuthenticationManager`.
+     * @throws Exception se si verifica un errore.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -73,9 +84,10 @@ public class SecurityConfig {
             }
         };
     }
+
     /**
      * Configura la catena di sicurezza per l'applicazione.
-     *
+     * <p>
      * Questo metodo definisce diverse configurazioni di sicurezza:
      * - Disabilita la protezione CSRF, poiché viene utilizzato un sistema di autenticazione basato su token.
      * - Consente l'accesso non autenticato a endpoint pubblici come "/auth/login" e "/auth/register".

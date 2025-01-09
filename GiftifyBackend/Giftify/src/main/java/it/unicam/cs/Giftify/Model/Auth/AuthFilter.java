@@ -15,7 +15,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+/**
+ * Filtro personalizzato per l'autenticazione JWT.
+ * Intercetta le richieste e autentica l'utente in base al token JWT presente nell'intestazione.
+ */
 @Component
 public class AuthFilter extends OncePerRequestFilter {
 
@@ -24,7 +27,16 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
+    /**
+     * Esegue il filtro per autenticare l'utente utilizzando il token JWT.
+     * Salta la logica di autenticazione per endpoint specifici come `/register` e `/login`.
+     *
+     * @param request     la richiesta HTTP.
+     * @param response    la risposta HTTP.
+     * @param filterChain la catena di filtri di Spring Security.
+     * @throws ServletException in caso di errore del servlet.
+     * @throws IOException      in caso di errore di input/output.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -66,7 +78,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // Imposta l'autenticazione nel contesto di sicurezza
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

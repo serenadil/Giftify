@@ -9,12 +9,12 @@ import {WishlistComponent} from './components/wishlist/wishlist.component';
 
 
 const routes: Routes = [
-  // {path: 'login', component: LoginComponent},
-  // {path: 'register', component: RegisterComponent},
-  // {path: '', redirectTo: '/login', pathMatch: 'full'},
-  // {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  // { path: 'community/:id', component: CommunityComponent },
-  // {path: 'community', component: CommunityComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'community/:id', component: CommunityComponent },
+  {path: 'community', component: CommunityComponent},
   {path: 'wishlist', component: WishlistComponent},
 ];
 

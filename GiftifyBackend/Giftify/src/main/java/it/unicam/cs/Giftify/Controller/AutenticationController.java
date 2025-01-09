@@ -16,23 +16,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.security.auth.login.AccountNotFoundException;
 
 @RestController
 public class AutenticationController {
+
     @Autowired
     private AuthService authService;
-
 
     @Autowired
     private LogoutHandlerImpl logoutHandler;
 
-
-
     @Autowired
     private AccountRepository accountRepository;
 
-
+    /**
+     * Registra un nuovo utente con i dati ricevuti nella richiesta.
+     *
+     * @param request Oggetto contenente i dati di registrazione dell'utente.
+     * @return Una risposta contenente il risultato della registrazione.
+     */
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
@@ -50,7 +52,12 @@ public class AutenticationController {
         }
     }
 
-
+    /**
+     * Esegue il login dell'utente con le credenziali fornite.
+     *
+     * @param request Oggetto contenente le credenziali di login dell'utente.
+     * @return Una risposta contenente il risultato del login.
+     */
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
@@ -64,16 +71,25 @@ public class AutenticationController {
         }
     }
 
-
+    /**
+     * Esegue il refresh del token di accesso dell'utente.
+     *
+     * @param request La richiesta HTTP contenente il refresh token.
+     * @param response La risposta HTTP in cui restituire il nuovo token.
+     * @return Una risposta contenente il nuovo token di accesso.
+     */
     @PostMapping("/auth/refresh_token")
-    public ResponseEntity refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response) {
         return authService.refreshToken(request, response);
     }
 
-
+    /**
+     * Esegue il logout dell'utente autenticato.
+     *
+     * @param request La richiesta HTTP.
+     * @param response La risposta HTTP.
+     * @return Una risposta che conferma il logout dell'utente.
+     */
     @PostMapping("/auth/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -84,7 +100,4 @@ public class AutenticationController {
                     .body("Errore durante il logout: " + e.getMessage());
         }
     }
-
 }
-
-
