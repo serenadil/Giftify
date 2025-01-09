@@ -1,5 +1,6 @@
 import { Wish } from "./Wish";
 import {Account} from "./Account";
+import {Community} from './Community';
 
 export class WishList {
   id: number;

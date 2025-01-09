@@ -21,8 +21,8 @@ export class HomeService {
   }
 
 
-  joinCommunity(accessCode: string): Observable<string> {
-    return this.http.post(`${this.apiUrl}/join/${accessCode}`, null, { responseType: 'text' });
+  joinCommunity(accessCode: string, userCommunityName:string): Observable<string> {
+    return this.http.post(`${this.apiUrl}/join/${accessCode}/${userCommunityName}`, null, { responseType: 'text' });
   }
 
   createCommunity(communityData: any): Observable<string> {

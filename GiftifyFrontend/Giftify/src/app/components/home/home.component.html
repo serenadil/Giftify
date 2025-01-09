@@ -78,6 +78,12 @@
           [(ngModel)]="joinCode"
           placeholder="Inserisci il codice della community"
         />
+        <input
+          type="text"
+          [(ngModel)]="userCommunityName"
+          placeholder="Inserisci il tuo nome nella community"
+        />
+
         <button (click)="joinCommunity()" class="btn btn-primary">
           Unisciti
         </button>
@@ -112,6 +118,11 @@
         type="date"
         [(ngModel)]="newCommunity.deadline"
         placeholder="Deadline"
+      />
+      <input
+        type="text"
+        [(ngModel)]="newCommunity.userCommunityName"
+        placeholder="Nome nella community"
       />
       <button (click)="createCommunity()" class="btn btn-success">
         Crea
