@@ -15,9 +15,10 @@ export class HomeComponent implements OnInit {
   accountInfo: any = null;
   communities: any[] = [];
   joinCode = '';
+  userCommunityName = '';
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
-  joinErrorMessage = ''; // Per la card "Unisciti"
+  joinErrorMessage = '';
   createErrorMessage = '';
   createSuccessMessage = '';
   isSuccessPopupVisible: boolean = false;
@@ -29,8 +30,9 @@ export class HomeComponent implements OnInit {
     communityNote: '',
     budget: null,
     deadline: null,
-  };
+    userCommunityName: ''
 
+  };
 
 
   constructor(private homeService: HomeService, private authService: AuthService, private router : Router) {}
@@ -67,7 +69,7 @@ export class HomeComponent implements OnInit {
       this.joinErrorMessage = 'Inserisci un codice valido';
       return;
     }
-    this.homeService.joinCommunity(this.joinCode).subscribe({
+    this.homeService.joinCommunity(this.joinCode, this.userCommunityName).subscribe({
       next: (message) => {
         alert(message);
         this.joinErrorMessage = '';
@@ -94,6 +96,7 @@ export class HomeComponent implements OnInit {
           communityNote: '',
           budget: null,
           deadline: null,
+          userCommunityName: ''
         };
         this.createErrorMessage = '';
 
@@ -125,15 +128,9 @@ export class HomeComponent implements OnInit {
   }
 
 
-
   logout() {
     this.authService.logout();
   }
 
-  showSuccessPopup() {
-    this.isSuccessPopupVisible = true;
-    setTimeout(() => {
-      this.isSuccessPopupVisible = false;
-    }, 3000);
-  }
+
 }

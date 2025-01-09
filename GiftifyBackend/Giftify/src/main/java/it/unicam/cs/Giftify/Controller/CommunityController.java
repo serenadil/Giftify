@@ -5,6 +5,7 @@ import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Role;
 import it.unicam.cs.Giftify.Model.Entity.WishList;
+import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Services.AccountService;
 import it.unicam.cs.Giftify.Model.Services.CommunityService;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityCreateDTO;
@@ -30,6 +31,9 @@ public class CommunityController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private CommunityRepository communityRepository;
+
 
     @PostMapping("/community/createCommunity")
     public ResponseEntity<String> createCommunity(@RequestBody CommunityCreateDTO communityDto) {
@@ -41,10 +45,17 @@ public class CommunityController {
             communityService.createCommunity(
                     admin,
                     communityDto.getCommunityName(),
-                    communityDto.getNote(),
+                    communityDto.getCommunityNote(),
                     communityDto.getBudget(),
-                    communityDto.getDeadline()
+                    communityDto.getDeadline(),
+                    communityDto.getUserCommunityName()
             );
+            System.out.println(communityRepository.findByActive(true).get(0).getCommunityName());
+            System.out.println(communityRepository.findByActive(true).get(0).getCommunityNote());
+            System.out.println(communityRepository.findByActive(true).get(0).getBudget());
+            System.out.println(communityRepository.findByActive(true).get(0).getDeadline());
+            System.out.println(communityRepository.findByActive(true).get(0).getCommunityNames().size());
+
             return ResponseEntity.ok("Community creata con successo.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -283,33 +294,6 @@ public class CommunityController {
         }
     }
 
-//    @GetMapping ("/community/wishlist/{id}")
-//    public ResponseEntity<?> getWishlist(@PathVariable long id) {
-//
-//    }
-
-//    @GetMapping("/community/infoCommunity/{name}")
-//    public ResponseEntity<?> getUserCommunityByName(@PathVariable String name) {
-//        try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Account account = (Account) authentication.getPrincipal();
-//            account = accountService.getAccountById(account.getId());
-//            Optional<Community> optionalCommunity = account.getUserCommunities().stream()
-//                    .filter(community -> community.getCommunityName().equalsIgnoreCase(name))
-//                    .findFirst();
-//            if (optionalCommunity.isEmpty()) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata per il nome specificato.");
-//            }
-//            Community community = optionalCommunity.get();
-//
-//            if (account.getRoleForCommunity(community) == null) {
-//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-//            }
-//            return ResponseEntity.ok(community);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
-//        }
-//    }
 
 
 

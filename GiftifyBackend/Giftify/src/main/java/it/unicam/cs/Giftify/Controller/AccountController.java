@@ -67,8 +67,8 @@ public class AccountController {
      * @param communityAccessCode Il codice di accesso della community.
      * @return Una risposta che indica se l'utente è riuscito a unirsi alla community.
      */
-    @PostMapping("/join/{communityAccessCode}")
-    public ResponseEntity<String> joinCommunity(@PathVariable String communityAccessCode) {
+    @PostMapping("/join/{communityAccessCode}/{userCommunityname}")
+    public ResponseEntity<String> joinCommunity(@PathVariable String communityAccessCode, @PathVariable String userCommunityname) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
@@ -77,7 +77,7 @@ public class AccountController {
             if (community == null || account == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            communityService.addUserToCommunity(account, community);
+            communityService.addUserToCommunity(account, community, userCommunityname);
             return ResponseEntity.ok("Unione alla community effettuata con successo");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

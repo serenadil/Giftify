@@ -63,6 +63,7 @@ public class Community {
      * Nota descrittiva della comunità.
      */
     @Setter
+
     private String communityNote;
 
     /**
@@ -105,6 +106,12 @@ public class Community {
     @JsonIgnore
     private Set<WishList> wishlists;
 
+    @Getter
+    @OneToMany
+    @JsonManagedReference
+    private Set<AccountCommunityName> communityNames;
+
+
     /**
      * Costruttore per creare una nuova comunità.
      *
@@ -127,6 +134,7 @@ public class Community {
         this.budget = budget;
         this.giftAssignments = new HashSet<>();
         this.wishlists = new HashSet<>();
+        this.communityNames = new HashSet<>();
         if (!this.verifyDeadline(deadline)) {
             this.deadline = deadline;
         } else {
@@ -136,16 +144,6 @@ public class Community {
         this.close = false;
     }
 
-    /**
-     * Aggiunge un utente e la sua wishlist alla comunità.
-     *
-     * @param user     Utente da aggiungere.
-     * @param wishList Wishlist dell'utente.
-     */
-    public void addUser(@NonNull Account user, WishList wishList) {
-        userList.add(user);
-        wishlists.add(wishList);
-    }
 
     /**
      * Rimuove un utente e la sua wishlist dalla comunità.
@@ -199,4 +197,49 @@ public class Community {
         }
         return wishListUser;
     }
+
+    /**
+     * Ottiene il nome utente nella comunità dato un account.
+     *
+     * @param account Account dell'utente.
+     * @return Nome dell'utente nella comunità o null se non trovato.
+     */
+    public String getCommunityNameByAccount(@NonNull Account account) {
+        for (AccountCommunityName acn : communityNames) {
+            if (acn.getAccount().equals(account)) {
+                return acn.getUserCommunityName();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Ottiene l'account associato a un nome utente nella comunità.
+     *
+     * @param communityName Nome utente nella comunità.
+     * @return Account associato o null se non trovato.
+     */
+    public Account getAccountByCommunityName(@NonNull String communityName) {
+        for (AccountCommunityName acn : communityNames) {
+            if (acn.getUserCommunityName().equals(communityName)) {
+                return acn.getAccount();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Aggiunge un utente con un nome univoco alla comunità.
+     *
+     * @param user          Utente da aggiungere.
+     * @param wishList      Wishlist dell'utente.
+     * @param communityName Nome utente nella comunità.
+     * @throws IllegalArgumentException se il nome utente nella comunità è già in uso.
+     */
+    public void addUser(@NonNull Account user, WishList wishList, @NonNull AccountCommunityName communityName) {
+        userList.add(user);
+        communityNames.add(communityName);
+        wishlists.add(wishList);
+    }
+
 }

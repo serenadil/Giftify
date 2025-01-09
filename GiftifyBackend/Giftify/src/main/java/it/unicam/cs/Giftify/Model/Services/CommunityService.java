@@ -2,6 +2,7 @@ package it.unicam.cs.Giftify.Model.Services;
 
 import it.unicam.cs.Giftify.Model.Entity.*;
 import it.unicam.cs.Giftify.Model.Repository.AccountCommunityRoleRepository;
+import it.unicam.cs.Giftify.Model.Repository.AccountCommunitynameRepository;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Repository.GiftAssigmentRepository;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
@@ -39,20 +40,31 @@ public class CommunityService {
     @Autowired
     private GiftAssigmentRepository giftAssigmentRepository;
 
+    @Autowired
+    private AccountCommunitynameRepository accountCommunitynameRepository;
+
     /**
      * Crea una nuova community, assegnando un amministratore, un budget, una scadenza e una lista dei desideri.
      *
-     * @param admin l'amministratore della community
-     * @param name il nome della community
-     * @param note una descrizione della community
-     * @param budget il budget della community
-     * @param deadline la data di scadenza della community
+     * @param admin         l'amministratore della community
+     * @param name          il nome della community
+     * @param note          una descrizione della community
+     * @param budget        il budget della community
+     * @param deadline      la data di scadenza della community
+     * @param communityName il nome dell'utente all'interno della community
      */
     @Transactional
-    public void createCommunity(Account admin, String name, String note, double budget, LocalDate deadline) {
+    public void createCommunity(@NonNull Account admin, @NonNull String name, @NonNull String note, double budget, @NonNull LocalDate deadline, @NonNull String communityName) {
         Community community = new Community(codeGeneretor, admin, name, note, budget, deadline);
         WishList wishList = wishListService.createWishList(admin);
-        community.addUser(admin, wishList);
+        communityRepository.save(community);
+        if (community.getAccountByCommunityName(communityName) != null) {
+            communityRepository.delete(community);
+            throw new IllegalArgumentException("Il nome utente nella comunità è già in uso: " + communityName);
+        }
+        AccountCommunityName acn = new AccountCommunityName(community, communityName, admin);
+        accountCommunitynameRepository.save(acn);
+        community.addUser(admin, wishList, acn);
         communityRepository.save(community);
         AccountCommunityRole accountCommunityRole = new AccountCommunityRole(admin, community, Role.ADMIN);
         accountCommunityRoleRepository.save(accountCommunityRole);
@@ -155,16 +167,21 @@ public class CommunityService {
     /**
      * Aggiunge un utente a una community. L'utente riceverà un ruolo di "MEMBER".
      *
-     * @param user l'utente da aggiungere
+     * @param user      l'utente da aggiungere
      * @param community la community a cui aggiungere l'utente
      * @throws IllegalArgumentException se la community è chiusa o l'utente è già membro
      */
-    public void addUserToCommunity(@NonNull Account user, @NonNull Community community) {
+    public void addUserToCommunity(@NonNull Account user, @NonNull Community community, @NonNull String userName) {
         if (community.isClose()) {
             throw new IllegalArgumentException("Impossibile unirsi, il gruppo è chiuso!");
         }
+        if (community.getAccountByCommunityName(userName) != null) {
+
+            throw new IllegalArgumentException("Il nome utente nella comunità è già in uso: " + userName);
+        }
         if (!community.getUserList().contains(user)) {
-            community.addUser(user, wishListService.createWishList(user));
+            AccountCommunityName acn = new AccountCommunityName(community, userName, user);
+            community.addUser(user, wishListService.createWishList(user), acn);
             communityRepository.save(community);
             user.addCommunity(community);
             AccountCommunityRole accountCommunityRole = new AccountCommunityRole(user, community, Role.MEMBER);
@@ -177,7 +194,7 @@ public class CommunityService {
     /**
      * Rimuove un utente da una community.
      *
-     * @param user l'utente da rimuovere
+     * @param user      l'utente da rimuovere
      * @param community la community da cui rimuovere l'utente
      * @throws IllegalArgumentException se la community è chiusa o l'utente non è presente nella community
      */

@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CommunityCreateDTO {
     private String communityName;
-    private String note;
+    private String communityNote;
     private double budget;
     private LocalDate deadline;
+    private String userCommunityName;
 }
