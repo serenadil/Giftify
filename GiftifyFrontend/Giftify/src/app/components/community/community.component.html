@@ -52,10 +52,12 @@
 
   <div class="main-content">
     <div class="card card-my-community">
-      <h3>{{ communityInfo?.name }}</h3>
+      <h3>{{ communityInfo?.communityName }}</h3>
       <ul class="community-info">
+        <li>Codice d'accesso</li>
+        <li>{{communityInfo.accessCode}}</li>
         <li>Descrizione</li>
-        <li>{{ communityInfo?.description }}</li>
+        <li>{{ communityInfo?.communityNote }}</li>
         <li>Budget</li>
         <li>{{ communityInfo?.budget }}</li>
         <li>Deadline</li>
@@ -72,6 +74,15 @@
       </ul>
     </div>
 
+    <div class="card card-close-community">
+      <ul>
+        <li>Chiudi community</li>
+        <li>
+          <button (click)="closeCommunity()">Chiudi</button>
+        </li>
+      </ul>
+    </div>
+
     <div class="card card-my-wishlist">
       <ul>
         <li>La mia lista</li>
@@ -82,13 +93,13 @@
       </ul>
     </div>
 
-    <div class="card card-participants">
-      <ul>
-        <li>Partecipanti</li>
-        <li>
-          <button (click)="loadParticipants()">Partecipanti</button>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+<!--    <div class="card card-participants">-->
+<!--      <ul>-->
+<!--        <li>Partecipanti</li>-->
+<!--        <li>-->
+<!--          <button (click)="loadParticipants()">Partecipanti</button>-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
