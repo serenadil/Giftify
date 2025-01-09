@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface CommunityRepository extends JpaRepository<Community, Long> {
@@ -14,7 +15,7 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     List<Community> findByActive(boolean active);
 
     @NonNull
-    Optional<Community> findById(@NonNull Long id);
+    Optional<Community> findById(@NonNull UUID id);
 
     Optional<Community> findByAccessCode(String accessCode);
 }

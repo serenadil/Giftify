@@ -12,43 +12,43 @@ export class CommunityService {
 
   constructor(private http: HttpClient) {}
 
-  removeUserFromCommunity(communityId: number, userId: number): Observable<string> {
+  removeUserFromCommunity(communityId: string, userId: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${userId}`, { responseType: 'text' });
   }
 
-  closeCommunity(communityId: number): Observable<string> {
+  closeCommunity(communityId: string): Observable<string> {
     return this.http.delete(`${this.apiUrl}/closeCommunity/${communityId}`, { responseType: 'text' });
   }
 
-  deleteCommunity(communityId: number): Observable<string> {
+  deleteCommunity(communityId: string): Observable<string> {
     return this.http.delete(`${this.apiUrl}/deleteCommunity/${communityId}`, { responseType: 'text' });
   }
 
-  updateCommunity(communityId: number, communityUpdateData: any): Observable<string> {
+  updateCommunity(communityId:string, communityUpdateData: any): Observable<string> {
     return this.http.put(`${this.apiUrl}/updateCommunity/${communityId}`, communityUpdateData, { responseType: 'text' });
   }
 
-  getParticipants(communityId: number): Observable<any[]> {
+  getParticipants(communityId:string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/participants/${communityId}`);
   }
 
-  getGeneralInfo(communityId: number): Observable<any[]> {
+  getGeneralInfo(communityId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/infoCommunity/${communityId}`);
   }
 
-  viewDrawnName(communityId: number): Observable<string> {
+  viewDrawnName(communityId: string): Observable<string> {
     return this.http.get(`${this.apiUrl}/drawnName/${communityId}`, {responseType: "text"});
   }
 
-  viewDrawnNameList(communityId: number): Observable<any[]> {
+  viewDrawnNameList(communityId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/drawnNameList/${communityId}`);
   }
 
-  viewParticipantList(communityId: number, userId: number): Observable<any[]> {
+  viewParticipantList(communityId: string, userId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/participantList/${communityId}/${userId}`);
   }
 
-  getWishlists(communityId: number): Observable<any[]> {
+  getWishlists(communityId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/wishlists/${communityId}`);
   }
 

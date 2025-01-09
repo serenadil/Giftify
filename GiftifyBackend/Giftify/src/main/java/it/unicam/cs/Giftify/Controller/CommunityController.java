@@ -1,5 +1,6 @@
 package it.unicam.cs.Giftify.Controller;
 
+import com.sun.java.accessibility.util.GUIInitializedListener;
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Role;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 public class CommunityController {
@@ -53,7 +55,7 @@ public class CommunityController {
 
 
     @DeleteMapping("/community/removeUser/{communityId}/{userId}")
-    public ResponseEntity<String> removeUserFromCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
+    public ResponseEntity<String> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable Long userId) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
@@ -74,7 +76,7 @@ public class CommunityController {
 
 
     @PostMapping("/community/closeCommunity/{id}")
-    public ResponseEntity<String> closeCommunity(@PathVariable long id) {
+    public ResponseEntity<String> closeCommunity(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
@@ -96,7 +98,7 @@ public class CommunityController {
     }
 
     @DeleteMapping("/community/deleteCommunity/{id}")
-    public ResponseEntity<String> deleteCommunity(@PathVariable long id) {
+    public ResponseEntity<String> deleteCommunity(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
@@ -118,7 +120,7 @@ public class CommunityController {
 
     @PutMapping("/community/updateCommunity/{id}")
     public ResponseEntity<String> updateCommunity(
-            @PathVariable long id,
+            @PathVariable UUID id,
             @RequestBody CommunityUpdateDTO communityUpdateDto) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -151,7 +153,7 @@ public class CommunityController {
 
 
     @GetMapping("/community/participants/{id}")
-    public ResponseEntity<?> getParticipants(@PathVariable long id) {
+    public ResponseEntity<?> getParticipants(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
@@ -170,7 +172,8 @@ public class CommunityController {
     }
 
     @GetMapping("/community/infoCommunity/{id}")
-    public ResponseEntity<?> getGeneralInfo(@PathVariable long id) {
+    public ResponseEntity<?> getGeneralInfo(@PathVariable UUID id) {
+        System.out.println(id);
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
@@ -189,7 +192,7 @@ public class CommunityController {
     }
 
     @GetMapping("/community/drawnName/{id}")
-    public ResponseEntity<String> viewDrawnName(@PathVariable long id) {
+    public ResponseEntity<String> viewDrawnName(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -208,7 +211,7 @@ public class CommunityController {
 
 
     @GetMapping("/community/drawnNameList/{id}")
-    public ResponseEntity<?> viewDrawnNameList(@PathVariable long id) {
+    public ResponseEntity<?> viewDrawnNameList(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
@@ -229,7 +232,7 @@ public class CommunityController {
     }
 
     @GetMapping("/community/participantList/{communityId}/{userId}")
-    public ResponseEntity<?> viewParticipantList(@PathVariable long communityId, @PathVariable long userId) {
+    public ResponseEntity<?> viewParticipantList(@PathVariable UUID communityId, @PathVariable long userId) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
@@ -261,7 +264,7 @@ public class CommunityController {
 
 
     @GetMapping("/community/wishlists/{id}")
-    public ResponseEntity<?> getWishlists(@PathVariable long id) {
+    public ResponseEntity<?> getWishlists(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();

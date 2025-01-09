@@ -87,7 +87,6 @@ public class SecurityConfig {
 
     /**
      * Configura la catena di sicurezza per l'applicazione.
-     * <p>
      * Questo metodo definisce diverse configurazioni di sicurezza:
      * - Disabilita la protezione CSRF, poiché viene utilizzato un sistema di autenticazione basato su token.
      * - Consente l'accesso non autenticato a endpoint pubblici come "/auth/login" e "/auth/register".

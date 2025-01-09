@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Classe che rappresenta una comunità virtuale.
@@ -29,8 +30,8 @@ public class Community {
      * Identificatore univoco della comunità.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     /**
      * Elenco degli utenti che fanno parte della comunità.

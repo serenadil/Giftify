@@ -120,7 +120,7 @@ public class CommunityService {
      * @return la community trovata, oppure null se non esiste
      */
 
-    public Community getCommunityById(long id) {
+    public Community getCommunityById(UUID id) {
         return communityRepository.findById(id).orElse(null);
     }
 

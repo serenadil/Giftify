@@ -24,7 +24,7 @@ export class CommunityComponent {
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
   errorMessage: string = '';
-  communityId: number = 0;
+  communityId: string = '';
   isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
   communities: any[] = [];

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 public class WishController {
@@ -30,7 +31,7 @@ public class WishController {
     private CommunityService communityService;
 
     @PostMapping("/wish/addWish/{id}")
-    public ResponseEntity<String> addWish(@RequestBody WishDTO wishDTO, @PathVariable long id) {
+    public ResponseEntity<String> addWish(@RequestBody WishDTO wishDTO, @PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account user = (Account) authentication.getPrincipal();

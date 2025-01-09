@@ -14,7 +14,7 @@ const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'community/:id', component: CommunityComponent },
-  {path: 'community', component: CommunityComponent},
+  { path: '**', redirectTo: '', pathMatch: 'full' },
   {path: 'wishlist', component: WishlistComponent},
 ];
 
