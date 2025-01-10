@@ -4,7 +4,7 @@ import {CommunityService} from '../../services/community.service';
 import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
 import {WishService} from '../../services/wish.service';
-import {defaultEquals} from '@angular/core/primitives/signals';
+import {Role} from '../../../model/Role';
 
 @Component({
   selector: 'app-community',
@@ -20,7 +20,7 @@ export class CommunityComponent implements OnInit {
   participants: any[] = [];
   drawnNameWishList: any = null;
   myWishList: any = null;
-  isCommunityClosed : boolean = false;
+  isCommunityClosed: boolean = false;
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
   successMessage: string | null = null;
@@ -29,7 +29,7 @@ export class CommunityComponent implements OnInit {
   accountInfo: any = null;
   communities: any[] = [];
 
-  constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService : WishService, private route: ActivatedRoute, private router: Router) {
+  constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService: WishService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
@@ -38,11 +38,18 @@ export class CommunityComponent implements OnInit {
   }
 
   loadAccountInfo() {
-    this.homeService.getAccountInfo().subscribe({
-      next: (data) => (this.accountInfo = data),
-      error: (err) => console.error('Errore nel caricamento del profilo:', err),
+    this.communityService.getAccountInfo().subscribe({
+      next: (data) => {
+        console.log('Dati dell\'account ricevuti:', data); // Aggiungi questo log per confermare
+        this.accountInfo = data;
+        console.log('palla'+this.accountInfo.email);
+      },
+      error: (err) => {
+        console.error('Errore nel caricamento del profilo:', err);
+      },
     });
   }
+
 
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
@@ -66,7 +73,7 @@ export class CommunityComponent implements OnInit {
 
   }
 
-  isClosed() : boolean {
+  isClosed(): boolean {
     return this.isCommunityClosed;
   }
 
@@ -96,29 +103,44 @@ export class CommunityComponent implements OnInit {
   //   })
   // }
 
+  closeCommunity() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      if (this.accountInfo.getRoleForCommunity(this.communityInfo)===Role.ADMIN) {
+        this.communityService.closeCommunity(communityId).subscribe({
+          next: (message) => {
+            alert (message);
+            this.successMessage = 'Community chiusa con successo'
+          },
+          error: (err) => {
+            this.errorMessage = err.error || 'Si è verificato un errore.';
+          }
+        });
+      }
+    }
+  }
+
   // closeCommunity() {
   //   const communityId = this.route.snapshot.paramMap.get('id');
   //   if (communityId) {
   //     this.communityService.closeCommunity(communityId).subscribe({
   //       next: (message) => {
-  //         this.successMessage = message;
-  //         this.isCommunityClosed = true;
-  //         this.successMessage = 'Chiusa con successo';
-  //         this.router.navigate([`/community/${communityId}`]);
+  //         alert(message);
+  //         this.successMessage = 'Community chiusa con successo';
   //       },
   //       error: (err) => {
-  //         switch (err.status) {
-  //           case 403:
-  //             this.errorMessage = 'Non sei autorizzato a chiudere questa community. Solo l\'amministratore può farlo.';
-  //             break;
-  //           default:
-  //             this.errorMessage = err.error || 'Si è verificato un errore.';
-  //             console.error(err);
+  //         if (err.status === 403) {
+  //           this.errorMessage = 'Non sei autorizzato a chiudere questa community.';
+  //         } else {
+  //           this.errorMessage = err.error || 'Si è verificato un errore.';
   //         }
   //       }
   //     });
+  //   } else {
+  //     this.errorMessage = 'ID della community non trovato.';
   //   }
   // }
+
 
   // loadParticipants() {
   //   this.communityService.getParticipants(this.communityId).subscribe({
@@ -148,28 +170,25 @@ export class CommunityComponent implements OnInit {
   // }
 
 
-openProfileModal()
-{
-  this.isProfileModalOpen = true;
-}
+  openProfileModal() {
+    this.isProfileModalOpen = true;
+  }
 
-closeProfileModal()
-{
-  this.isProfileModalOpen = false;
-}
+  closeProfileModal() {
+    this.isProfileModalOpen = false;
+  }
 
-openSettingsModal()
-{
-  this.isSettingsModalOpen = true;
-}
+  openSettingsModal() {
+    this.isSettingsModalOpen = true;
+  }
 
-closeSettingsModal()
-{
-  this.isSettingsModalOpen = false;
-}
-logout()
-{
-  this.authService.logout();
-}
+  closeSettingsModal() {
+    this.isSettingsModalOpen = false;
+  }
 
+  logout() {
+    this.authService.logout();
+  }
+
+  protected readonly Role = Role;
 }

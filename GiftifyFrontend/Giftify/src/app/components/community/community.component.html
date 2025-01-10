@@ -42,8 +42,8 @@
         <div class="modal-window">
           <span class="close-btn" (click)="closeProfileModal()">&times;</span>
           <h3>Informazioni Profilo</h3>
-          <p><strong>Username:</strong> {{ accountInfo?.name }}</p>
-          <p><strong>Email:</strong> {{ accountInfo?.email }}</p>
+          <p><strong>Username:</strong> {{ accountInfo?.data?.name }}</p>
+          <p><strong>Email:</strong> {{ accountInfo?.data?.email }}</p>
           <button (click)="logout()" class="logout-btn">Logout</button>
         </div>
       </div>
@@ -74,14 +74,6 @@
       </ul>
     </div>
 
-    <div class="card card-close-community">
-      <ul>
-        <li>Chiudi community</li>
-        <li>
-          <button (click)="closeCommunity()">Chiudi</button>
-        </li>
-      </ul>
-    </div>
 
     <div class="card card-my-wishlist">
       <ul>
@@ -101,5 +93,11 @@
 <!--        </li>-->
 <!--      </ul>-->
 <!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+  </div>
+
+  <div class="card card-close-community" *ngIf="accountInfo.AccountCommunityRole.Role == Role.ADMIN">
+    <button (click)="closeCommunity()">Chiudi</button>
+    <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+  </div>
+</div>

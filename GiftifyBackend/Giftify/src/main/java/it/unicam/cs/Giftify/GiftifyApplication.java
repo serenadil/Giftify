@@ -11,5 +11,4 @@ public class GiftifyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GiftifyApplication.class, args);
 	}
-
 }

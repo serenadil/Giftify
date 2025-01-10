@@ -13,7 +13,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'community/:id', component: CommunityComponent },
+  { path: 'community/:id', component: CommunityComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '', pathMatch: 'full' },
   {path: 'wishlist', component: WishlistComponent},
 ];

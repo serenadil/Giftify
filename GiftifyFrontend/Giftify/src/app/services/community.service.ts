@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {catchError, Observable, tap, throwError} from 'rxjs';
 import {AuthResponse} from '../../model/Auth/AuthResponse';
 import {Community} from '../../model/Community';
 
@@ -11,6 +11,21 @@ export class CommunityService {
   private apiUrl = 'http://localhost:8080/community';
 
   constructor(private http: HttpClient) {}
+
+  getAccountInfo(): Observable<any> {
+    return this.http.get('http://localhost:8080/accountInfo').pipe(
+      tap((response) => {
+        console.log('Dati dell\'account:', response); // Stampa tutta la risposta
+        // Se la risposta contiene un oggetto con i dati dell'account, puoi fare qualcosa del tipo:
+        console.log('Nome dell\'account:', response);
+        console.log('Email dell\'account:', response);
+      }),
+      catchError((error) => {
+        console.error('Errore nel caricamento dell\'account:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 
   removeUserFromCommunity(communityId: string, userId: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${userId}`, { responseType: 'text' });
@@ -54,7 +69,11 @@ export class CommunityService {
 
   // getUserCommunityByName(name: string): Observable<any> {
   //   return this.http.get<any>(`${this.apiUrl}/communityInfo/${name}`);
-  // }
+
+
+  getRoleForCommunity(communityId: string): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/role/${communityId}`);
+  }
 
   saveIds(community: Community): void {
     sessionStorage.clear();
