@@ -2,7 +2,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title></title>
 </head>
-
 <body>
 <div *ngIf="isSuccessPopupVisible" class="success-popup">
   <div class="popup-content">
@@ -42,20 +41,19 @@
         <div class="modal-window">
           <span class="close-btn" (click)="closeProfileModal()">&times;</span>
           <h3>Informazioni Profilo</h3>
-          <p><strong>Username:</strong> {{ accountInfo?.data?.name }}</p>
-          <p><strong>Email:</strong> {{ accountInfo?.data?.email }}</p>
+          <p><strong>Username:</strong> {{ accountInfo?.name }}</p>
+          <p><strong>Email:</strong> {{ accountInfo?.email }}</p>
           <button (click)="logout()" class="logout-btn">Logout</button>
         </div>
       </div>
     </div>
   </div>
-
   <div class="main-content">
     <div class="card card-my-community">
       <h3>{{ communityInfo?.communityName }}</h3>
       <ul class="community-info">
         <li>Codice d'accesso</li>
-        <li>{{communityInfo.accessCode}}</li>
+        <li>{{ communityInfo.accessCode }}</li>
         <li>Descrizione</li>
         <li>{{ communityInfo?.communityNote }}</li>
         <li>Budget</li>
@@ -73,8 +71,6 @@
         </li>
       </ul>
     </div>
-
-
     <div class="card card-my-wishlist">
       <ul>
         <li>La mia lista</li>
@@ -85,19 +81,18 @@
       </ul>
     </div>
 
-<!--    <div class="card card-participants">-->
-<!--      <ul>-->
-<!--        <li>Partecipanti</li>-->
-<!--        <li>-->
-<!--          <button (click)="loadParticipants()">Partecipanti</button>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
+    <div class="card card-participants">
+      <ul>
+        <li>Partecipanti</li>
+        <li>
+          <!--          <button (click)="loadUserList()">Partecipanti</button>-->
+        </li>
+      </ul>
+    </div>
   </div>
-
-  <div class="card card-close-community" *ngIf="accountInfo.AccountCommunityRole.Role == Role.ADMIN">
-    <button (click)="closeCommunity()">Chiudi</button>
-    <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
-    <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
-  </div>
+  <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi</button>
+  <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
 </div>
+
+

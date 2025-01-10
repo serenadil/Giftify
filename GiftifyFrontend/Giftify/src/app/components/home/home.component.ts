@@ -54,7 +54,6 @@ export class HomeComponent implements OnInit {
   loadCommunities() {
     this.homeService.getUserCommunities().subscribe({
       next: (data) => {
-        console.log('Community Data:', data);
         this.communities = data;
       },
       error: (err) =>

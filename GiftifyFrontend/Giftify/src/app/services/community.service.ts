@@ -31,8 +31,8 @@ export class CommunityService {
     return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${userId}`, { responseType: 'text' });
   }
 
-  closeCommunity(communityId: string): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/closeCommunity/${communityId}`, { responseType: 'text' });
+  closeCommunity(communityId: string): Observable<Object> {
+    return this.http.post(`${this.apiUrl}/closeCommunity/${communityId}`, { responseType: 'text' });
   }
 
   deleteCommunity(communityId: string): Observable<string> {

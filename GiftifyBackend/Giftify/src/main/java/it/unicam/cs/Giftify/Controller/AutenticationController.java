@@ -40,8 +40,6 @@ public class AutenticationController {
         try {
             System.out.println("Dati di registrazione ricevuti: " + request);
             AuthResponse response = authService.register(request);
-
-            System.out.println(accountRepository.findAll().get(0).getEmail());
             return ResponseEntity.ok(response);
         } catch (ExistingUserException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

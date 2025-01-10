@@ -16,6 +16,7 @@
           id="email"
           name="email"
           [(ngModel)]="email"
+          pattern="^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
           placeholder="Inserisci la tua email"
           required
         />
@@ -26,12 +27,16 @@
           id="password"
           name="password"
           [(ngModel)]="password"
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$"
+          minlength="8"
+          maxlength="15"
           placeholder="Inserisci la tua password"
           required
         />
       </div>
       <button type="submit" class="btn">Login</button>
-    </form><br>
+    </form>
+    <br>
     <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
     <div class="login-link">
       <p>Non hai un account?

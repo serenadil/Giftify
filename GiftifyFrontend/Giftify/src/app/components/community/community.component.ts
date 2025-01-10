@@ -5,7 +5,6 @@ import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
 import {WishService} from '../../services/wish.service';
 import {Role} from '../../../model/Role';
-
 @Component({
   selector: 'app-community',
   standalone: false,
@@ -28,7 +27,7 @@ export class CommunityComponent implements OnInit {
   isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
   communities: any[] = [];
-
+  userRole: string | null = null;
   constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService: WishService, private route: ActivatedRoute, private router: Router) {
   }
 
@@ -50,24 +49,6 @@ export class CommunityComponent implements OnInit {
     });
   }
 
-
-  loadCommunity() {
-    const communityId = this.route.snapshot.paramMap.get('id');
-    if (communityId) {
-      this.communityService.getGeneralInfo(communityId).subscribe({
-        next: (data) => {
-          this.communityInfo = data;
-          this.errorMessage = null;
-        },
-        error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.';
-          console.error(err);
-        }
-      });
-    } else {
-      this.errorMessage = 'ID della community non trovato.';
-    }
-  }
 
   loadMyWishList() {
 
@@ -103,22 +84,22 @@ export class CommunityComponent implements OnInit {
   //   })
   // }
 
-  closeCommunity() {
-    const communityId = this.route.snapshot.paramMap.get('id');
-    if (communityId) {
-      if (this.accountInfo.getRoleForCommunity(this.communityInfo)===Role.ADMIN) {
-        this.communityService.closeCommunity(communityId).subscribe({
-          next: (message) => {
-            alert (message);
-            this.successMessage = 'Community chiusa con successo'
-          },
-          error: (err) => {
-            this.errorMessage = err.error || 'Si è verificato un errore.';
-          }
-        });
-      }
-    }
-  }
+  // closeCommunity() {
+  //   const communityId = this.route.snapshot.paramMap.get('id');
+  //   if (communityId) {
+  //     if (this.accountInfo.getRoleForCommunity(this.communityInfo)===Role.ADMIN) {
+  //       this.communityService.closeCommunity(communityId).subscribe({
+  //         next: (message) => {
+  //           alert (message);
+  //           this.successMessage = 'Community chiusa con successo'
+  //         },
+  //         error: (err) => {
+  //           this.errorMessage = err.error || 'Si è verificato un errore.';
+  //         }
+  //       });
+  //     }
+  //   }
+  //}
 
   // closeCommunity() {
   //   const communityId = this.route.snapshot.paramMap.get('id');
@@ -169,7 +150,48 @@ export class CommunityComponent implements OnInit {
   //   this.loadUserList();
   // }
 
+  loadCommunity() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.communityService.getGeneralInfo(communityId).subscribe({
+        next: (data) => {
+          this.communityInfo = data;
+          this.errorMessage = null;
+          // Ora carica anche il ruolo dell'utente per questa community
+          this.communityService.getRoleForCommunity(communityId).subscribe({
+            next: (roleData) => {
+              this.userRole = roleData;  // Salva il ruolo dell'utente
+            },
+            error: (err) => {
+              this.errorMessage = 'Errore nel caricare il ruolo dell\'utente.';
+            }
+          });
+        },
+        error: (err) => {
+          this.errorMessage = err.error || 'Si è verificato un errore.';
+        }
+      });
+    } else {
+      this.errorMessage = 'ID della community non trovato.';
+    }
+  }
 
+  closeCommunity() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId ) {
+      this.communityService.closeCommunity(communityId).subscribe({
+        next: (message) => {
+          alert(message);
+          this.successMessage = 'Community chiusa con successo';
+        },
+        error: (err) => {
+          this.errorMessage = err.error || 'Si è verificato un errore.';
+        }
+      });
+    } else {
+      this.errorMessage = 'errore';
+    }
+  }
   openProfileModal() {
     this.isProfileModalOpen = true;
   }

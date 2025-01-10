@@ -104,10 +104,12 @@ public class CommunityController {
     @PostMapping("/community/closeCommunity/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable UUID id) {
         try {
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
             Community community = communityService.getCommunityById(id);
+            System.out.println(admin.getRoleForCommunity(community));
             if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }

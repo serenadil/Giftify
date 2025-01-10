@@ -181,6 +181,7 @@ public class CommunityService {
         }
         if (!community.getUserList().contains(user)) {
             AccountCommunityName acn = new AccountCommunityName(community, userName, user);
+            accountCommunitynameRepository.save(acn);
             community.addUser(user, wishListService.createWishList(user), acn);
             communityRepository.save(community);
             user.addCommunity(community);

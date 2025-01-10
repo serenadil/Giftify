@@ -19,10 +19,10 @@
     <div>
       <div class="profile-settings-container">
         <div class="icon-settings" (click)="openSettingsModal()">
-          <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img" />
+          <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img"/>
         </div>
         <div class="icon-profile" (click)="openProfileModal()">
-          <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img" />
+          <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
         </div>
       </div>
       <div class="modal-overlay" *ngIf="isSettingsModalOpen">
@@ -65,31 +65,39 @@
         <br>
         <br>
         <div class="rocket-container">
-          <img src="../../../assets/pics/rocket.png" alt="Razzo" class="rocket-img animate__animated animate__zoomInLeft">
+          <img src="../../../assets/pics/rocket.png" alt="Razzo"
+               class="rocket-img animate__animated animate__zoomInLeft">
         </div>
       </ng-template>
     </div>
 
     <div class="card card-join">
       <h3>Unisciti a una Community</h3>
-      <div  class="join-text">
+      <div class="join-text">
         <input
           type="text"
           [(ngModel)]="joinCode"
           placeholder="Inserisci il codice della community"
+          pattern="^[a-fA-F0-9]{8}$"
         />
+        <!--          Essendo un codice UUID subtring 0-8 consente solo caratteri alfanumerici, sia lettere sia numeri (0 a 9).-->
+        <!--          Indica che esattamente 8 caratteri devono essere presenti.-->
         <input
           type="text"
           [(ngModel)]="userCommunityName"
           placeholder="Inserisci il tuo nome nella community"
         />
+        <!--      Lettere maiuscole e minuscole (a-zA-Z).-->
+        <!--      Numeri (0-9).-->
+        <!--      Trattini (-), underscore (_), e punti (.) come caratteri validi.-->
 
         <button (click)="joinCommunity()" class="btn btn-primary">
           Unisciti
         </button>
         <div class="globe-container">
           <img src="../../../assets/pics/globe.png" alt="globe" class="globe-img">
-        </div><br>
+        </div>
+        <br>
         <br>
         <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
       </div>
@@ -105,9 +113,16 @@
         [(ngModel)]="newCommunity.communityName"
         placeholder="Nome della community"
       />
+<!--      Lettere maiuscole e minuscole (a-zA-Z).-->
+<!--      Numeri (0-9).-->
+<!--      Trattini (-), underscore (_), e punti (.) come caratteri validi.-->
       <textarea
         [(ngModel)]="newCommunity.communityNote"
-        placeholder="Descrizione"></textarea>
+        placeholder="Descrizione"
+        pattern="^[\w\s\.,!?-]*$">
+      </textarea>
+      <!--     Consente: Lettere (sia maiuscole che minuscole), numeri, e underscore-Spazi.-->
+      <!--      Punti, virgole, punti esclamativi, punti di domanda e trattini.-->
       <input
         type="number"
         [(ngModel)]="newCommunity.budget"
@@ -122,8 +137,11 @@
       <input
         type="text"
         [(ngModel)]="newCommunity.userCommunityName"
-        placeholder="Nome nella community"
+        placeholder="Inserisci il tuo nome nella community"
       />
+      <!--      Lettere maiuscole e minuscole (a-zA-Z).-->
+      <!--      Numeri (0-9).-->
+      <!--      Trattini (-), underscore (_), e punti (.) come caratteri validi.-->
       <button (click)="createCommunity()" class="btn btn-success">
         Crea
       </button>
