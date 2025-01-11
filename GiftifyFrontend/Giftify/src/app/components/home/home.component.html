@@ -6,7 +6,6 @@
 <div *ngIf="isSuccessPopupVisible" class="success-popup">
   <div class="popup-content">
     <span class="close-btn" (click)="isSuccessPopupVisible = false">&times;</span>
-
   </div>
 </div>
 <div class="home-container">
@@ -79,17 +78,31 @@
           [(ngModel)]="joinCode"
           placeholder="Inserisci il codice della community"
           pattern="^[a-fA-F0-9]{8}$"
+          #joinCodeInput="ngModel"
         />
-        <!--          Essendo un codice UUID subtring 0-8 consente solo caratteri alfanumerici, sia lettere sia numeri (0 a 9).-->
-        <!--          Indica che esattamente 8 caratteri devono essere presenti.-->
+        <div *ngIf="joinCodeInput.invalid && joinCodeInput.touched" class="error">
+          <p *ngIf="joinCodeInput.errors?.['pattern']">Il codice deve contenere esattamente 8 caratteri
+            alfanumerici.</p>
+        </div>
+
         <input
           type="text"
           [(ngModel)]="userCommunityName"
           placeholder="Inserisci il tuo nome nella community"
+          pattern="[a-zA-Z0-9._\-]+"
+          maxlength="8"
+          required
+          #userCommunityNameInput="ngModel"
         />
-        <!--      Lettere maiuscole e minuscole (a-zA-Z).-->
-        <!--      Numeri (0-9).-->
-        <!--      Trattini (-), underscore (_), e punti (.) come caratteri validi.-->
+        <div *ngIf="userCommunityNameInput.invalid && userCommunityNameInput.touched" class="error">
+
+          <div *ngIf="userCommunityNameInput.errors?.['maxlength']">
+            Il nome può contenere massimo 8 caratteri.
+          </div>
+          <p *ngIf="userCommunityNameInput.errors?.['pattern']">
+            Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
+          </p>
+        </div>
 
         <button (click)="joinCommunity()" class="btn btn-primary">
           Unisciti
@@ -101,9 +114,7 @@
         <br>
         <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
       </div>
-
     </div>
-
 
     <div class="card card-create">
       <h3>Crea una nuova Community</h3>
@@ -112,36 +123,64 @@
         type="text"
         [(ngModel)]="newCommunity.communityName"
         placeholder="Nome della community"
+        pattern="[a-zA-Z0-9._\-]+"
+        #communityNameInput="ngModel"
       />
-<!--      Lettere maiuscole e minuscole (a-zA-Z).-->
-<!--      Numeri (0-9).-->
-<!--      Trattini (-), underscore (_), e punti (.) come caratteri validi.-->
+      <div *ngIf="communityNameInput.invalid && communityNameInput.touched" class="error">
+        <p *ngIf="communityNameInput.errors?.['pattern']">
+          Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
+        </p>
+      </div>
+
       <textarea
         [(ngModel)]="newCommunity.communityNote"
         placeholder="Descrizione"
-        pattern="^[\w\s\.,!?-]*$">
-      </textarea>
-      <!--     Consente: Lettere (sia maiuscole che minuscole), numeri, e underscore-Spazi.-->
-      <!--      Punti, virgole, punti esclamativi, punti di domanda e trattini.-->
+        pattern="^[\\w\\s\\.,!?-]*$"
+        #communityNoteInput="ngModel"
+      ></textarea>
+      <div *ngIf="communityNoteInput.invalid && communityNoteInput.touched" class="error">
+        <p *ngIf="communityNoteInput.errors?.['pattern']">
+          La descrizione può contenere solo lettere, numeri, spazi, e caratteri come .,!?-.
+        </p>
+      </div>
+
       <input
         type="number"
         [(ngModel)]="newCommunity.budget"
         placeholder="Budget"
         min="1"
+        required
+        #budgetInput="ngModel"
       />
+      <div *ngIf="budgetInput.invalid && budgetInput.touched" class="error">
+        <p *ngIf="budgetInput.errors?.['min']">Il budget deve essere almeno 1.</p>
+        <p *ngIf="budgetInput.errors?.['required']">Il budget è obbligatorio.</p>
+      </div>
+
       <input
         type="date"
         [(ngModel)]="newCommunity.deadline"
         placeholder="Deadline"
+        required
+        #deadlineInput="ngModel"
       />
+      <div *ngIf="deadlineInput.invalid && deadlineInput.touched" class="error">
+        <p *ngIf="deadlineInput.errors?.['required']">La deadline è obbligatoria.</p>
+      </div>
+
       <input
         type="text"
         [(ngModel)]="newCommunity.userCommunityName"
         placeholder="Inserisci il tuo nome nella community"
+        pattern="[a-zA-Z0-9._\-]+"
+        #newUserCommunityNameInput="ngModel"
       />
-      <!--      Lettere maiuscole e minuscole (a-zA-Z).-->
-      <!--      Numeri (0-9).-->
-      <!--      Trattini (-), underscore (_), e punti (.) come caratteri validi.-->
+      <div *ngIf="newUserCommunityNameInput.invalid && newUserCommunityNameInput.touched" class="error">
+        <p *ngIf="newUserCommunityNameInput.errors?.['pattern']">
+          Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
+        </p>
+      </div>
+
       <button (click)="createCommunity()" class="btn btn-success">
         Crea
       </button>
@@ -153,4 +192,3 @@
   </div>
 </div>
 </body>
-

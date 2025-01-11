@@ -46,7 +46,7 @@ public class CommunityController {
             Community community = communityService.getCommunityById(communityId);
             return ResponseEntity.ok(account.getRoleForCommunity(community));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -75,7 +75,7 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -96,7 +96,7 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -109,7 +109,6 @@ public class CommunityController {
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
             Community community = communityService.getCommunityById(id);
-            System.out.println(admin.getRoleForCommunity(community));
             if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
@@ -121,7 +120,7 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore durante la registrazione" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore" );
         }
     }
 
@@ -142,7 +141,7 @@ public class CommunityController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -175,7 +174,7 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -195,7 +194,7 @@ public class CommunityController {
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -215,7 +214,7 @@ public class CommunityController {
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
 
@@ -233,7 +232,7 @@ public class CommunityController {
             Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
             return optionalReceiver.map(value -> ResponseEntity.ok(value.getName())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gift receiver not found"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -255,7 +254,7 @@ public class CommunityController {
             WishList wishList = community.getuserWishList(optionalReceiver.get());
             return ResponseEntity.ok(wishList);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 
@@ -286,7 +285,7 @@ public class CommunityController {
 
             return ResponseEntity.ok(wishList);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore" );
         }
     }
 
@@ -307,7 +306,7 @@ public class CommunityController {
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 

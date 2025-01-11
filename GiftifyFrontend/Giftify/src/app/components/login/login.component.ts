@@ -15,7 +15,6 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   errorMessage: string | null = null;
-
   constructor(private authService: AuthService, private router: Router) {
   }
 

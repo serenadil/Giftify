@@ -53,13 +53,30 @@
           id="username"
           name="username"
           [(ngModel)]="username"
-          pattern="^[a-zA-Z0-9._-]{3,20}$"
+          pattern="[a-zA-Z0-9._\-]+"
+          minlength="3"
+          maxlength="8"
           placeholder="Inserisci il tuo username"
           required
+          #usernameInput="ngModel"
         />
-
-
+        <div *ngIf="usernameInput.invalid && usernameInput.touched" class="error">
+          <div *ngIf="passwordInput.errors?.['required']">
+            Lo username è obbligatorio.
+          </div>
+          <div *ngIf="usernameInput.errors?.['minlength']">
+            Lo username deve avere almeno 3 caratteri.
+          </div>
+          <div *ngIf="usernameInput.errors?.['maxlength']">
+            Lo username deve avere massimo 8 caratteri.
+          </div>
+          <div *ngIf="usernameInput.errors?.['pattern']">
+            Lo username può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
+          </div>
+        </div>
       </div>
+
+
       <button type="submit" class="btn" [disabled]="registerForm.invalid">
         Registrati
       </button>

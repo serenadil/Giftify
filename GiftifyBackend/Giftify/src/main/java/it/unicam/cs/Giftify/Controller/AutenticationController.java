@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 public class AutenticationController {
@@ -46,7 +49,7 @@ public class AutenticationController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore durante la registrazione" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore durante la registrazione" );
         }
     }
 
@@ -65,7 +68,7 @@ public class AutenticationController {
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ops! Sembra che le tue credenziali non siano corrette!");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'autenticazione: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'autenticazione: " );
         }
     }
 
@@ -92,10 +95,13 @@ public class AutenticationController {
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-            return ResponseEntity.ok("Logout eseguito con successo.");
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("message", "Logout eseguito con successo.");
+            return ResponseEntity.ok(responseMap);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Errore durante il logout: " + e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Errore durante il logout.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

@@ -61,10 +61,19 @@ export class AuthService {
   }
 
   logout(): void {
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('refreshToken');
-    this.router.navigate(['/login']);
+    this.http.post<string>(`${this.apiUrl}/logout`, {}).subscribe({
+      next: (response) => {
+        console.log(response);
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('refreshToken');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Errore durante il logout:', err);
+      },
+    });
   }
+
 
   isAuthenticated(): boolean {
     return !!sessionStorage.getItem('accessToken');
