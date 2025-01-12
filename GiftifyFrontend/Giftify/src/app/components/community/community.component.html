@@ -11,6 +11,11 @@
 </div>
 <div class="home-container">
   <div class="header">
+    <div class="go-back">
+      <div class = "back-btn" (click) = "goBack()">
+        <img src="../../../assets/pics/home.png" alt="Indietro" class="back-img">
+      </div>
+    </div>
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
       <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
       <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
@@ -51,16 +56,11 @@
   <div class="main-content">
     <div class="card card-my-community">
       <h3>{{ communityInfo?.communityName }}</h3>
-      <ul class="community-info">
-        <li>Codice d'accesso</li>
-        <li>{{ communityInfo.accessCode }}</li>
-        <li>Descrizione</li>
-        <li>{{ communityInfo?.communityNote }}</li>
-        <li>Budget</li>
-        <li>{{ communityInfo?.budget }}</li>
-        <li>Deadline</li>
-        <li>{{ communityInfo?.deadline }}</li>
-      </ul>
+      <br>
+      <p><strong>Codice d'accesso: {{ communityInfo.accessCode }}</strong></p>
+      <p><strong>Descrizione: {{ communityInfo.communityNote }}</strong></p>
+      <p><strong>Codice d'accesso: {{ communityInfo.budget }}</strong></p>
+      <p><strong>Codice d'accesso: {{ communityInfo.deadline }}</strong></p>
     </div>
 
     <div class="card card-extracted-name">
@@ -72,27 +72,44 @@
       </ul>
     </div>
     <div class="card card-my-wishlist">
-      <ul>
-        <li>La mia lista</li>
-        <li>
-          <button (click)="loadMyWishList()"> La mia lista</button>
-        </li>
-        <li> {{ communityInfo.myWishList }}</li>
-      </ul>
+      <h3>La mia wishlist</h3>
+      <br>
+      <ul>{{communityInfo.myWishList}}</ul>
     </div>
 
     <div class="card card-participants">
-      <ul>
-        <li>Partecipanti</li>
-        <li>
-          <!--          <button (click)="loadUserList()">Partecipanti</button>-->
+      <h3>Partecipanti</h3>
+      <br>
+      <ul *ngIf="participants.length > 0; else noParticipants">
+        <li *ngFor="let participant of participants">
+          <a [routerLink]="['/wishlist', participant.id]" class="participant-link">
+            {{ participant.getAccountCommunityNameByAccount(participant.account) }}
+          </a>
         </li>
       </ul>
+
+      <ng-template #noParticipants>
+        <p>C'è troppo silenzio qui...non c'è ancora nessuno!</p>
+        <br>
+        <br>
+        <div class="rocket-container">
+          <img src="../../../assets/pics/rocket.png" alt="Razzo"
+               class="rocket-img animate__animated animate__zoomInLeft">
+        </div>
+      </ng-template>
     </div>
   </div>
-  <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi</button>
+
+
+  <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi community</button>
   <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
   <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+  <br>
+  <br>
+  <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community</button>
+  <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+
 </div>
 
 

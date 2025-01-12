@@ -30,9 +30,18 @@ export class Community {
     this.deadline = deadline;
     this.wishlists = new Set();
     this.giftAssignments = new Set();
-    this.communityNames=new Set();
+    this.communityNames = new Set();
     this.active = true;
     this.closed = false;
+  }
+
+  getAccountCommunityNameByAccount(account: Account): string | null {
+    for (const acn of this.communityNames) {
+      if (acn.account === account) {
+        return acn.userCommunityName;
+      }
+    }
+    return null;
   }
 
 }

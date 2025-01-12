@@ -40,7 +40,7 @@ public class WishController {
             if (user.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            wishService.createWish(wishDTO.getName(), wishDTO.getImagePath(), community.getuserWishList(user));
+            wishService.createWish(wishDTO.getName(), wishDTO.getImagePath(), community.getuserWishList(community.getCommunityNameByAccount(user)));
             return ResponseEntity.status(HttpStatus.CREATED).body("Desiderio aggiunto con successo alla tua lista");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );

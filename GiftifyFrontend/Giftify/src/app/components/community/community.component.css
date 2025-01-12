@@ -76,6 +76,22 @@ body {
   justify-content: center;
 }
 
+.card-participants p {
+  font-size: 1.1rem;
+}
+
+.participant-link {
+  font-size: 1.1rem;
+  text-decoration: none; /* Rimuove la sottolineatura */
+  color: #00664e; /* Colore del testo */
+  font-weight: bold; /* Testo in grassetto */
+  transition: color 0.3s ease; /* Animazione colore */
+}
+
+.participant-link:hover {
+  color: #00b88d; /* Cambia colore al passaggio del mouse */
+}
+
 .profile-settings-container {
   display: flex;
   align-items: center;
@@ -96,6 +112,26 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+
+.rocket-container {
+  margin-top: 4rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.rocket-img {
+  max-height: 15rem;
+  width: auto;
+  height: auto;
+}
+
+.back-img {
+  height: 7rem;
 }
 
 .modal-overlay {

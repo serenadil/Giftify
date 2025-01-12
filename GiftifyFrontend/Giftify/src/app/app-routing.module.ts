@@ -16,6 +16,8 @@ const routes: Routes = [
   { path: 'community/:id', component: CommunityComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '', pathMatch: 'full' },
   {path: 'wishlist', component: WishlistComponent},
+  { path: 'wishlist/:id', component: WishlistComponent},
+
 ];
 
 @NgModule({

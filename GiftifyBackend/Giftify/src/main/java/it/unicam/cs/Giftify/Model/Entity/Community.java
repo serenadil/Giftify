@@ -184,20 +184,27 @@ public class Community {
     /**
      * Ottiene la wishlist di un utente specifico.
      *
-     * @param user Utente di cui recuperare la wishlist.
+     * @param accountCommunityName Nome utente di cui recuperare la wishlist.
      * @return La wishlist dell'utente o null se non trovata.
      */
-    public WishList getuserWishList(@NonNull Account user) {
-        Set<WishList> wishLists = wishlists;
-        WishList wishListUser = null;
-        for (WishList wishList : wishLists) {
-            if (wishList.getUser().equals(user)) {
-                wishListUser = wishList;
+    public WishList getuserWishList(@NonNull String accountCommunityName) {
+        Account account = null;
+        for (AccountCommunityName acn : communityNames) {
+            if (acn.getUserCommunityName().equals(accountCommunityName)) {
+                account = acn.getAccount();
+                break;
             }
         }
-        return wishListUser;
+        if (account == null) {
+            throw new IllegalArgumentException("Utente non trovato nella community");
+        }
+        for (WishList wishList : wishlists) {
+            if (wishList.getUser().equals(account)) {
+                return wishList;
+            }
+        }
+        return null;
     }
-
     /**
      * Ottiene il nome utente nella comunità dato un account.
      *

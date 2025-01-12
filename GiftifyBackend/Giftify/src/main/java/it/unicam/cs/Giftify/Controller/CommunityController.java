@@ -1,6 +1,5 @@
 package it.unicam.cs.Giftify.Controller;
 
-import com.sun.java.accessibility.util.GUIInitializedListener;
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Role;
@@ -237,29 +236,29 @@ public class CommunityController {
     }
 
 
-    @GetMapping("/community/drawnNameList/{id}")
-    public ResponseEntity<?> viewDrawnNameList(@PathVariable UUID id) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account account = (Account) authentication.getPrincipal();
-            account = accountService.getAccountById(account.getId());
-            Community community = communityService.getCommunityById(id);
-            if (community == null || account.getRoleForCommunity(community) != Role.MEMBER) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
-            if (optionalReceiver.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            WishList wishList = community.getuserWishList(optionalReceiver.get());
-            return ResponseEntity.ok(wishList);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
-        }
-    }
+//    @GetMapping("/community/drawnNameList/{id}")
+//    public ResponseEntity<?> viewDrawnNameList(@PathVariable UUID id) {
+//        try {
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Account account = (Account) authentication.getPrincipal();
+//            account = accountService.getAccountById(account.getId());
+//            Community community = communityService.getCommunityById(id);
+//            if (community == null || account.getRoleForCommunity(community) != Role.MEMBER) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//            }
+//            Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
+//            if (optionalReceiver.isEmpty()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//            }
+//            WishList wishList = community.getuserWishList(optionalReceiver.get());
+//            return ResponseEntity.ok(wishList);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
+//        }
+//    }
 
-    @GetMapping("/community/participantList/{communityId}/{userId}")
-    public ResponseEntity<?> viewParticipantList(@PathVariable UUID communityId, @PathVariable long userId) {
+    @GetMapping("/community/participantList/{communityId}/{accountCommunityName}")
+    public ResponseEntity<?> viewParticipantList(@PathVariable UUID communityId, @PathVariable String accountCommunityName) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
@@ -269,23 +268,18 @@ public class CommunityController {
             if (community == null || account.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-
-            Optional<Account> participant = community.getUserList().stream()
-                    .filter(user -> user.getId() == userId)
-                    .findFirst();
-
-            if (participant.isEmpty()) {
+            String userCommunityName = community.getCommunityNameByAccount(account);
+            if (userCommunityName == null || !userCommunityName.equals(accountCommunityName)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Partecipante non trovato nella community.");
             }
-
-            WishList wishList = community.getuserWishList(participant.get());
+            WishList wishList = community.getuserWishList(accountCommunityName);
             if (wishList == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wishlist non trovata per il partecipante.");
             }
 
             return ResponseEntity.ok(wishList);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore" );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server: " + e.getMessage());
         }
     }
 

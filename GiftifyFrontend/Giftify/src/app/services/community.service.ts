@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {catchError, Observable, tap, throwError} from 'rxjs';
 import {AuthResponse} from '../../model/Auth/AuthResponse';
 import {Community} from '../../model/Community';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import {Community} from '../../model/Community';
 export class CommunityService {
   private apiUrl = 'http://localhost:8080/community';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   getAccountInfo(): Observable<any> {
     return this.http.get('http://localhost:8080/accountInfo').pipe(
@@ -43,10 +44,6 @@ export class CommunityService {
     return this.http.put(`${this.apiUrl}/updateCommunity/${communityId}`, communityUpdateData, { responseType: 'text' });
   }
 
-  getParticipants(communityId:string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/participants/${communityId}`);
-  }
-
   getGeneralInfo(communityId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/infoCommunity/${communityId}`);
   }
@@ -59,12 +56,16 @@ export class CommunityService {
     return this.http.get<any[]>(`${this.apiUrl}/drawnNameList/${communityId}`);
   }
 
-  viewParticipantList(communityId: string, userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/participantList/${communityId}/${userId}`);
+  viewParticipantList(communityId: string, accountCommunityName: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/participantList/${communityId}/${accountCommunityName}`);
   }
 
   getWishlists(communityId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/wishlists/${communityId}`);
+  }
+
+  goBack() {
+    this.router.navigate(['/home']);
   }
 
   // getUserCommunityByName(name: string): Observable<any> {

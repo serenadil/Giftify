@@ -5,6 +5,7 @@ import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
 import {WishService} from '../../services/wish.service';
 import {Role} from '../../../model/Role';
+
 @Component({
   selector: 'app-community',
   standalone: false,
@@ -16,9 +17,9 @@ export class CommunityComponent implements OnInit {
   communityInfo: any = null;
   drawnName: string | null = null;
   userWishList: any = null;
-  participants: any[] = [];
   drawnNameWishList: any = null;
   myWishList: any = null;
+  participants: any = [];
   isCommunityClosed: boolean = false;
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
@@ -26,14 +27,16 @@ export class CommunityComponent implements OnInit {
   errorMessage: string | null = null;
   isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
-  communities: any[] = [];
   userRole: string | null = null;
+
   constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService: WishService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
     this.loadAccountInfo();
     this.loadCommunity();
+    this.loadMyWishList()
+    this.loadUserList()
   }
 
   loadAccountInfo() {
@@ -41,7 +44,7 @@ export class CommunityComponent implements OnInit {
       next: (data) => {
         console.log('Dati dell\'account ricevuti:', data); // Aggiungi questo log per confermare
         this.accountInfo = data;
-        console.log('palla'+this.accountInfo.email);
+        console.log('palla' + this.accountInfo.email);
       },
       error: (err) => {
         console.error('Errore nel caricamento del profilo:', err);
@@ -84,71 +87,19 @@ export class CommunityComponent implements OnInit {
   //   })
   // }
 
-  // closeCommunity() {
-  //   const communityId = this.route.snapshot.paramMap.get('id');
-  //   if (communityId) {
-  //     if (this.accountInfo.getRoleForCommunity(this.communityInfo)===Role.ADMIN) {
-  //       this.communityService.closeCommunity(communityId).subscribe({
-  //         next: (message) => {
-  //           alert (message);
-  //           this.successMessage = 'Community chiusa con successo'
-  //         },
-  //         error: (err) => {
-  //           this.errorMessage = err.error || 'Si è verificato un errore.';
-  //         }
-  //       });
-  //     }
-  //   }
-  //}
-
-  // closeCommunity() {
-  //   const communityId = this.route.snapshot.paramMap.get('id');
-  //   if (communityId) {
-  //     this.communityService.closeCommunity(communityId).subscribe({
-  //       next: (message) => {
-  //         alert(message);
-  //         this.successMessage = 'Community chiusa con successo';
-  //       },
-  //       error: (err) => {
-  //         if (err.status === 403) {
-  //           this.errorMessage = 'Non sei autorizzato a chiudere questa community.';
-  //         } else {
-  //           this.errorMessage = err.error || 'Si è verificato un errore.';
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     this.errorMessage = 'ID della community non trovato.';
-  //   }
-  // }
-
-
-  // loadParticipants() {
-  //   this.communityService.getParticipants(this.communityId).subscribe({
-  //     next: (data) => (this.participants = data),
-  //     error: (err) =>
-  //       console.error('Errore nel caricamento dei partecipanti: ', err),
-  //   })
-  // }
-  //
-  // loadUserList(): void {
-  //   const selectedUser = this.participants.find(participant => participant.isSelected);
-  //   if (selectedUser) {
-  //     this.communityService.viewParticipantList(this.communityId, selectedUser.id).subscribe(
-  //       (wishList) => {
-  //         this.userWishList = wishList;
-  //       },
-  //       (error) => {
-  //         console.error('Errore nel caricare la wishlist', error);
-  //       }
-  //     );
-  //   }
-  // }
-  //
-  // onParticipantClick(participantId: number): void {
-  //   this.participants.forEach(participant => participant.isSelected = (participant.id === participantId));
-  //   this.loadUserList();
-  // }
+  loadUserList() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.communityService.viewParticipantList(communityId, this.participants.getAccountCommunityNameByAccount(this.accountInfo)).subscribe({
+        next: (data) => {
+          this.userWishList = data;
+        },
+        error: (err) => {
+          this.errorMessage = err.error || 'Si è verificato un errore.';
+        }
+      })
+    }
+  }
 
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
@@ -157,13 +108,12 @@ export class CommunityComponent implements OnInit {
         next: (data) => {
           this.communityInfo = data;
           this.errorMessage = null;
-          // Ora carica anche il ruolo dell'utente per questa community
           this.communityService.getRoleForCommunity(communityId).subscribe({
             next: (roleData) => {
               this.userRole = roleData;  // Salva il ruolo dell'utente
             },
             error: (err) => {
-              this.errorMessage = 'Errore nel caricare il ruolo dell\'utente.';
+              this.errorMessage = err.error ||'Errore nel caricare il ruolo dell\'utente.';
             }
           });
         },
@@ -178,7 +128,7 @@ export class CommunityComponent implements OnInit {
 
   closeCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
-    if (communityId ) {
+    if (communityId) {
       this.communityService.closeCommunity(communityId).subscribe({
         next: (message) => {
           alert(message);
@@ -192,6 +142,37 @@ export class CommunityComponent implements OnInit {
       this.errorMessage = 'errore';
     }
   }
+
+  removeUserFromCommunity() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.communityService.removeUserFromCommunity(communityId, this.communityInfo).subscribe({
+        next: (message) => {
+          alert(message);
+          this.successMessage = 'Partecipante rimosso con successo';
+        },
+        error: (err) => {
+          this.errorMessage = err.error || 'Si è verificato un errore.';
+        }
+      });
+    }
+  }
+
+  deleteCommunity(){
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.communityService.deleteCommunity(communityId).subscribe({
+        next: (message) => {
+          alert(message);
+          this.successMessage = 'Community eliminata con successo';
+        },
+        error: (err) => {
+          this.errorMessage = err.error || 'Si è verificato un errore.';
+        }
+      });
+    }
+  }
+
   openProfileModal() {
     this.isProfileModalOpen = true;
   }
@@ -210,6 +191,10 @@ export class CommunityComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  goBack() {
+    this.communityService.goBack();
   }
 
   protected readonly Role = Role;
