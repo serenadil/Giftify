@@ -7,6 +7,7 @@ import it.unicam.cs.Giftify.Model.Entity.WishList;
 import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Services.AccountService;
 import it.unicam.cs.Giftify.Model.Services.CommunityService;
+import it.unicam.cs.Giftify.Model.Services.WishListService;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityCreateDTO;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class CommunityController {
 
     @Autowired
     private CommunityRepository communityRepository;
+    private WishListService wishListService;
 
     @GetMapping ("community/role/{communityId}")
     public ResponseEntity<?> getRoleForCommunity(@PathVariable UUID communityId) {
@@ -283,6 +285,25 @@ public class CommunityController {
         }
     }
 
+    @GetMapping("community/myWishlist/{id}")
+    public ResponseEntity<?> getWishList(@PathVariable UUID id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account user = (Account) authentication.getPrincipal();
+            user = accountService.getAccountById(user.getId());
+            Community community = communityService.getCommunityById(id);
+            if (user.getRoleForCommunity(community) == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            WishList wishList = wishListService.getWishList(user);
+            if (wishList != null) {
+                return ResponseEntity.ok(wishList);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
+        }
+    }
 
     @GetMapping("/community/wishlists/{id}")
     public ResponseEntity<?> getWishlists(@PathVariable UUID id) {

@@ -49,13 +49,14 @@ public class WishListService {
 
     public void removeWishFromWishList(Wish wish) {
         wish.getWishList().removeWish(wish);
-        wishListRepository.save(wish.getWishList());}
+        wishListRepository.save(wish.getWishList());
+    }
 
     /**
      * Rimuove un desiderio dalla lista dei desideri.
      *
      * @param wishList La lista dei desideri da cui rimuovere il desiderio.
-     * @param wish Il desiderio da rimuovere.
+     * @param wish     Il desiderio da rimuovere.
      */
     public void removeWishFromWishList(WishList wishList, Wish wish) {
         wishList.removeWish(wish);

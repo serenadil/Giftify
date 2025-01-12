@@ -23,11 +23,18 @@ export class CommunityComponent implements OnInit {
   isCommunityClosed: boolean = false;
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
+  isWishListModalOpen = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
   isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
   userRole: string | null = null;
+  newWish = {
+    name: '',
+    imagePath: ''
+  }
+  createSuccessMessage: string | null = null;
+
 
   constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService: WishService, private route: ActivatedRoute, private router: Router) {
   }
@@ -50,11 +57,6 @@ export class CommunityComponent implements OnInit {
         console.error('Errore nel caricamento del profilo:', err);
       },
     });
-  }
-
-
-  loadMyWishList() {
-
   }
 
   isClosed(): boolean {
@@ -173,6 +175,62 @@ export class CommunityComponent implements OnInit {
     }
   }
 
+  loadMyWishList() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.wishService.viewMyWishlist(communityId).subscribe({
+        next: (data) => {
+          this.myWishList = data;
+        },
+        error: (err) => {
+          this.errorMessage = err.error || 'Errore nel caricamento della wishlist.';
+        }
+      })
+    }
+  }
+
+  addWish() {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      if (!this.newWish.name) {
+        alert('Il nome del desiderio è obbligatorio.');
+        return;
+      }
+      this.wishService.addWish(communityId, this.newWish).subscribe({
+        next: (message) => {
+          alert(message);
+          this.newWish = {
+            name: '',
+            imagePath: ''
+          };
+          setTimeout(() => {
+            this.createSuccessMessage = '';
+          }, 3000);
+        },
+
+        error: err => {
+          alert(err.error || 'Errore durante la creazione del desiderio');
+        }
+      });
+    }
+  }
+
+  // deleteWish() {
+  //   const wishId = this.route.snapshot.paramMap.get('id');
+  //   if (wishId) {
+  //     this.wishService.deleteWish(wishId.toString()).subscribe({
+  //       next: (message) => {
+  //         alert(message);
+  //         this.successMessage = 'Community eliminata con successo';
+  //       },
+  //       error: (err) => {
+  //         alert(err.error || 'Errore durante l\'eliminazione del desiderio')
+  //       }
+  //     })
+  //   }
+  // }
+
+
   openProfileModal() {
     this.isProfileModalOpen = true;
   }
@@ -187,6 +245,14 @@ export class CommunityComponent implements OnInit {
 
   closeSettingsModal() {
     this.isSettingsModalOpen = false;
+  }
+
+  openWishListModal() {
+    this.isWishListModalOpen = true;
+  }
+
+  closeWishListModal() {
+    this.isWishListModalOpen = false;
   }
 
   logout() {

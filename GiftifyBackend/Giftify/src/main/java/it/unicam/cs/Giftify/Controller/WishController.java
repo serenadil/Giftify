@@ -3,8 +3,10 @@ package it.unicam.cs.Giftify.Controller;
 import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Wish;
+import it.unicam.cs.Giftify.Model.Entity.WishList;
 import it.unicam.cs.Giftify.Model.Services.AccountService;
 import it.unicam.cs.Giftify.Model.Services.CommunityService;
+import it.unicam.cs.Giftify.Model.Services.WishListService;
 import it.unicam.cs.Giftify.Model.Services.WishService;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.WishDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +32,8 @@ public class WishController {
 
     @Autowired
     private CommunityService communityService;
+
+
 
     @PostMapping("/wish/addWish/{id}")
     public ResponseEntity<String> addWish(@RequestBody WishDTO wishDTO, @PathVariable UUID id) {

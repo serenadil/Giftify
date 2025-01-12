@@ -6,22 +6,26 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class WishService {
-  private apiUrl = 'http://localhost:8080/wish';
+  private apiUrl = 'http://localhost:8080';
 
 
   constructor(private http: HttpClient) {
   }
 
-  addWish(communityId: number, wishData: any): Observable<string> {
-    return this.http.post(`${this.apiUrl}/addWish/${communityId}`, wishData, {responseType: 'text'});
+  viewMyWishlist(communityId: string) {
+    return this.http.get(`${this.apiUrl}/community/myWishList/${communityId}`);
+  }
+
+  addWish(communityId: string, wishData: any): Observable<string> {
+    return this.http.post(`${this.apiUrl}/wish/addWish/${communityId}`, wishData, {responseType: 'text'});
   }
 
   deleteWish(wishId: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/deleteWish/${wishId}`, {responseType: 'text'});
+    return this.http.delete(`${this.apiUrl}/wish/deleteWish/${wishId}`, {responseType: 'text'});
   }
 
   editWish(wishId: number, wishData: any): Observable<string> {
-    return this.http.put(`${this.apiUrl}/editWish/${wishId}`, wishData, {responseType: 'text'});
+    return this.http.put(`${this.apiUrl}/wish/editWish/${wishId}`, wishData, {responseType: 'text'});
   }
 
 }

@@ -11,11 +11,9 @@
 </div>
 <div class="home-container">
   <div class="header">
-    <div class="go-back">
-      <div class = "back-btn" (click) = "goBack()">
+      <div class="back-btn" (click)="goBack()">
         <img src="../../../assets/pics/home.png" alt="Indietro" class="back-img">
       </div>
-    </div>
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
       <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
       <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
@@ -72,44 +70,54 @@
       </ul>
     </div>
     <div class="card card-my-wishlist">
-      <h3>La mia wishlist</h3>
-      <br>
-      <ul>{{communityInfo.myWishList}}</ul>
+      <div class="my-list" (click)="loadMyWishList()">
+        <h3>La mia wishlist</h3>
+
+      </div>
+
     </div>
 
     <div class="card card-participants">
-      <h3>Partecipanti</h3>
-      <br>
-      <ul *ngIf="participants.length > 0; else noParticipants">
-        <li *ngFor="let participant of participants">
-          <a [routerLink]="['/wishlist', participant.id]" class="participant-link">
+      <div class="participants-name" (click)="openWishListModal()">
+        <ul *ngIf="participants.length > 0; else noParticipants">
+          <li *ngFor="let participant of participants">
             {{ participant.getAccountCommunityNameByAccount(participant.account) }}
-          </a>
-        </li>
-      </ul>
-
-      <ng-template #noParticipants>
-        <p>C'è troppo silenzio qui...non c'è ancora nessuno!</p>
-        <br>
-        <br>
-        <div class="rocket-container">
-          <img src="../../../assets/pics/rocket.png" alt="Razzo"
-               class="rocket-img animate__animated animate__zoomInLeft">
+          </li>
+        </ul>
+        <ng-template #noParticipants>
+          <p>C'è troppo silenzio qui...non c'è ancora nessuno!</p>
+          <br>
+          <br>
+          <div class="rocket-container">
+            <img src="../../../assets/pics/rocket.png" alt="Razzo"
+                 class="rocket-img animate__animated animate__zoomInLeft">
+          </div>
+        </ng-template>
+      </div>
+      <div class="modal-overlay" *ngIf="isWishListModalOpen">
+        <div class="modal-window">
+          <span class="close-btn" (click)="closeWishListModal()">&times;</span>
+          <h3>Partecipanti</h3>
+          <br>
         </div>
-      </ng-template>
+        <div class="remove-user-btn" *ngIf="userRole === 'ADMIN'" (click)="removeUserFromCommunity()">
+          <img src="../../../assets/pics/remove.png" alt="Rimuovi" class="remove-img">
+          <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+          <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+        </div>
+      </div>
     </div>
+
+
+    <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi community</button>
+    <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+    <br>
+    <br>
+    <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community</button>
+    <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
   </div>
-
-
-  <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi community</button>
-  <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
-  <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
-  <br>
-  <br>
-  <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community</button>
-  <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
-  <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
-
 </div>
 
 
