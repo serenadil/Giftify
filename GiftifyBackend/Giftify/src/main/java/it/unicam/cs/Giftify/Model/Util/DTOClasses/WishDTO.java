@@ -13,4 +13,5 @@ import lombok.Setter;
 public class WishDTO {
     private String name;
     private String imagePath;
+    private WishList wishList;
 }

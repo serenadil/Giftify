@@ -24,6 +24,7 @@ export class CommunityComponent implements OnInit {
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
   isWishListModalOpen = false;
+  isNewWishFormOpen: boolean = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
   isSuccessPopupVisible: boolean = false;
@@ -34,6 +35,7 @@ export class CommunityComponent implements OnInit {
     imagePath: ''
   }
   createSuccessMessage: string | null = null;
+  createErrorMessage: string | null = null;
 
 
   constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService: WishService, private route: ActivatedRoute, private router: Router) {
@@ -192,8 +194,8 @@ export class CommunityComponent implements OnInit {
   addWish() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      if (!this.newWish.name) {
-        alert('Il nome del desiderio è obbligatorio.');
+      if (!this.newWish.name||!this.newWish.imagePath) {
+        alert('Inserisci le informazioni.');
         return;
       }
       this.wishService.addWish(communityId, this.newWish).subscribe({
@@ -203,13 +205,14 @@ export class CommunityComponent implements OnInit {
             name: '',
             imagePath: ''
           };
+          this.createErrorMessage = '';
           setTimeout(() => {
             this.createSuccessMessage = '';
           }, 3000);
         },
 
         error: err => {
-          alert(err.error || 'Errore durante la creazione del desiderio');
+          this.createErrorMessage= err.error || 'Errore durante la creazione del desiderio';
         }
       });
     }
@@ -253,6 +256,14 @@ export class CommunityComponent implements OnInit {
 
   closeWishListModal() {
     this.isWishListModalOpen = false;
+  }
+
+  openNewWishForm() {
+    this.isNewWishFormOpen = true;
+  }
+
+  closeNewWishForm() {
+    this.isNewWishFormOpen = false;
   }
 
   logout() {

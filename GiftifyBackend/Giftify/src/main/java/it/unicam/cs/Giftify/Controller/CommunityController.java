@@ -259,7 +259,7 @@ public class CommunityController {
 //        }
 //    }
 
-    @GetMapping("/community/participantList/{communityId}/{accountCommunityName}")
+    @GetMapping("/community/{communityId}/participantList/{accountCommunityName}")
     public ResponseEntity<?> viewParticipantList(@PathVariable UUID communityId, @PathVariable String accountCommunityName) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -285,13 +285,13 @@ public class CommunityController {
         }
     }
 
-    @GetMapping("community/myWishlist/{id}")
-    public ResponseEntity<?> getWishList(@PathVariable UUID id) {
+    @GetMapping("community/{communityId}/myWishlist")
+    public ResponseEntity<?> getWishList(@PathVariable UUID communityId) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account user = (Account) authentication.getPrincipal();
             user = accountService.getAccountById(user.getId());
-            Community community = communityService.getCommunityById(id);
+            Community community = communityService.getCommunityById(communityId);
             if (user.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }

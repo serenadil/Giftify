@@ -11,9 +11,7 @@
 </div>
 <div class="home-container">
   <div class="header">
-      <div class="back-btn" (click)="goBack()">
-        <img src="../../../assets/pics/home.png" alt="Indietro" class="back-img">
-      </div>
+    <button (click)="goBack()" class="back-btn">Indietro</button>
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
       <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
       <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
@@ -51,73 +49,123 @@
       </div>
     </div>
   </div>
+
   <div class="main-content">
+
     <div class="card card-my-community">
       <h3>{{ communityInfo?.communityName }}</h3>
       <br>
-      <p><strong>Codice d'accesso: {{ communityInfo.accessCode }}</strong></p>
-      <p><strong>Descrizione: {{ communityInfo.communityNote }}</strong></p>
-      <p><strong>Codice d'accesso: {{ communityInfo.budget }}</strong></p>
-      <p><strong>Codice d'accesso: {{ communityInfo.deadline }}</strong></p>
+      <p><strong>Codice d'accesso:</strong> {{ communityInfo.accessCode }}</p>
+      <p><strong>Descrizione:</strong> {{ communityInfo.communityNote }}</p>
+      <p><strong>Codice d'accesso:</strong> {{ communityInfo.budget }}</p>
+      <p><strong>Codice d'accesso:</strong> {{ communityInfo.deadline }}</p>
     </div>
 
     <div class="card card-extracted-name">
-      <ul>
-        <li>Il mio nome estratto</li>
-        <li>
-          <button (click)="viewDrawnName()">Nome estratto</button>
+      <h3>Il mio nome estratto</h3>
+      <br>
+      <button (click)="viewDrawnName()">Nome estratto</button>
+    </div>
+
+    <div class="card card-my-wishlist">
+      <h3>La mia wishlist</h3>
+      <br>
+      <ul *ngIf="myWishList.wishes.length > 0; else noWishes">
+        <li *ngFor="let wish of myWishList.wishes">
+          {{ wish.name }}
         </li>
       </ul>
-    </div>
-    <div class="card card-my-wishlist">
-      <div class="my-list" (click)="loadMyWishList()">
-        <h3>La mia wishlist</h3>
+      <ng-template #noWishes>
+        <p>La lista dei desideri è ancora vuota...idee?</p>
+      </ng-template>
 
-      </div>
+      <div class="add-wish-container">
+        <button (click)="openNewWishForm()">Aggiungi</button>
+        <div class="modal-overlay" *ngIf="isNewWishFormOpen">
+          <div class="modal-window">
+            <span class="close-btn" (click)="closeNewWishForm()">&times;</span>
+            <h3>Aggiungi un desiderio</h3>
+            <div class="new-wish">
+              <input
+                type="text"
+                [(ngModel)]="newWish.name"
+                placeholder="Nome del desiderio"
+                pattern="[a-zA-Z0-9._\-]+"
+                #wishNameInput="ngModel"
+              />
+              <div *ngIf="wishNameInput.invalid && wishNameInput.touched" class="error">
+                <p *ngIf="wishNameInput.errors?.['pattern']">
+                  Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
+                </p>
+              </div>
 
-    </div>
+              <h3>Seleziona un'immagine</h3>
+              <div class="image-grid">
+                <button
+                  type="button"
+                  *ngFor="let image of ['../../../assets/pics/book-pic.png', '../../../assets/pics/cinema-pic.png', '../../../assets/pics/care-pic.png', '../../../assets/pics/gym-pic.png', '../../../assets/pics/hat-pic.png', '../../../assets/pics/kitchen-pic.png', '../../../assets/pics/laptop-pic.png', '../../../assets/pics/other-pic.png']"
+                  [class.selected]="image === newWish.imagePath"
+                  (click)="newWish.imagePath = image"
+                >
+                  <img [src]="image" alt="Opzione immagine"/>
+                </button>
+              </div>
 
-    <div class="card card-participants">
-      <div class="participants-name" (click)="openWishListModal()">
-        <ul *ngIf="participants.length > 0; else noParticipants">
-          <li *ngFor="let participant of participants">
-            {{ participant.getAccountCommunityNameByAccount(participant.account) }}
-          </li>
-        </ul>
-        <ng-template #noParticipants>
-          <p>C'è troppo silenzio qui...non c'è ancora nessuno!</p>
-          <br>
-          <br>
-          <div class="rocket-container">
-            <img src="../../../assets/pics/rocket.png" alt="Razzo"
-                 class="rocket-img animate__animated animate__zoomInLeft">
+              <button (click)="addWish()" class="btn btn-success">
+                Aggiungi desiderio
+              </button>
+              <br>
+              <br>
+              <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
+              <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
+            </div>
           </div>
-        </ng-template>
-      </div>
-      <div class="modal-overlay" *ngIf="isWishListModalOpen">
-        <div class="modal-window">
-          <span class="close-btn" (click)="closeWishListModal()">&times;</span>
-          <h3>Partecipanti</h3>
-          <br>
-        </div>
-        <div class="remove-user-btn" *ngIf="userRole === 'ADMIN'" (click)="removeUserFromCommunity()">
-          <img src="../../../assets/pics/remove.png" alt="Rimuovi" class="remove-img">
-          <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
-          <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
         </div>
       </div>
     </div>
-
-
-    <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi community</button>
-    <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
-    <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
-    <br>
-    <br>
-    <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community</button>
-    <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
-    <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
   </div>
+
+  <div class="card card-participants">
+    <div class="participants-name" (click)="openWishListModal()">
+      <h3>Partecipanti</h3>
+      <br>
+      <ul *ngIf="participants.length > 0; else noParticipants">
+        <li *ngFor="let participant of participants">
+          {{ participant.getAccountCommunityNameByAccount(participant.account) }}
+        </li>
+      </ul>
+      <ng-template #noParticipants>
+        <p>C'è troppo silenzio qui...non c'è ancora nessuno!</p>
+        <br>
+        <br>
+        <div class="rocket-container">
+          <img src="../../../assets/pics/rocket.png" alt="Razzo"
+               class="rocket-img animate__animated animate__zoomInLeft">
+        </div>
+      </ng-template>
+    </div>
+    <div class="modal-overlay" *ngIf="isWishListModalOpen">
+      <div class="modal-window">
+        <span class="close-btn" (click)="closeWishListModal()">&times;</span>
+      </div>
+      <div class="remove-user-btn" *ngIf="userRole === 'ADMIN'" (click)="removeUserFromCommunity()">
+        <img src="../../../assets/pics/remove.png" alt="Rimuovi" class="remove-img">
+        <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+        <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+      </div>
+    </div>
+  </div>
+
+
+  <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi community</button>
+  <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
+  <br>
+  <br>
+  <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community</button>
+  <p *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</p>
 </div>
+
 
 

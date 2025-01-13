@@ -130,8 +130,14 @@ body {
   height: auto;
 }
 
-.back-img {
-  height: 7rem;
+.back-btn {
+  background: #00b88d;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.back-btn:hover {
+  color: #008a69;
 }
 
 .modal-overlay {
@@ -146,7 +152,6 @@ body {
   align-items: center;
   z-index: 1000;
 }
-
 
 .close-btn {
   position: absolute;
@@ -300,6 +305,31 @@ ul {
 
 .profile-img {
   height: 2.5rem;
+}
+
+.add-wish-container{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.card-my-community {
+
+}
+
+.card-my-wishlist {
+
+}
+
+.card-participants {
+
 }
 
 
