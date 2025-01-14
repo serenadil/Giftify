@@ -324,12 +324,40 @@ li {
   gap: 0.5rem;
 }
 
-.image-grid{
+.image-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  gap: 1rem;
 }
+
+.button-grid {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  background: #00b88d;
+  color: white;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.button-grid img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.button-grid.selected {
+  background-color: white;
+  transform: scale(1.05);
+  border-color: #00b88d;
+}
+
 
 .card-my-community {
 

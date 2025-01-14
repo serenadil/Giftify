@@ -27,11 +27,10 @@ public class Wish {
     private String name;
 
     /**
-     * Percorso dell'immagine associata al desiderio.
+     * Categoria di immagini associata al desiderio.
      */
     @Setter
-    private String imagePath;
-
+    private WishCategory category;
     /**
      * Wishlist a cui appartiene il desiderio.
      */
@@ -43,12 +42,12 @@ public class Wish {
      * Costruttore per creare un nuovo desiderio.
      *
      * @param name      Nome del desiderio.
-     * @param imagePath Percorso immagine associato al desiderio.
+     * @param category Categoria di immagini associata al desiderio.
      * @param wishList  Wishlist di appartenenza.
      */
-    public Wish(@NonNull String name, @NonNull String imagePath, @NonNull WishList wishList) {
+    public Wish(@NonNull String name, @NonNull WishCategory category, @NonNull WishList wishList) {
         this.name = name;
-        this.imagePath = imagePath;
+        this.category = category;
         this.wishList = wishList;
     }
 }

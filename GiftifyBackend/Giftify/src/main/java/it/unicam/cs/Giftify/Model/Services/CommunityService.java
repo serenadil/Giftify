@@ -244,4 +244,14 @@ public class CommunityService {
         communityRepository.save(community);
     }
 
+
+
+    public String getReceiverName(Account accountGiver, UUID communityId){
+        Community community = this.getCommunityById(communityId);
+        String receiverEmail = community.getGiftReceiver(accountGiver);
+        Account accountReciver = accountServices.getAccount(receiverEmail).get();
+        return community.getCommunityNameByAccount(accountReciver);
+
+    }
+
 }

@@ -226,12 +226,8 @@ public class CommunityController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
             account = accountService.getAccountById(account.getId());
-            Community community = communityService.getCommunityById(id);
-//            if (community == null || account.getRoleForCommunity(community) != Role.MEMBER) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community not found or unauthorized");
-//            }
-            Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
-            return optionalReceiver.map(value -> ResponseEntity.ok(value.getName())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gift receiver not found"));
+            String userReceiverCommName= communityService.getReceiverName(account, id);
+            return ResponseEntity.ok(userReceiverCommName);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
@@ -265,7 +261,6 @@ public class CommunityController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
             account = accountService.getAccountById(account.getId());
-
             Community community = communityService.getCommunityById(communityId);
             if (community == null || account.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);

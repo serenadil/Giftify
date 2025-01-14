@@ -5,7 +5,7 @@ import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
 import {WishService} from '../../services/wish.service';
 import {Role} from '../../../model/Role';
-import {Community} from '../../../model/Community';
+
 
 @Component({
   selector: 'app-community',
@@ -21,7 +21,6 @@ export class CommunityComponent implements OnInit {
   drawnNameWishList: any = null;
   myWishList: any = null;
   participants: any = [];
-  isCommunityClosed: boolean = false;
   isProfileModalOpen = false;
   isSettingsModalOpen = false;
   isWishListModalOpen = false;
@@ -33,7 +32,7 @@ export class CommunityComponent implements OnInit {
   userRole: string | null = null;
   newWish = {
     name: '',
-    imagePath: ''
+    category: '',
   }
   createSuccessMessage: string | null = null;
   createErrorMessage: string | null = null;
@@ -45,6 +44,7 @@ export class CommunityComponent implements OnInit {
   ngOnInit() {
     this.loadAccountInfo();
     this.loadCommunity();
+    this.viewDrawnName();
     this.loadMyWishList()
   }
 
@@ -59,16 +59,14 @@ export class CommunityComponent implements OnInit {
     });
   }
 
-  isClosed(): boolean {
-    return this.isCommunityClosed = true;
-  }
-
   viewDrawnName(): void {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
       this.communityService.viewDrawnName(communityId).subscribe({
-        next: (name) =>
-          this.drawnName = name,
+        next: (name) =>  {
+          console.log(name);
+        this.drawnName = name;
+      },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
           console.error(err);
@@ -78,14 +76,6 @@ export class CommunityComponent implements OnInit {
       this.errorMessage = 'ID della community non trovato.';
     }
   }
-
-  // viewDrawnNameList() {
-  //   this.communityService.viewDrawnNameList(this.communityId).subscribe({
-  //     next: (data) => (this.drawnNameWishList = data),
-  //     error: (err) => (console.error('Errore durante il caricamento: ', err)),
-  //   })
-  // }
-
 
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
@@ -177,7 +167,7 @@ export class CommunityComponent implements OnInit {
   addWish() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      if (!this.newWish.name || !this.newWish.imagePath) {
+      if (!this.newWish.name || !this.newWish.category) {
         alert('Inserisci le informazioni.');
         return;
       }
@@ -186,7 +176,7 @@ export class CommunityComponent implements OnInit {
           alert(message);
           this.newWish = {
             name: '',
-            imagePath: ''
+            category: ''
           };
           this.createErrorMessage = '';
           setTimeout(() => {

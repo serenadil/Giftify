@@ -17,7 +17,7 @@ export class Community {
 
 
   active: boolean;
-  closed: boolean;
+  close: boolean;
 
   constructor(
     id: string,
@@ -28,7 +28,7 @@ export class Community {
     budget: number,
     deadline: Date,
     active:boolean,
-    closed: boolean
+    close: boolean
   ) {
     this.id = id;
     this.userList = [];
@@ -42,6 +42,6 @@ export class Community {
     this.giftAssignments = new Set();
     this.communityNames = [];
     this.active = active;
-    this.closed = closed;
+    this.close = close;
   }
 }

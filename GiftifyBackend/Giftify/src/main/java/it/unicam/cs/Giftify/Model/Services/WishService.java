@@ -1,7 +1,6 @@
 package it.unicam.cs.Giftify.Model.Services;
 
-import it.unicam.cs.Giftify.Model.Entity.Wish;
-import it.unicam.cs.Giftify.Model.Entity.WishList;
+import it.unicam.cs.Giftify.Model.Entity.*;
 import it.unicam.cs.Giftify.Model.Repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +27,11 @@ public class WishService {
      * Crea un nuovo desiderio e lo aggiunge alla lista dei desideri associata.
      *
      * @param name Il nome del desiderio.
-     * @param imagePath Il percorso dell'immagine associata al desiderio.
+     * @param category Categoria di immagini associata al desiderio.
      * @param wishList La lista dei desideri alla quale aggiungere il desiderio.
      */
-    public void createWish(String name, String imagePath, WishList wishList) {
-        Wish wish = new Wish(name, imagePath, wishList);
+    public void createWish(String name, WishCategory category, WishList wishList) {
+        Wish wish = new Wish(name, category, wishList);
         wishRepository.save(wish);
         wishListService.addWish(wish);
     }

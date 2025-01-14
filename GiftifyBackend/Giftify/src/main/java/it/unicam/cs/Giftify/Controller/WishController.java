@@ -45,16 +45,8 @@ public class WishController {
             if (user.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            List<String> validImagePaths = List.of(
-                    "/images/image1.png",
-                    "/images/image2.png",
-                    "/images/image3.png"
-            );
 
-            if (!validImagePaths.contains(wishDTO.getImagePath())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Percorso immagine non valido.");
-            }
-            wishService.createWish(wishDTO.getName(), wishDTO.getImagePath(), wishDTO.getWishList());
+            wishService.createWish(wishDTO.getName(), wishDTO.getCategory(), wishDTO.getWishList());
             return ResponseEntity.status(HttpStatus.CREATED).body("Desiderio aggiunto con successo alla tua lista");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
@@ -98,8 +90,8 @@ public class WishController {
                 if (wishDTO.getName() != null) {
                     wish.setName(wishDTO.getName());
                 }
-                if (wishDTO.getImagePath() != null) {
-                    wish.setImagePath(wishDTO.getImagePath());
+                if (wishDTO.getCategory() != null) {
+                    wish.setCategory(wishDTO.getCategory());
                 }
                 wishService.updateWish(wish);
                 return ResponseEntity.ok("desiderio aggiornato con successo");

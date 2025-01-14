@@ -1,5 +1,6 @@
 package it.unicam.cs.Giftify.Model.Util.DTOClasses;
 
+import it.unicam.cs.Giftify.Model.Entity.WishCategory;
 import it.unicam.cs.Giftify.Model.Entity.WishList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WishDTO {
     private String name;
-    private String imagePath;
+    private WishCategory category;
     private WishList wishList;
 }
