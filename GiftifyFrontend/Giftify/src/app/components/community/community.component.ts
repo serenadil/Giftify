@@ -5,6 +5,7 @@ import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
 import {WishService} from '../../services/wish.service';
 import {Role} from '../../../model/Role';
+import {Community} from '../../../model/Community';
 
 @Component({
   selector: 'app-community',
@@ -45,15 +46,12 @@ export class CommunityComponent implements OnInit {
     this.loadAccountInfo();
     this.loadCommunity();
     this.loadMyWishList()
-    this.loadUserList()
   }
 
   loadAccountInfo() {
     this.communityService.getAccountInfo().subscribe({
       next: (data) => {
-        console.log('Dati dell\'account ricevuti:', data); // Aggiungi questo log per confermare
         this.accountInfo = data;
-        console.log('palla' + this.accountInfo.email);
       },
       error: (err) => {
         console.error('Errore nel caricamento del profilo:', err);
@@ -62,15 +60,12 @@ export class CommunityComponent implements OnInit {
   }
 
   isClosed(): boolean {
-    return this.isCommunityClosed;
+    return this.isCommunityClosed = true;
   }
 
   viewDrawnName(): void {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      if (!this.isClosed()) {
-        this.errorMessage = 'Ops! La community non è stata ancora chiusa.';
-      }
       this.communityService.viewDrawnName(communityId).subscribe({
         next: (name) =>
           this.drawnName = name,
@@ -91,19 +86,6 @@ export class CommunityComponent implements OnInit {
   //   })
   // }
 
-  loadUserList() {
-    const communityId = this.route.snapshot.paramMap.get('id');
-    if (communityId) {
-      this.communityService.viewParticipantList(communityId, this.participants.getAccountCommunityNameByAccount(this.accountInfo)).subscribe({
-        next: (data) => {
-          this.userWishList = data;
-        },
-        error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.';
-        }
-      })
-    }
-  }
 
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
@@ -117,7 +99,7 @@ export class CommunityComponent implements OnInit {
               this.userRole = roleData;  // Salva il ruolo dell'utente
             },
             error: (err) => {
-              this.errorMessage = err.error ||'Errore nel caricare il ruolo dell\'utente.';
+              this.errorMessage = err.error || 'Errore nel caricare il ruolo dell\'utente.';
             }
           });
         },
@@ -162,7 +144,7 @@ export class CommunityComponent implements OnInit {
     }
   }
 
-  deleteCommunity(){
+  deleteCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
       this.communityService.deleteCommunity(communityId).subscribe({
@@ -183,6 +165,7 @@ export class CommunityComponent implements OnInit {
       this.wishService.viewMyWishlist(communityId).subscribe({
         next: (data) => {
           this.myWishList = data;
+          console.log(this.myWishList)
         },
         error: (err) => {
           this.errorMessage = err.error || 'Errore nel caricamento della wishlist.';
@@ -194,7 +177,7 @@ export class CommunityComponent implements OnInit {
   addWish() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      if (!this.newWish.name||!this.newWish.imagePath) {
+      if (!this.newWish.name || !this.newWish.imagePath) {
         alert('Inserisci le informazioni.');
         return;
       }
@@ -210,28 +193,24 @@ export class CommunityComponent implements OnInit {
             this.createSuccessMessage = '';
           }, 3000);
         },
-
         error: err => {
-          this.createErrorMessage= err.error || 'Errore durante la creazione del desiderio';
+          this.createErrorMessage = err.error || 'Errore durante la creazione del desiderio';
         }
       });
     }
   }
 
-  // deleteWish() {
-  //   const wishId = this.route.snapshot.paramMap.get('id');
-  //   if (wishId) {
-  //     this.wishService.deleteWish(wishId.toString()).subscribe({
-  //       next: (message) => {
-  //         alert(message);
-  //         this.successMessage = 'Community eliminata con successo';
-  //       },
-  //       error: (err) => {
-  //         alert(err.error || 'Errore durante l\'eliminazione del desiderio')
-  //       }
-  //     })
-  //   }
-  // }
+  deleteWish(wishId: number) {
+    this.wishService.deleteWish(wishId).subscribe({
+      next: (message) => {
+        alert(message);
+        this.successMessage = 'Community eliminata con successo';
+      },
+      error: (err) => {
+        alert(err.error || 'Errore durante l\'eliminazione del desiderio')
+      }
+    })
+  }
 
 
   openProfileModal() {

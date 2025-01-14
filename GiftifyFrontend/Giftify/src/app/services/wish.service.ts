@@ -13,7 +13,7 @@ export class WishService {
   }
 
   viewMyWishlist(communityId: string) {
-    return this.http.get(`${this.apiUrl}/community/myWishList/${communityId}`);
+    return this.http.get(`${this.apiUrl}/community/${communityId}/myWishlist`);
   }
 
   addWish(communityId: string, wishData: any): Observable<string> {

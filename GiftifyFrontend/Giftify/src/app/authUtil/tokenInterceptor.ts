@@ -19,7 +19,6 @@ export class TokenInterceptor implements HttpInterceptor {
         headers: req.headers.set('Authorization', `Bearer ${token}`)
       });
     }
-    console.log('Token inviato:', token);
     return next.handle(req).pipe(
       catchError((error) => {
         if (error.status === 401 && !req.url.includes('/auth/refresh_token')) {

@@ -131,13 +131,19 @@ body {
 }
 
 .back-btn {
+  font-size: 1.2rem;
+  width: 15%;
   background: #00b88d;
   color: white;
-  font-size: 1.2rem;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 25px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
+
 .back-btn:hover {
-  color: #008a69;
+  background: #008a69;
 }
 
 .modal-overlay {
@@ -203,6 +209,11 @@ body {
 ul {
   list-style: none; /* Rimuove i puntini */
   padding: 0;
+}
+
+li {
+  color: black;
+  /*list-style: none;*/
 }
 
 .community-link {
@@ -333,6 +344,34 @@ ul {
 }
 
 
+.wish-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.wish-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.wish-name {
+  font-size: 2rem;
+  flex-grow: 1;
+}
+
+.remove-wish-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+
 
 
 @media (max-width: 768px) {
@@ -370,6 +409,18 @@ ul {
     height: 1rem;
   }
 
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .row .card {
+    flex: 1 1 calc(50% - 1rem); /* Ogni card occupa il 50% della riga meno il gap */
+    max-width: calc(50% - 1rem);
+  }
+
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -382,6 +433,11 @@ ul {
 
   .logo-img {
     height: 8rem;
+  }
+
+  .row .card {
+    flex: 1 1 100%; /* Su dispositivi piccoli, le card occupano l'intera larghezza */
+    max-width: 100%;
   }
 }
 

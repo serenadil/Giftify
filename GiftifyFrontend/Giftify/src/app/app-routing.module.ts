@@ -13,11 +13,9 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'community/:id', component: CommunityComponent, canActivate: [AuthGuard]},
-  { path: '**', redirectTo: '', pathMatch: 'full' },
-  {path: 'wishlist', component: WishlistComponent},
-  { path: 'wishlist/:id', component: WishlistComponent},
-
+  {path: 'community/:id', component: CommunityComponent, canActivate: [AuthGuard]},
+  {path: '**', redirectTo: '', pathMatch: 'full'},
+  {path: 'community/:id/:wishlistId', component: CommunityComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
