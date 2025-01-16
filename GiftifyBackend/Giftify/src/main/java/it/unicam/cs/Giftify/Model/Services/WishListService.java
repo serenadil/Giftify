@@ -36,15 +36,6 @@ public class WishListService {
         wishListRepository.save(wish.getWishList());
     }
 
-    /**
-     * Ottiene la lista dei desideri associata ad un utente.
-     *
-     * @param user L'utente di cui ottenere la lista dei desideri.
-     * @return La lista dei desideri dell'utente.
-     */
-    public WishList getWishList(Account user) {
-        return wishListRepository.findByUser(user);
-    }
 
 
     public void removeWishFromWishList(Wish wish) {

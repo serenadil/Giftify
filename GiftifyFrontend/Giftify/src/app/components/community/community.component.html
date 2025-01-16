@@ -65,6 +65,7 @@
         <br>
         <p *ngIf="communityInfo?.close; else communityStillOpen">
           {{ drawnName }} </p>
+
         <ng-template #communityStillOpen>
           <br>
           <p>La community è ancora aperta!</p>
@@ -75,11 +76,11 @@
 
     <div class="card card-my-wishlist">
       <h3>La mia wishlist</h3>
-      <ul *ngIf="myWishList.wishes.length > 0; else noWishes">
+      <ul *ngIf="myWishList?.wishes.length > 0; else noWishes">
         <li *ngFor="let wish of myWishList.wishes">
           <div class="wish-content">
-            <span class="wish-img">{{ wish.imagePath }}</span>
-            <span class="wish-name">{{ wish.name }}</span>
+            <span class="wish-img">{{ wish?.category }}</span>
+            <span class="wish-name">{{ wish?.name }}</span>
             <button class="remove-wish-btn" (click)="deleteWish(wish.id)">
               <img src="../../../assets/pics/remove.png" alt="Elimina" class="remove-img">
             </button>
@@ -90,32 +91,35 @@
         <br>
         <p>La lista dei desideri è ancora vuota...idee?</p>
       </ng-template>
-
       <div class="add-wish-container">
         <button (click)="openNewWishForm()">Aggiungi</button>
-        <div class="modal-overlay" *ngIf="isNewWishFormOpen">
-          <div class="modal-window">
-            <span class="close-btn" (click)="closeNewWishForm()">&times;</span>
-            <h3>Aggiungi un desiderio</h3>
-            <div class="new-wish">
-              <input
-                type="text"
-                [(ngModel)]="newWish.name"
-                placeholder="Nome del desiderio"
-                pattern="[a-zA-Z0-9._\-]+"
-                #wishNameInput="ngModel"
-              />
-              <div *ngIf="wishNameInput.invalid && wishNameInput.touched" class="error">
-                <p *ngIf="wishNameInput.errors?.['pattern']">
-                  Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
-                </p>
-              </div>
+      </div>
 
-              <h3>Seleziona una categoria</h3>
-              <div class="image-grid">
-                <button
-                  type="button" class="button-grid"
-                  *ngFor="let category of [
+    </div>
+
+    <div class="modal-wish-overlay" *ngIf="isNewWishFormOpen">
+      <div class="modal-wish-window">
+        <span class="close-btn" (click)="closeNewWishForm()">&times;</span>
+        <h3>Aggiungi un desiderio</h3>
+        <div class="new-wish">
+          <input
+            type="text"
+            [(ngModel)]="newWish.name"
+            placeholder="Nome del desiderio"
+            pattern="[a-zA-Z0-9._\-]+"
+            #wishNameInput="ngModel"
+          />
+          <div *ngIf="wishNameInput.invalid && wishNameInput.touched" class="error">
+            <p *ngIf="wishNameInput.errors?.['pattern']">
+              Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
+            </p>
+          </div>
+
+          <h3>Seleziona una categoria</h3>
+          <div class="image-grid">
+            <button
+              type="button" class="button-grid"
+              *ngFor="let category of [
       { key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png' },
       { key: 'CARE', img: '../../../assets/pics/care-pic.png' },
       { key: 'GYM', img: '../../../assets/pics/gym-pic.png' },
@@ -125,27 +129,23 @@
       { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
       { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
     ]"
-                  [class]="'category-' + category.key.toLowerCase()"
-                  [class.selected]="newWish.category === category.key"
-                  (click)="newWish.category = category.key"
-                >
-                  <img [src]="category.img" [alt]="category.key"/>
-                </button>
-              </div>
-
-              <button (click)="addWish()" class="btn btn-success">
-                Aggiungi desiderio
-              </button>
-              <br>
-              <br>
-              <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
-              <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
-            </div>
+              [class]="'category-' + category.key.toLowerCase()"
+              [class.selected]="newWish?.category === category.key"
+              (click)="newWish.category = category.key"
+            >
+              <img [src]="category.img" [alt]="category.key"/>
+            </button>
           </div>
+
+          <button (click)="addWish()" class="btn btn-success">
+            Aggiungi desiderio
+          </button>
+          <br>
+          <br>
+          <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
+          <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
         </div>
       </div>
-
-
     </div>
 
     <div class="card card-participants">

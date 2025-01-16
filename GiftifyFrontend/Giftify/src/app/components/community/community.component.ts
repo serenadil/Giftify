@@ -44,7 +44,6 @@ export class CommunityComponent implements OnInit {
   ngOnInit() {
     this.loadAccountInfo();
     this.loadCommunity();
-    this.viewDrawnName();
     this.loadMyWishList()
   }
 
@@ -58,6 +57,7 @@ export class CommunityComponent implements OnInit {
       },
     });
   }
+
 
   viewDrawnName(): void {
     const communityId = this.route.snapshot.paramMap.get('id');
@@ -84,6 +84,9 @@ export class CommunityComponent implements OnInit {
         next: (data) => {
           this.communityInfo = data;
           this.errorMessage = null;
+          if (this.communityInfo.close) {
+            this.viewDrawnName();
+          }
           this.communityService.getRoleForCommunity(communityId).subscribe({
             next: (roleData) => {
               this.userRole = roleData;  // Salva il ruolo dell'utente
@@ -151,11 +154,13 @@ export class CommunityComponent implements OnInit {
 
   loadMyWishList() {
     const communityId = this.route.snapshot.paramMap.get('id');
+    console.log(communityId);
     if (communityId) {
       this.wishService.viewMyWishlist(communityId).subscribe({
         next: (data) => {
+          console.log('stocazzo');
           this.myWishList = data;
-          console.log(this.myWishList)
+          console.log('piuppo '+this.myWishList)
         },
         error: (err) => {
           this.errorMessage = err.error || 'Errore nel caricamento della wishlist.';

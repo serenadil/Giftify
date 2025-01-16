@@ -265,7 +265,7 @@ public class CommunityController {
             if (community == null || account.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            WishList wishList = community.getuserWishList(accountCommunityName);
+            WishList wishList = community.getuserWishList(community.getCommunityNameByAccount(account));
             if (wishList == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wishlist non trovata per il partecipante.");
             }
@@ -278,19 +278,21 @@ public class CommunityController {
     @GetMapping("community/{communityId}/myWishlist")
     public ResponseEntity<?> getWishList(@PathVariable UUID communityId) {
         try {
+            System.out.println(communityId);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account user = (Account) authentication.getPrincipal();
             user = accountService.getAccountById(user.getId());
+            System.out.println(user.getEmail());
             Community community = communityService.getCommunityById(communityId);
             if (user.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
+            System.out.println(user.getRoleForCommunity(community));
             String userCommunityName= community.getCommunityNameByAccount(user);
+            System.out.println(userCommunityName);
             WishList wishList = community.getuserWishList(userCommunityName);
-            if (wishList != null) {
-                return ResponseEntity.ok(wishList);
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            System.out.println(wishList.getWishes().stream().toList().get(0).getName());
+            return ResponseEntity.ok(wishList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }

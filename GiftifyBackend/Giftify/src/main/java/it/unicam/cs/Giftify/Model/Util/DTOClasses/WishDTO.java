@@ -14,5 +14,4 @@ import lombok.Setter;
 public class WishDTO {
     private String name;
     private WishCategory category;
-    private WishList wishList;
 }

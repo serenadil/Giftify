@@ -5,7 +5,6 @@ import {RegisterComponent} from './components/register/register.component';
 import {HomeComponent} from './components/home/home.component';
 import {CommunityComponent} from './components/community/community.component';
 import {AuthGuard} from './authUtil/authGuard';
-import {WishlistComponent} from './components/wishlist/wishlist.component';
 
 
 const routes: Routes = [

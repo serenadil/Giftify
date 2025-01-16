@@ -197,6 +197,51 @@ body {
 .modal-window p {
   margin: 0.5rem 0;
 }
+
+.modal-wish-window {
+  line-height: 1.8;
+  font-family: 'Afacad Flux', serif;
+  color: #008a69;
+  background: #f8fcee;
+  padding: 1rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 50rem;
+  height: 40rem;
+  text-align: center;
+  position: relative;
+}
+
+
+.modal-wish-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-wish-window button {
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.modal-wish-window h3 {
+  margin-bottom: 1rem;
+}
+
+.modal-wish-window p {
+  margin: 0.5rem 0;
+}
+
 .logout-btn {
   background: #dc3545;
   color: white;
@@ -209,11 +254,6 @@ body {
 ul {
   list-style: none; /* Rimuove i puntini */
   padding: 0;
-}
-
-li {
-  color: black;
-  /*list-style: none;*/
 }
 
 .community-link {
@@ -328,6 +368,8 @@ li {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   gap: 1rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .button-grid {
