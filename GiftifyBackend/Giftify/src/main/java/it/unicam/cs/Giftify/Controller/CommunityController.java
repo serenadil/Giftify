@@ -31,9 +31,6 @@ public class CommunityController {
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private CommunityRepository communityRepository;
-    private WishListService wishListService;
 
     @GetMapping("community/role/{communityId}")
     public ResponseEntity<?> getRoleForCommunity(@PathVariable UUID communityId) {
@@ -66,13 +63,6 @@ public class CommunityController {
                     communityDto.getDeadline(),
                     communityDto.getUserCommunityName()
             );
-            System.out.println(communityRepository.findByActive(true).get(0).getCommunityName());
-            System.out.println(communityRepository.findByActive(true).get(0).getCommunityNote());
-            System.out.println(communityRepository.findByActive(true).get(0).getBudget());
-            System.out.println(communityRepository.findByActive(true).get(0).getDeadline());
-            System.out.println(communityRepository.findByActive(true).get(0).getCommunityNames().stream().toList().get(0).getUserCommunityName());
-
-
             return ResponseEntity.ok("Community creata con successo.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -234,26 +224,6 @@ public class CommunityController {
     }
 
 
-//    @GetMapping("/community/drawnNameList/{id}")
-//    public ResponseEntity<?> viewDrawnNameList(@PathVariable UUID id) {
-//        try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Account account = (Account) authentication.getPrincipal();
-//            account = accountService.getAccountById(account.getId());
-//            Community community = communityService.getCommunityById(id);
-//            if (community == null || account.getRoleForCommunity(community) != Role.MEMBER) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//            }
-//            Optional<Account> optionalReceiver = accountService.getAccount(community.getGiftReceiver(account));
-//            if (optionalReceiver.isEmpty()) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//            }
-//            WishList wishList = community.getuserWishList(optionalReceiver.get());
-//            return ResponseEntity.ok(wishList);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
-//        }
-//    }
 
     @GetMapping("/community/{communityId}/participantList/{accountCommunityName}")
     public ResponseEntity<?> viewParticipantList(@PathVariable UUID communityId, @PathVariable String accountCommunityName) {
@@ -265,7 +235,7 @@ public class CommunityController {
             if (community == null || account.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            WishList wishList = community.getuserWishList(community.getCommunityNameByAccount(account));
+            WishList wishList = community.getuserWishList(accountCommunityName);
             if (wishList == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wishlist non trovata per il partecipante.");
             }
@@ -275,28 +245,23 @@ public class CommunityController {
         }
     }
 
-    @GetMapping("community/{communityId}/myWishlist")
-    public ResponseEntity<?> getWishList(@PathVariable UUID communityId) {
+    @GetMapping("/community/getName/{communityId}")
+    public ResponseEntity<String> viewUserCommunityName(@PathVariable UUID communityId) {
         try {
-            System.out.println(communityId);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account user = (Account) authentication.getPrincipal();
-            user = accountService.getAccountById(user.getId());
-            System.out.println(user.getEmail());
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
             Community community = communityService.getCommunityById(communityId);
-            if (user.getRoleForCommunity(community) == null) {
+            if (community == null || account.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            System.out.println(user.getRoleForCommunity(community));
-            String userCommunityName= community.getCommunityNameByAccount(user);
-            System.out.println(userCommunityName);
-            WishList wishList = community.getuserWishList(userCommunityName);
-            System.out.println(wishList.getWishes().stream().toList().get(0).getName());
-            return ResponseEntity.ok(wishList);
+            String userCommunityName= community.getCommunityNameByAccount(account);
+            return ResponseEntity.ok(userCommunityName);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/community/wishlists/{id}")
     public ResponseEntity<?> getWishlists(@PathVariable UUID id) {

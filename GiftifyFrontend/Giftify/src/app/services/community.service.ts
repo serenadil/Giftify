@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, Observable, tap, throwError} from 'rxjs';
 import {AuthResponse} from '../../model/Auth/AuthResponse';
@@ -11,37 +11,31 @@ import {Router} from '@angular/router';
 export class CommunityService {
   private apiUrl = 'http://localhost:8080/community';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+  }
 
   getAccountInfo(): Observable<any> {
     return this.http.get('http://localhost:8080/accountInfo').pipe(
-      tap((response) => {
-        console.log('Dati dell\'account:', response); // Stampa tutta la risposta
-        // Se la risposta contiene un oggetto con i dati dell'account, puoi fare qualcosa del tipo:
-        console.log('Nome dell\'account:', response);
-        console.log('Email dell\'account:', response);
-      }),
       catchError((error) => {
-        console.error('Errore nel caricamento dell\'account:', error);
         return throwError(() => error);
       })
     );
   }
 
   removeUserFromCommunity(communityId: string, userId: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${userId}`, { responseType: 'text' });
+    return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${userId}`, {responseType: 'text'});
   }
 
   closeCommunity(communityId: string): Observable<Object> {
-    return this.http.post(`${this.apiUrl}/closeCommunity/${communityId}`, { responseType: 'text' });
+    return this.http.post(`${this.apiUrl}/closeCommunity/${communityId}`, {responseType: 'text'});
   }
 
   deleteCommunity(communityId: string): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/deleteCommunity/${communityId}`, { responseType: 'text' });
+    return this.http.delete(`${this.apiUrl}/deleteCommunity/${communityId}`, {responseType: 'text'});
   }
 
-  updateCommunity(communityId:string, communityUpdateData: any): Observable<string> {
-    return this.http.put(`${this.apiUrl}/updateCommunity/${communityId}`, communityUpdateData, { responseType: 'text' });
+  updateCommunity(communityId: string, communityUpdateData: any): Observable<string> {
+    return this.http.put(`${this.apiUrl}/updateCommunity/${communityId}`, communityUpdateData, {responseType: 'text'});
   }
 
   getGeneralInfo(communityId: string): Observable<any[]> {
@@ -52,17 +46,14 @@ export class CommunityService {
     return this.http.get(`${this.apiUrl}/drawnName/${communityId}`, {responseType: "text"});
   }
 
-  viewDrawnNameList(communityId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/drawnNameList/${communityId}`);
+  viewParticipantList(communityId: string, accountCommunityName: string | null): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/${communityId}/participantList/${accountCommunityName}`);
   }
 
-  viewParticipantList(communityId: string, accountCommunityName: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/participantList/${communityId}/${accountCommunityName}`);
+  viewUserCommunityName(communityId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/getName/${communityId}`, {responseType: 'text'});
   }
 
-  getWishlists(communityId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/wishlists/${communityId}`);
-  }
 
   goBack() {
     this.router.navigate(['/home']);

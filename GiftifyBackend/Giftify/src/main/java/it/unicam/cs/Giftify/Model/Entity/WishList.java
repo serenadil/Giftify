@@ -1,5 +1,6 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,7 @@ public class WishList {
     /**
      * Utente proprietario della wishlist.
      */
+    @JsonIgnore
     @ManyToOne
     private Account user;
 

@@ -18,7 +18,7 @@ export class CommunityComponent implements OnInit {
   communityInfo: any = null;
   drawnName: string | null = null;
   userWishList: any = null;
-  drawnNameWishList: any = null;
+  userCommunityName: string | null = null;
   myWishList: any = null;
   participants: any = [];
   isProfileModalOpen = false;
@@ -34,6 +34,16 @@ export class CommunityComponent implements OnInit {
     name: '',
     category: '',
   }
+  categories = [
+    { key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png' },
+    { key: 'CARE', img: '../../../assets/pics/care-pic.png' },
+    { key: 'GYM', img: '../../../assets/pics/gym-pic.png' },
+    { key: 'READING', img: '../../../assets/pics/book-pic.png' },
+    { key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png' },
+    { key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png' },
+    { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
+    { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
+  ];
   createSuccessMessage: string | null = null;
   createErrorMessage: string | null = null;
 
@@ -55,28 +65,9 @@ export class CommunityComponent implements OnInit {
       error: (err) => {
         console.error('Errore nel caricamento del profilo:', err);
       },
+
     });
   }
-
-
-  viewDrawnName(): void {
-    const communityId = this.route.snapshot.paramMap.get('id');
-    if (communityId) {
-      this.communityService.viewDrawnName(communityId).subscribe({
-        next: (name) =>  {
-          console.log(name);
-        this.drawnName = name;
-      },
-        error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.';
-          console.error(err);
-        }
-      });
-    } else {
-      this.errorMessage = 'ID della community non trovato.';
-    }
-  }
-
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
@@ -89,7 +80,7 @@ export class CommunityComponent implements OnInit {
           }
           this.communityService.getRoleForCommunity(communityId).subscribe({
             next: (roleData) => {
-              this.userRole = roleData;  // Salva il ruolo dell'utente
+              this.userRole = roleData;
             },
             error: (err) => {
               this.errorMessage = err.error || 'Errore nel caricare il ruolo dell\'utente.';
@@ -98,6 +89,30 @@ export class CommunityComponent implements OnInit {
         },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
+        }
+      });
+    } else {
+      this.errorMessage = 'ID della community non trovato.';
+    }
+  }
+
+  getCategoryImage(category: string): string | null {
+    const foundCategory = this.categories.find(cat => cat.key === category);
+    return foundCategory ? foundCategory.img : null;
+  }
+
+
+  viewDrawnName(): void {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.communityService.viewDrawnName(communityId).subscribe({
+        next: (name) =>  {
+        this.drawnName = name;
+
+      },
+        error: (err) => {
+          this.errorMessage = err.error || 'Si è verificato un errore.';
+          console.error(err);
         }
       });
     } else {
@@ -154,18 +169,45 @@ export class CommunityComponent implements OnInit {
 
   loadMyWishList() {
     const communityId = this.route.snapshot.paramMap.get('id');
-    console.log(communityId);
     if (communityId) {
-      this.wishService.viewMyWishlist(communityId).subscribe({
+
+      this.communityService.viewUserCommunityName(communityId).subscribe({
         next: (data) => {
-          console.log('stocazzo');
-          this.myWishList = data;
-          console.log('piuppo '+this.myWishList)
+          this.userCommunityName = data;
+          console.log(this.userCommunityName)
+          this.communityService.viewParticipantList(communityId, this.userCommunityName).subscribe({
+            next: (data) => {
+              this.myWishList = data;
+              console.log(this.myWishList)
+            },
+            error: (err) => {
+              this.errorMessage = err.error || 'Errore nel caricamento del nome ';
+            }
+          })
         },
         error: (err) => {
-          this.errorMessage = err.error || 'Errore nel caricamento della wishlist.';
+          this.errorMessage = err.error || 'Errore nel caricamento del nome ';
         }
       })
+    }
+  }
+
+  viewParticipantWishlist(accountCommunityName: string): void {
+    const communityId = this.route.snapshot.paramMap.get('id');
+    if (communityId) {
+      this.communityService.viewParticipantList(communityId, accountCommunityName).subscribe({
+        next: (data) => {
+          console.log('Dati ricevuti dalla wishlist del partecipante:', data);
+          this.userWishList = data; // Assicurati che "data" sia un array valido
+          this.openWishListModal();
+        },
+        error: (err) => {
+          console.error('Errore durante il recupero della wishlist del partecipante:', err);
+          this.errorMessage = err.error || 'Errore nel recupero della wishlist del partecipante.';
+        }
+      });
+    } else {
+      console.error('Community ID mancante nella route!');
     }
   }
 
@@ -192,7 +234,7 @@ export class CommunityComponent implements OnInit {
           this.createErrorMessage = err.error || 'Errore durante la creazione del desiderio';
         }
       });
-    }
+    }this.loadMyWishList();
   }
 
   deleteWish(wishId: number) {
