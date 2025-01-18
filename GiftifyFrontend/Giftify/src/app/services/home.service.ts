@@ -16,7 +16,6 @@ export class HomeService {
   }
 
 
-
   getUserCommunities(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/getCommunities`);
   }

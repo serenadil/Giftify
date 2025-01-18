@@ -8,16 +8,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.home-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: #00664e;
-  color: #f8fcee;
-  padding: 1rem;
-  gap: 1rem;
-}
-
 .community-container {
   display: flex;
   flex-direction: column;
@@ -28,6 +18,33 @@ body {
   gap: 1rem;
 }
 
+.planet-container {
+  margin-top: 2rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.planet-img {
+  max-height: 9rem;
+  width: auto;
+  height: auto;
+}
+
+.astro-container {
+  margin-top: 7rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.astro-img {
+  max-height: 14rem;
+  width: auto;
+  height: auto;
+}
 
 .header {
   display: flex;
@@ -44,7 +61,6 @@ body {
 
 .logo-img {
   height: 7rem;
-
 }
 
 .gift-img {
@@ -71,25 +87,43 @@ body {
 
 .main-content {
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
-  gap: 1rem;
+  padding: 1.5rem;
+  gap: 2rem;
   justify-content: center;
 }
 
-.card-participants p {
-  font-size: 1.1rem;
+.rocket-container {
+  margin-top: 4rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.participant-link {
-  font-size: 1.1rem;
-  text-decoration: none; /* Rimuove la sottolineatura */
-  color: #00664e; /* Colore del testo */
-  font-weight: bold; /* Testo in grassetto */
-  transition: color 0.3s ease; /* Animazione colore */
+.final-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
 }
 
-.participant-link:hover {
-  color: #00b88d; /* Cambia colore al passaggio del mouse */
+.final-btn button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  color: white;
+  background-color: #00b88d;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.final-btn button:hover {
+  background-color: #008a69;
+  transform: scale(1.05);
 }
 
 .profile-settings-container {
@@ -114,45 +148,201 @@ body {
   gap: 0.5rem;
 }
 
+.add-wish-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-.rocket-container {
-  margin-top: 4rem;
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0.1rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0.3rem 0;
+}
+
+.button-grid {
+  width: 6rem;
+  height: 6rem;
+  background: #f8fcee;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  border-radius: 8px;
   text-align: center;
+}
+
+.button-grid img {
+  max-width: 4rem;
+  max-height: 4rem;
+  object-fit: cover;
+}
+
+.button-grid.selected {
+  background-color: #00b88d;
+  transform: scale(1.05);
+  border: 2px solid #00b88d;
+  color: #f8fcee;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wish-conteiner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.625rem;
+}
+
+.wish-category-img {
+  width: 3.125rem;
+  height: 3.125rem;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.wish-conteiner p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+.modal-wish-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-
+  z-index: 1000;
 }
 
-.rocket-img {
-  max-height: 15rem;
-  width: auto;
-  height: auto;
-}
 
-.back-btn {
-  font-size: 1.2rem;
-  width: 15%;
-  background: #00b88d;
-  color: white;
-  border: none;
-  padding: 0.7rem;
+
+.modal-wish-window {
+  line-height: 1.8;
+  font-family: 'Afacad Flux', serif;
+  color: #696969;
+  background: #f8fcee;
+  padding: 3rem;
   border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 35rem;
+  height: 40rem;
+  text-align: center;
+  position: relative;
+}
+
+
+.modal-wish-window button {
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 15px;
   cursor: pointer;
-  transition: background 0.3s ease;
+}
+.modal-wish-window h3 {
+  color: #00664e;
+  margin-bottom: 1rem;
 }
 
-.back-btn:hover {
-  background: #008a69;
+.modal-wish-window p {
+  margin: 0.5rem 0;
 }
 
+.modal-wish-overlay input[type="text"] {
+  font-family: 'Afacad Flux', serif;
+  font-size: 1.1rem;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border: 1px solid #008a69;
+  border-radius: 15px;
+  background: #f8fcee;
+  color: #00664e;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-wish-overlay input[type="text"]:focus {
+  outline: none;
+  border-color: #00b88d;
+  box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
+}
+
+.modal-wish-overlay input[type="text"]::placeholder {
+  color: #a1a1a1;
+  opacity: 1;
+}
+
+.message-container {
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+.message-container .error {
+  color: red;
+  font-weight: bold;
+}
+
+.message-container .success {
+  color: #00664e;
+  font-weight: bold;
+}
+.wish-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.wish-image {
+  width: 3rem;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.wish-name {
+  font-size: 2rem;
+  flex-grow: 1;
+}
+
+.remove-wish-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0!important;
+  color: #003f35 !important;
+  align-self: revert;
+  font-size: 1.2rem !important;
+  text-align: right !important;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -172,15 +362,16 @@ body {
   font-family: 'Afacad Flux', serif;
   color: #696969;
   background: #f8fcee;
-  padding: 1rem;
+  padding: 3rem;
   border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 19rem;
-  height: 15rem;
+  width: 23rem;
+  height: 19rem;
   text-align: center;
   position: relative;
+  max-height: 80vh;
+  overflow: hidden;
 }
-
 
 .modal-window button {
   font-size: 1rem;
@@ -190,6 +381,7 @@ body {
   border-radius: 15px;
   cursor: pointer;
 }
+
 .modal-window h3 {
   margin-bottom: 1rem;
 }
@@ -198,48 +390,49 @@ body {
   margin: 0.5rem 0;
 }
 
-.modal-wish-window {
-  line-height: 1.8;
-  font-family: 'Afacad Flux', serif;
-  color: #008a69;
-  background: #f8fcee;
-  padding: 1rem;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 50rem;
-  height: 40rem;
-  text-align: center;
-  position: relative;
-}
-
-
-.modal-wish-overlay {
+.modal-whisList-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modal-wish-window button {
-  font-size: 1rem;
-  margin: 1rem;
-  padding: 16px 24px;
-  border: none;
-  border-radius: 15px;
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.2rem;
   cursor: pointer;
 }
-.modal-wish-window h3 {
-  margin-bottom: 1rem;
+
+.modal-whisList-window {
+  line-height: 1.8;
+  font-family: 'Afacad Flux', serif;
+  color: #696969;
+  background: #f8fcee;
+  padding: 3rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 23rem;
+  height: auto;
+  text-align: center;
+  position: relative;
+  max-height: 80vh;
+  overflow: hidden;
 }
 
-.modal-wish-window p {
-  margin: 0.5rem 0;
+
+.wishlist-container {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-top: 1rem;
 }
 
 .logout-btn {
@@ -251,57 +444,42 @@ body {
   background: #c82333;
 }
 
-ul {
-  list-style: none; /* Rimuove i puntini */
-  padding: 0;
-}
-
-.community-link {
-  font-size: 1.1rem;
-  text-decoration: none; /* Rimuove la sottolineatura */
-  color: #00664e; /* Colore del testo */
-  font-weight: bold; /* Testo in grassetto */
-  transition: color 0.3s ease; /* Animazione colore */
-}
-
-.community-link:hover {
-  color: #00b88d; /* Cambia colore al passaggio del mouse */
-}
-
-
-.profile-info {
-  position: relative;
-  display: flex;
-  align-items: center;
+.btn-success {
+  background: #00b88d;
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 25px;
   cursor: pointer;
+
 }
 
-
+.btn-success:hover {
+  background: #008a69;
+  transform: scale(1.05);
+}
 
 .card {
   justify-content: center;
+  margin-bottom: 0.5rem;
   font-family: 'Afacad Flux', serif;
   background-color: #f8fcee;
   color: #00664e;
   border-radius: 25px;
   box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
-  padding-left: 2.4rem;
-  padding-right: 2.2rem;
-  padding-top: 1.7rem;
-  padding-bottom: 2rem;
+  padding: 1.7rem 2.4rem 2rem;
   flex: 1 1 calc(33.33% - 2rem);
   max-width: 400px;
-  min-width: 350px;
+  min-width: 370px;
+  min-height: 10rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   gap: 1rem;
 }
-
 
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
 }
-
 
 .card input,
 .card textarea {
@@ -313,7 +491,6 @@ ul {
   border: 1px solid #f8fcee;
   border-radius: 15px;
   background: #f8fcee;
-
 }
 
 .card input:focus,
@@ -321,17 +498,6 @@ ul {
   outline: none;
   border-color: #00b88d;
   box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
-}
-
-.card input::placeholder {
-  opacity: 1;
-}
-
-
-.input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
 }
 
 .card button {
@@ -349,100 +515,6 @@ ul {
 .card button:hover {
   background: #008a69;
 }
-
-.Impostazioni {
-  height: 1rem;
-}
-
-.profile-img {
-  height: 2.5rem;
-}
-
-.add-wish-container{
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-  gap: 1rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.button-grid {
-  position: relative;
-  width: 6rem;
-  height: 6rem;
-  background: #00b88d;
-  color: white;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.button-grid img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-}
-
-.button-grid.selected {
-  background-color: white;
-  transform: scale(1.05);
-  border-color: #00b88d;
-}
-
-
-.card-my-community {
-
-}
-
-.card-my-wishlist {
-
-}
-
-.card-participants {
-
-}
-
-
-.wish-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-}
-
-.wish-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.wish-name {
-  font-size: 2rem;
-  flex-grow: 1;
-}
-
-.remove-wish-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-
-
 
 @media (max-width: 768px) {
   .header {
@@ -471,26 +543,13 @@ ul {
     height: 3.5rem;
   }
 
-  .profile-img{
+  .profile-img {
     height: 1rem;
   }
 
-  .Impostazioni{
+  .Impostazioni {
     height: 1rem;
   }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .row .card {
-    flex: 1 1 calc(50% - 1rem); /* Ogni card occupa il 50% della riga meno il gap */
-    max-width: calc(50% - 1rem);
-  }
-
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -504,10 +563,4 @@ ul {
   .logo-img {
     height: 8rem;
   }
-
-  .row .card {
-    flex: 1 1 100%; /* Su dispositivi piccoli, le card occupano l'intera larghezza */
-    max-width: 100%;
-  }
 }
-
