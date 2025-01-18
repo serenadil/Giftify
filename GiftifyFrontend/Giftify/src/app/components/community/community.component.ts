@@ -44,6 +44,7 @@ export class CommunityComponent implements OnInit {
     { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
     { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
   ];
+  filteredParticipants: any[] = [];
   createSuccessMessage: string | null = null;
   createErrorMessage: string | null = null;
 
@@ -75,6 +76,14 @@ export class CommunityComponent implements OnInit {
         next: (data) => {
           this.communityInfo = data;
           this.errorMessage = null;
+
+          if (this.communityInfo.communityNames) {
+            this.filteredParticipants = this.communityInfo.communityNames.filter(
+              (participant: any) => participant.userCommunityName !== this.userCommunityName
+            );
+          }
+          console.log(this.filteredParticipants);
+
           if (this.communityInfo.close) {
             this.viewDrawnName();
           }
@@ -134,7 +143,7 @@ export class CommunityComponent implements OnInit {
       });
     } else {
       this.errorMessage = 'errore';
-    }
+    }this.loadMyWishList();
   }
 
   removeUserFromCommunity() {
@@ -170,7 +179,6 @@ export class CommunityComponent implements OnInit {
   loadMyWishList() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-
       this.communityService.viewUserCommunityName(communityId).subscribe({
         next: (data) => {
           this.userCommunityName = data;
@@ -215,12 +223,12 @@ export class CommunityComponent implements OnInit {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
       if (!this.newWish.name || !this.newWish.category) {
-        alert('Inserisci le informazioni.');
+        this.createErrorMessage = 'Inserisci tutte le informazioni richieste.';
         return;
       }
       this.wishService.addWish(communityId, this.newWish).subscribe({
         next: (message) => {
-          alert(message);
+          this.createSuccessMessage = message;
           this.newWish = {
             name: '',
             category: ''
@@ -230,24 +238,34 @@ export class CommunityComponent implements OnInit {
             this.createSuccessMessage = '';
           }, 3000);
         },
-        error: err => {
-          this.createErrorMessage = err.error || 'Errore durante la creazione del desiderio';
+        error: (err) => {
+          this.createErrorMessage = err.error || 'Errore durante la creazione del desiderio.';
         }
       });
-    }this.loadMyWishList();
+      this.loadMyWishList();
+    }
   }
 
   deleteWish(wishId: number) {
     this.wishService.deleteWish(wishId).subscribe({
       next: (message) => {
-        alert(message);
-        this.successMessage = 'Community eliminata con successo';
+        this.successMessage = 'Desiderio eliminato con successo';
+        this.errorMessage = '';
+        this.loadMyWishList();
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
       },
       error: (err) => {
-        alert(err.error || 'Errore durante l\'eliminazione del desiderio')
+        this.errorMessage = err.error || 'Errore durante l\'eliminazione del desiderio';
+        this.successMessage = '';
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 3000);
       }
-    })
+    });
   }
+
 
 
   openProfileModal() {

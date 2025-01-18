@@ -80,43 +80,50 @@
 
 
     <div class="card card-my-wishlist">
-      <h3>La mia wishlist</h3><br>
+      <h3>La mia wishlist</h3>
       <ul *ngIf="myWishList && myWishList?.wishes.length > 0; else noWishes">
-        <li *ngFor="let wish of myWishList.wishes">
-          <div class="wish-conteiner"><p>
-            <img *ngIf="getCategoryImage(wish.category)"
-                 [src]="getCategoryImage(wish.category)"
-                 alt="{{ wish.category }}"
-                 class="wish-category-img"/>{{ wish.name }}
-          </p>
-            <button (click)="deleteWish(wish.id)">X</button>
-          </div>
+        <div class="wishlist-container">
+          <li *ngFor="let wish of myWishList.wishes">
+            <div class="wish-conteiner"><p>
+              <img *ngIf="getCategoryImage(wish.category)"
+                   [src]="getCategoryImage(wish.category)"
+                   alt="{{ wish.category }}"
+                   class="wish-category-img"/>{{ wish.name }}
+            </p>
+              <button class="remove-wish-btn" (click)="deleteWish(wish.id)">X</button>
+            </div>
 
-        </li>
+          </li>
+        </div>
       </ul>
+      <br>
+
       <ng-template #noWishes>
         <p>La lista dei desideri è ancora vuota...idee?</p> <br>
       </ng-template>
       <div class="add-wish-container">
         <button (click)="openNewWishForm()">Aggiungi</button>
       </div>
+      <br>
+      <div class="message-container">
+        <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+      </div>
     </div>
 
 
     <div class="card card-participants">
-      <div class="participants-name" (click)="openWishListModal()">
+      <div class="participants-name">
         <h3>Partecipanti</h3>
         <br>
-
         <ul *ngIf="communityInfo?.communityNames?.length > 1; else noOtherParticipants">
-          <li *ngFor="let accountName of communityInfo.communityNames"
+          <li *ngFor="let accountName of filteredParticipants"
               (click)="viewParticipantWishlist(accountName.userCommunityName)">
             <p>{{ accountName.userCommunityName }}</p>
           </li>
         </ul>
 
-        <div *ngIf="communityInfo?.communityNames?.length > 0 && communityInfo?.communityNames?.length <= 5"
-             class="astro-container">
+        <div *ngIf="filteredParticipants.length <= 5" class="astro-container">
           <img src="../../../assets/pics/astro.png" alt="astro"
                class="astro-img animate__animated animate__zoomInLeft">
         </div>
@@ -125,14 +132,16 @@
           <p>C'è troppo silenzio qui... non c'è ancora nessuno oltre te!</p>
         </ng-template>
       </div>
-
-
     </div>
+
+
     <div class="final-btn animate__animated animate__bounceInUp">
       <button (click)="goBack()">Torna alla home</button>
       <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi la community
       </button>
       <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community
+      </button>
+      <button *ngIf="userRole === 'MEMBER'" (click)="removeUserFromCommunity()">Abbandona la community
       </button>
     </div>
 
@@ -162,15 +171,15 @@
         <button
           type="button" class="button-grid"
           *ngFor="let category of [
-      { key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png'  },
-      { key: 'CARE', img: '../../../assets/pics/care-pic.png'},
-      { key: 'GYM', img: '../../../assets/pics/gym-pic.png' },
-      { key: 'READING', img: '../../../assets/pics/book-pic.png' },
-      { key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png' },
-      { key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png' },
-      { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
-      { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
-    ]"
+            { key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png'  },
+            { key: 'CARE', img: '../../../assets/pics/care-pic.png'},
+            { key: 'GYM', img: '../../../assets/pics/gym-pic.png' },
+            { key: 'READING', img: '../../../assets/pics/book-pic.png' },
+            { key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png' },
+            { key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png' },
+            { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
+            { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
+          ]"
           [class]="'category-' + category.key.toLowerCase()"
           [class.selected]="newWish.category === category.key"
           (click)="newWish.category = category.key"
@@ -182,22 +191,31 @@
       <button (click)="addWish()" class="btn btn-success">
         Aggiungi desiderio
       </button>
-      <br>
-      <br>
-      <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
-      <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
+
+      <div class="message-container">
+        <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
+        <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
+      </div>
     </div>
   </div>
 </div>
-<div class="modal-overlay" *ngIf="isWishListModalOpen">
-  <div class="modal-window">
+<div class="modal-whisList-overlay" *ngIf="isWishListModalOpen">
+  <div class="modal-whisList-window">
     <span class="close-btn" (click)="closeWishListModal()">&times;</span>
-    <h3>Wishlist</h3>
+    <h3>Wishlist:</h3>
 
-    <div *ngIf="userWishList && userWishList.wishes.length > 0; else noWishes">
+    <div *ngIf="userWishList && userWishList.wishes.length > 0; else noWishes" class="wishlist-container">
       <ul>
         <li *ngFor="let wish of userWishList.wishes">
-          <p>{{ wish.name }} - {{ wish.category }}</p>
+          <div class="wish-conteiner">
+            <p>
+              <img *ngIf="getCategoryImage(wish.category)"
+                   [src]="getCategoryImage(wish.category)"
+                   alt="{{ wish.category }}"
+                   class="wish-category-img"/>
+              {{ wish.name }}
+            </p>
+          </div>
         </li>
       </ul>
     </div>
@@ -207,6 +225,7 @@
     </ng-template>
   </div>
 </div>
+
 
 </body>
 

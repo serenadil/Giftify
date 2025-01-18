@@ -18,7 +18,7 @@ body {
   gap: 1rem;
 }
 
-.planet-container, .astro-container, .rocket-container {
+.planet-container {
   margin-top: 2rem;
   text-align: center;
   display: flex;
@@ -26,9 +26,24 @@ body {
   align-items: center;
 }
 
-.planet-img, .astro-img {
+.planet-img {
   max-height: 9rem;
   width: auto;
+  height: auto;
+}
+
+.astro-container {
+  margin-top: 7rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.astro-img {
+  max-height: 14rem;
+  width: auto;
+  height: auto;
 }
 
 .header {
@@ -52,14 +67,21 @@ body {
   height: 5rem;
 }
 
-.profile-settings, .profile-info {
+.profile-settings {
+  display: flex;
+  align-items: center;
+  gap: 0rem;
+}
+
+.profile-settings img {
+  height: 2rem;
+  cursor: pointer;
+}
+
+.profile-info {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.profile-settings img, .profile-info img {
-  height: 2rem;
   cursor: pointer;
 }
 
@@ -70,6 +92,14 @@ body {
   padding: 1.5rem;
   gap: 2rem;
   justify-content: center;
+}
+
+.rocket-container {
+  margin-top: 4rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .final-btn {
@@ -96,15 +126,26 @@ body {
   transform: scale(1.05);
 }
 
-.profile-settings-container, .icon-settings img, .icon-profile img {
+.profile-settings-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.icon-settings img, .icon-profile img {
+.icon-settings img {
   height: 2rem;
   cursor: pointer;
+}
+
+.icon-profile img {
+  height: 2.5rem;
+  cursor: pointer;
+}
+
+.icon-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .add-wish-container {
@@ -124,7 +165,7 @@ body {
 
 .button-grid {
   width: 6rem;
-  height: 7rem;
+  height: 6rem;
   background: #f8fcee;
   border: none;
   padding: 0;
@@ -161,6 +202,7 @@ ul {
 .wish-conteiner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.625rem;
   margin-bottom: 0.5rem;
   padding-bottom: 0.625rem;
@@ -180,24 +222,91 @@ ul {
   display: flex;
   align-items: center;
 }
+.modal-wish-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
-.modal-wish-overlay.input {
+
+
+.modal-wish-window {
+  line-height: 1.8;
+  font-family: 'Afacad Flux', serif;
+  color: #696969;
+  background: #f8fcee;
+  padding: 3rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 35rem;
+  height: 40rem;
+  text-align: center;
+  position: relative;
+}
+
+
+.modal-wish-window button {
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.modal-wish-window h3 {
+  color: #00664e;
+  margin-bottom: 1rem;
+}
+
+.modal-wish-window p {
+  margin: 0.5rem 0;
+}
+
+.modal-wish-overlay input[type="text"] {
   font-family: 'Afacad Flux', serif;
   font-size: 1.1rem;
   width: 100%;
   margin: 0.5rem 0;
   padding: 1rem;
-  border: 1px solid #f8fcee;
+  border: 1px solid #008a69;
   border-radius: 15px;
   background: #f8fcee;
+  color: #00664e;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.modal-wish-overlay.input:focus {
+.modal-wish-overlay input[type="text"]:focus {
   outline: none;
   border-color: #00b88d;
   box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
 }
 
+.modal-wish-overlay input[type="text"]::placeholder {
+  color: #a1a1a1;
+  opacity: 1;
+}
+
+.message-container {
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+.message-container .error {
+  color: red;
+  font-weight: bold;
+}
+
+.message-container .success {
+  color: #00664e;
+  font-weight: bold;
+}
 .wish-content {
   display: flex;
   align-items: center;
@@ -218,12 +327,15 @@ ul {
 }
 
 .remove-wish-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0!important;
+  color: #003f35 !important;
+  align-self: revert;
+  font-size: 1.2rem !important;
+  text-align: right !important;
 }
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -245,7 +357,7 @@ ul {
   cursor: pointer;
 }
 
-.modal-window, .modal-wish-window {
+.modal-window {
   line-height: 1.8;
   font-family: 'Afacad Flux', serif;
   color: #696969;
@@ -253,11 +365,15 @@ ul {
   padding: 3rem;
   border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 23rem;
+  height: 19rem;
   text-align: center;
   position: relative;
+  max-height: 80vh;
+  overflow: hidden;
 }
 
-.modal-window button, .modal-wish-window button {
+.modal-window button {
   font-size: 1rem;
   margin: 1rem;
   padding: 16px 24px;
@@ -266,24 +382,79 @@ ul {
   cursor: pointer;
 }
 
-.modal-window h3, .modal-wish-window h3 {
+.modal-window h3 {
   margin-bottom: 1rem;
 }
 
-.modal-window p, .modal-wish-window p {
+.modal-window p {
   margin: 0.5rem 0;
 }
 
-.logout-btn, .btn-success {
+.modal-whisList-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-whisList-window {
+  line-height: 1.8;
+  font-family: 'Afacad Flux', serif;
+  color: #696969;
+  background: #f8fcee;
+  padding: 3rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 23rem;
+  height: auto;
+  text-align: center;
+  position: relative;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+
+.wishlist-container {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-top: 1rem;
+}
+
+.logout-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+}
+
+.btn-success {
   background: #00b88d;
   color: white;
   border: none;
   padding: 16px 24px;
   border-radius: 25px;
   cursor: pointer;
+
 }
 
-.logout-btn:hover, .btn-success:hover {
+.btn-success:hover {
   background: #008a69;
   transform: scale(1.05);
 }
@@ -296,10 +467,7 @@ ul {
   color: #00664e;
   border-radius: 25px;
   box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
-  padding-left: 2.4rem;
-  padding-right: 2.2rem;
-  padding-top: 1.7rem;
-  padding-bottom: 2rem;
+  padding: 1.7rem 2.4rem 2rem;
   flex: 1 1 calc(33.33% - 2rem);
   max-width: 400px;
   min-width: 370px;
@@ -348,46 +516,6 @@ ul {
   background: #008a69;
 }
 
-.profile-img {
-  height: 2.5rem;
-}
-
-.modal-wish-overlay input[type="text"] {
-  font-family: 'Afacad Flux', serif;
-  font-size: 1.1rem;
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 1rem;
-  border: 1px solid #008a69;
-  border-radius: 15px;
-  background: #f8fcee;
-  color: #00664e;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modal-wish-overlay input[type="text"]:focus {
-  outline: none;
-  border-color: #00b88d;
-  box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
-}
-
-.modal-wish-overlay input[type="text"]::placeholder {
-  color: #a1a1a1;
-  opacity: 1;
-}
-
-.category-label {
-  font-family: 'Afacad Flux', serif;
-  font-size: 0.9rem;
-  color: #00664e;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-.button-grid.selected .category-label {
-  color: #f8fcee;
-}
-
 @media (max-width: 768px) {
   .header {
     flex-direction: row;
@@ -400,6 +528,12 @@ ul {
     gap: 1.5rem;
   }
 
+  .rocket-img {
+    max-height: 9rem;
+    width: auto;
+    height: auto;
+  }
+
   .card {
     flex: 1 1 100%;
     min-width: 100%;
@@ -410,6 +544,10 @@ ul {
   }
 
   .profile-img {
+    height: 1rem;
+  }
+
+  .Impostazioni {
     height: 1rem;
   }
 }
