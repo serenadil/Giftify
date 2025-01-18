@@ -17,6 +17,7 @@ import {Role} from '../../../model/Role';
 export class CommunityComponent implements OnInit {
   communityInfo: any = null;
   drawnName: string | null = null;
+
   userWishList: any = null;
   userCommunityName: string | null = null;
   myWishList: any = null;
@@ -102,7 +103,7 @@ export class CommunityComponent implements OnInit {
       });
     } else {
       this.errorMessage = 'ID della community non trovato.';
-    }
+    } this.loadMyWishList();
   }
 
   getCategoryImage(category: string): string | null {
@@ -143,22 +144,22 @@ export class CommunityComponent implements OnInit {
       });
     } else {
       this.errorMessage = 'errore';
-    }this.loadMyWishList();
+    }this.loadCommunity();
   }
 
-  removeUserFromCommunity() {
+  removeUserFromCommunity(userToRemove: string | null) {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      this.communityService.removeUserFromCommunity(communityId, this.communityInfo).subscribe({
+      this.communityService.removeUserFromCommunity(communityId,userToRemove ).subscribe({
         next: (message) => {
           alert(message);
           this.successMessage = 'Partecipante rimosso con successo';
         },
         error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.';
+          this.errorMessage = err.error || 'Si è verificato un errore.'+ err;
         }
       });
-    }
+    }this.loadCommunity();
   }
 
   deleteCommunity() {

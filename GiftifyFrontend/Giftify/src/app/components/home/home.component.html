@@ -11,13 +11,11 @@
 <div class="home-container">
   <div class="header">
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
-      <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
       <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
-      <img src="../../../assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img"/>
     </div>
     <div>
       <div class="profile-settings-container">
-        <div class="icon-settings" (click)="openSettingsModal()">
+        <div class="icon-profile" (click)="openSettingsModal()">
           <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img"/>
         </div>
         <div class="icon-profile" (click)="openProfileModal()">
@@ -50,7 +48,7 @@
 
   <div class="main-content  animate__animated animate__bounceInUp">
     <div class="card card-user-communities">
-      <h3>Le tue community:</h3><br>
+      <h3>Le tue community:</h3>
       <ul *ngIf="communities.length > 0; else noCommunities">
         <li *ngFor="let community of communities">
           <a [routerLink]="['/community', community.id]" class="community-link">
@@ -59,16 +57,20 @@
         </li>
       </ul>
 
-      <ng-template #noCommunities>
-        <p>Non appartieni a nessuna community! Dobbiamo rimediare...</p>
-        <br>
-        <br>
+      <ng-container *ngIf="communities.length <= 5">
         <div class="rocket-container">
           <img src="../../../assets/pics/rocket.png" alt="Razzo"
                class="rocket-img animate__animated animate__zoomInLeft">
         </div>
+      </ng-container>
+
+      <ng-template #noCommunities>
+        <p>Non appartieni a nessuna community! Dobbiamo rimediare...</p>
+        <br>
+        <br>
       </ng-template>
     </div>
+
 
     <div class="card card-join">
       <h3>Unisciti a una Community</h3>
@@ -93,7 +95,7 @@
           maxlength="8"
           required
           #userCommunityNameInput="ngModel"
-        />
+        /> <br><br>
         <div *ngIf="userCommunityNameInput.invalid && userCommunityNameInput.touched" class="error">
 
           <div *ngIf="userCommunityNameInput.errors?.['maxlength']">
@@ -101,14 +103,14 @@
           </div>
           <p *ngIf="userCommunityNameInput.errors?.['pattern']">
             Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
-          </p>
+          </p><br>
         </div>
 
         <button (click)="joinCommunity()" class="btn btn-primary">
           Unisciti
         </button>
         <div class="globe-container">
-          <img src="../../../assets/pics/globe.png" alt="globe" class="globe-img">
+          <img src="../../../assets/pics/astro2.png" alt="globe" class="globe-img">
         </div>
         <br>
         <br>
@@ -180,7 +182,7 @@
           Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
         </p>
       </div>
-
+      <br><br>
       <button (click)="createCommunity()" class="btn btn-success">
         Crea
       </button>

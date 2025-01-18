@@ -57,6 +57,7 @@ public class Community {
      */
     @Getter
     @Setter
+
     private String communityName;
 
     /**
@@ -94,7 +95,7 @@ public class Community {
     /**
      * Assegnazioni dei regali per la comunità.
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Setter
     @JsonIgnore
     private Set<GiftAssignment> giftAssignments;
@@ -107,7 +108,7 @@ public class Community {
     private Set<WishList> wishlists;
 
     @Getter
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonManagedReference
     private Set<AccountCommunityName> communityNames;
 
@@ -152,7 +153,8 @@ public class Community {
      */
     public void removeUser(@NonNull Account user) {
         userList.remove(user);
-        wishlists.remove(user);
+        wishlists.removeIf(wishList -> wishList.getUser().getEmail().equals(user.getEmail()));
+        communityNames.removeIf(acn -> acn.getAccount().getEmail().equals(user.getEmail()));
     }
 
     /**

@@ -22,8 +22,8 @@ export class CommunityService {
     );
   }
 
-  removeUserFromCommunity(communityId: string, userId: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${userId}`, {responseType: 'text'});
+  removeUserFromCommunity(communityId: string, name: string | null): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/removeUser/${communityId}/${name}`, {responseType: 'text'});
   }
 
   closeCommunity(communityId: string): Observable<Object> {

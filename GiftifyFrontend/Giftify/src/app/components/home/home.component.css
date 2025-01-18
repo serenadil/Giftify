@@ -6,6 +6,8 @@
 }
 
 body {
+  padding-left: 2rem;
+  padding-right: 2rem;
   font-family: Arial, sans-serif;
 }
 
@@ -20,6 +22,8 @@ body {
 }
 
 .header {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,12 +37,12 @@ body {
 }
 
 .logo-img {
-  height: 7rem;
+  height: 9rem;
 
 }
 
 .gift-img {
-  height: 5rem;
+  height: 6rem;
 }
 
 .profile-settings {
@@ -67,7 +71,7 @@ body {
 }
 
 .rocket-container {
-  margin-top: 4rem;
+  margin-top: 7rem;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -81,7 +85,7 @@ body {
   content: "Inserisci la scadenza"; /* Nome specifico */
 }
 .globe-container {
-  margin-top: 4.5rem;
+  margin-top: 3rem;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -89,13 +93,13 @@ body {
 }
 
 .rocket-img {
-  max-height: 15rem;
+  max-height: 18rem;
   width: auto;
   height: auto;
 }
 
 .globe-img {
-  max-height: 8rem;
+  max-height: 15rem;
   width: auto;
   height: auto;
 }
@@ -107,16 +111,19 @@ body {
 }
 
 .icon-settings img {
-  height: 2rem;
+  height: 1rem;
   cursor: pointer;
 }
 
 .icon-profile img {
-  height: 2.5rem;
+  height: 2rem;
   cursor: pointer;
 }
 
 .icon-profile {
+  padding: 0.2rem 0.5rem;
+  background: #00b88d;
+  border-radius: 40%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -150,10 +157,10 @@ body {
   font-family: 'Afacad Flux', serif;
   color: #696969;
   background: #f8fcee;
-  padding: 3rem;
+  padding: 2rem;
   border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 23rem;
+  width: 25rem;
   height: 19rem;
   text-align: center;
   position: relative;
@@ -173,6 +180,7 @@ body {
 }
 
 .modal-window p {
+  font-size: 1.2rem;
   margin: 0.5rem 0;
 }
 .logout-btn {
@@ -224,7 +232,7 @@ ul {
   padding-bottom: 2rem;
   flex: 1 1 calc(33.33% - 2rem);
   max-width: 400px;
-  min-width: 350px;
+  min-width: 380px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   gap: 1rem;
 }
@@ -239,12 +247,12 @@ ul {
 .card input,
 .card textarea {
   font-family: 'Afacad Flux', serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   width: 100%;
   margin: 0.5rem 0;
   padding: 1rem;
-  border: 1px solid #f8fcee;
-  border-radius: 15px;
+  border: none;
+  border-radius: 25px;
   background: #f8fcee;
 
 }
@@ -252,7 +260,7 @@ ul {
 .card input:focus,
 .card textarea:focus {
   outline: none;
-  border-color: #00b88d;
+  border: 1px #00b88d;
   box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
 }
 
@@ -268,7 +276,7 @@ ul {
 }
 
 .card button {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   width: 100%;
   background: #00b88d;
   color: white;
@@ -283,12 +291,24 @@ ul {
   background: #008a69;
 }
 
-.Impostazioni {
-  height: 1rem;
+.card h3 {
+  font-size: 1.4rem; /* Dimensione del testo del titolo */
+  font-weight: bold; /* Per un testo più marcato */
+  margin-bottom: 1rem; /* Spazio sotto il titolo */
 }
 
-.profile-img {
-  height: 2.5rem;
+.card p {
+  font-size: 1.2rem; /* Dimensione del testo del paragrafo */
+  line-height: 1.5; /* Migliora la leggibilità aumentando lo spazio tra le righe */
+}
+
+.card a{
+  font-size: 1.2rem; /* Dimensione del testo del paragrafo */
+  line-height: 1.5;
+}
+
+.Impostazioni {
+  height: 1rem;
 }
 
 

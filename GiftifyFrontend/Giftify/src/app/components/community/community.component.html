@@ -11,13 +11,12 @@
 <div class="community-container">
   <div class="header">
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
-      <img src="../../../assets/pics/pacco.png" alt="Pacchi regalo" class="gift-img"/>
       <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
-      <img src="../../../assets/pics/pacco2.png" alt="Pacchi regalo" class="gift-img"/>
+
     </div>
     <div>
       <div class="profile-settings-container">
-        <div class="icon-settings" (click)="openSettingsModal()">
+        <div class="icon-profile" (click)="openSettingsModal()">
           <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img"/>
         </div>
         <div class="icon-profile" (click)="openProfileModal()">
@@ -53,7 +52,6 @@
     <div class="row">
       <div class="card card-my-community ">
         <h3>{{ communityInfo?.communityName }}</h3>
-        <br>
         <p><strong>Codice d'accesso:</strong> {{ communityInfo?.accessCode }}</p>
         <p><strong>Descrizione:</strong> {{ communityInfo?.communityNote }}</p>
         <p><strong>Budget:</strong> {{ communityInfo?.budget }}</p>
@@ -63,16 +61,16 @@
                class="planet-img animate__animated animate__zoomInLeft">
         </div>
       </div>
+      <br>
       <div class="card card-extracted-name">
         <h3>Il mio nome estratto</h3>
-        <br>
         <p *ngIf="communityInfo?.close; else communityStillOpen">
           {{ drawnName }} </p>
 
         <ng-template #communityStillOpen>
-          <br>
+
           <p>La community è ancora aperta!</p>
-          <br>
+
         </ng-template>
       </div>
 
@@ -90,7 +88,9 @@
                    alt="{{ wish.category }}"
                    class="wish-category-img"/>{{ wish.name }}
             </p>
-              <button class="remove-wish-btn" (click)="deleteWish(wish.id)">X</button>
+              <button class="remove-wish-btn" (click)="deleteWish(wish.id)">
+                <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon">
+              </button>
             </div>
 
           </li>
@@ -99,7 +99,7 @@
       <br>
 
       <ng-template #noWishes>
-        <p>La lista dei desideri è ancora vuota...idee?</p> <br>
+        <p>La lista dei desideri è ancora vuota...idee?</p>
       </ng-template>
       <div class="add-wish-container">
         <button (click)="openNewWishForm()">Aggiungi</button>
@@ -115,11 +115,15 @@
     <div class="card card-participants">
       <div class="participants-name">
         <h3>Partecipanti</h3>
-        <br>
         <ul *ngIf="communityInfo?.communityNames?.length > 1; else noOtherParticipants">
           <li *ngFor="let accountName of filteredParticipants"
               (click)="viewParticipantWishlist(accountName.userCommunityName)">
-            <p>{{ accountName.userCommunityName }}</p>
+            <div class="wish-conteiner">
+              <p>{{ accountName.userCommunityName }}</p>
+              <button *ngIf="userRole === 'ADMIN'" class="remove-wish-btn" (click)="removeUserFromCommunity(accountName.userCommunityName)">
+                <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon">
+              </button>
+            </div>
           </li>
         </ul>
 
@@ -141,7 +145,7 @@
       </button>
       <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community
       </button>
-      <button *ngIf="userRole === 'MEMBER'" (click)="removeUserFromCommunity()">Abbandona la community
+      <button *ngIf="userRole === 'MEMBER'" (click)="removeUserFromCommunity(userCommunityName)">Abbandona la community
       </button>
     </div>
 

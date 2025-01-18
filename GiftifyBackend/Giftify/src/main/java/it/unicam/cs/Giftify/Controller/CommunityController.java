@@ -4,10 +4,8 @@ import it.unicam.cs.Giftify.Model.Entity.Account;
 import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Role;
 import it.unicam.cs.Giftify.Model.Entity.WishList;
-import it.unicam.cs.Giftify.Model.Repository.CommunityRepository;
 import it.unicam.cs.Giftify.Model.Services.AccountService;
 import it.unicam.cs.Giftify.Model.Services.CommunityService;
-import it.unicam.cs.Giftify.Model.Services.WishListService;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityCreateDTO;
 import it.unicam.cs.Giftify.Model.Util.DTOClasses.CommunityUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,19 +69,24 @@ public class CommunityController {
     }
 
 
-    @DeleteMapping("/community/removeUser/{communityId}/{userId}")
-    public ResponseEntity<String> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable Long userId) {
+    @DeleteMapping("/community/removeUser/{communityId}/{accountCommunityName}")
+    public ResponseEntity<String> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable String accountCommunityName) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account admin = (Account) authentication.getPrincipal();
-            admin = accountService.getAccountById(admin.getId());
+            Account account = (Account) authentication.getPrincipal();
+            account = accountService.getAccountById(account.getId());
             Community community = communityService.getCommunityById(communityId);
-            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            Account user = community.getAccountByCommunityName(accountCommunityName);
+            if (account.getRoleForCommunity(community).equals(Role.ADMIN)) {
+                communityService.removeUserFromCommunity(user, community);
+                return ResponseEntity.ok("Abbiamo rimosso l'utente selezionato");
             }
-            Account user = accountService.getAccountById(userId);
+            if (!account.getEmail().equals(user.getEmail())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Non puoi rimuovere un altro utente.");
+            }
             communityService.removeUserFromCommunity(user, community);
-            return ResponseEntity.ok("Abbiamo rimosso l'utente selezionato");
+            return ResponseEntity.ok("Abbiamo rimosso il tuo account dalla comunità.");
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -123,7 +125,7 @@ public class CommunityController {
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
             Community community = communityService.getCommunityById(id);
-            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
+            if (admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             if (community != null) {

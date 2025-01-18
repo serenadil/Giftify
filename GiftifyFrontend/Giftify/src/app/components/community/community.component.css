@@ -6,6 +6,8 @@
 
 body {
   font-family: Arial, sans-serif;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .community-container {
@@ -47,6 +49,8 @@ body {
 }
 
 .header {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,11 +64,11 @@ body {
 }
 
 .logo-img {
-  height: 7rem;
+  height: 9rem;
 }
 
 .gift-img {
-  height: 5rem;
+  height: 6.5rem;
 }
 
 .profile-settings {
@@ -89,8 +93,8 @@ body {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
-  padding: 1.5rem;
-  gap: 2rem;
+  padding: 0rem;
+  gap: 2.7rem;
   justify-content: center;
 }
 
@@ -112,7 +116,7 @@ body {
 
 .final-btn button {
   padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: white;
   background-color: #00b88d;
   border: none;
@@ -133,16 +137,19 @@ body {
 }
 
 .icon-settings img {
-  height: 2rem;
+  height: 1rem;
   cursor: pointer;
 }
 
 .icon-profile img {
-  height: 2.5rem;
+  height: 2rem;
   cursor: pointer;
 }
 
 .icon-profile {
+  padding: 0.2rem 0.5rem;
+  background: #00b88d;
+  border-radius: 40%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -222,6 +229,7 @@ ul {
   display: flex;
   align-items: center;
 }
+
 .modal-wish-overlay {
   position: fixed;
   top: 0;
@@ -234,7 +242,6 @@ ul {
   align-items: center;
   z-index: 1000;
 }
-
 
 
 .modal-wish-window {
@@ -260,6 +267,7 @@ ul {
   border-radius: 15px;
   cursor: pointer;
 }
+
 .modal-wish-window h3 {
   color: #00664e;
   margin-bottom: 1rem;
@@ -271,7 +279,7 @@ ul {
 
 .modal-wish-overlay input[type="text"] {
   font-family: 'Afacad Flux', serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   width: 100%;
   margin: 0.5rem 0;
   padding: 1rem;
@@ -307,6 +315,7 @@ ul {
   color: #00664e;
   font-weight: bold;
 }
+
 .wish-content {
   display: flex;
   align-items: center;
@@ -330,12 +339,13 @@ ul {
   background: none !important;
   border: none !important;
   cursor: pointer !important;
-  padding: 0!important;
+  padding: 0 !important;
   color: #003f35 !important;
   align-self: revert;
   font-size: 1.2rem !important;
   text-align: right !important;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -365,7 +375,7 @@ ul {
   padding: 3rem;
   border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 23rem;
+  width: 25rem;
   height: 19rem;
   text-align: center;
   position: relative;
@@ -374,7 +384,7 @@ ul {
 }
 
 .modal-window button {
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin: 1rem;
   padding: 16px 24px;
   border: none;
@@ -383,10 +393,12 @@ ul {
 }
 
 .modal-window h3 {
+  font-size: 1.4rem;
   margin-bottom: 1rem;
 }
 
 .modal-window p {
+  font-size: 1.2rem;
   margin: 0.5rem 0;
 }
 
@@ -472,6 +484,7 @@ ul {
   max-width: 400px;
   min-width: 370px;
   min-height: 10rem;
+  max-height: 38rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   gap: 1rem;
 }
@@ -514,6 +527,27 @@ ul {
 
 .card button:hover {
   background: #008a69;
+}
+
+.remove-icon {
+  width: 1rem;
+  cursor: pointer;
+}
+
+.card h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.card p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.card a {
+  font-size: 1.2rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {
