@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
     userCommunityName: ''
 
   };
+  joinSuccessMessage: string ='';
 
 
   constructor(private homeService: HomeService, private authService: AuthService, private router : Router) {}
@@ -65,19 +66,23 @@ export class HomeComponent implements OnInit {
   joinCommunity() {
     if (!this.joinCode.trim()) {
       this.joinErrorMessage = 'Inserisci un codice valido';
+      this.joinSuccessMessage = '';
       return;
     }
+
     this.homeService.joinCommunity(this.joinCode, this.userCommunityName).subscribe({
       next: (message) => {
-        alert(message);
+        this.joinSuccessMessage = message;
         this.joinErrorMessage = '';
         this.loadCommunities();
       },
-      error: (err) =>
-        (this.joinErrorMessage =
-          err.error || 'Errore durante l’unione alla community'),
+      error: (err) => {
+        this.joinErrorMessage = err.error || 'Errore durante l’unione alla community';
+        this.joinSuccessMessage = '';
+      },
     });
   }
+
 
 
   createCommunity() {
@@ -96,6 +101,7 @@ export class HomeComponent implements OnInit {
           deadline: null,
           userCommunityName: ''
         };
+
         this.createErrorMessage = '';
 
         setTimeout(() => {

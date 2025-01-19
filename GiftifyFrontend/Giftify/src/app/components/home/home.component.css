@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -33,34 +32,48 @@ body {
 .logo-gift-container {
   display: flex;
   align-items: center;
-  gap: 0rem;
+  gap: 0.5rem;
 }
 
-.logo-img {
+.logo-img,
+.gift-img {
   height: 9rem;
 
-}
-
-.gift-img {
-  height: 6rem;
 }
 
 .profile-settings {
   display: flex;
   align-items: center;
-  gap: 0rem;
+  gap: 1rem;
 }
 
-.profile-settings img {
-  height: 2rem;
+.profile-settings img,
+.icon-settings img {
+  height: 2.5rem;
   cursor: pointer;
 }
 
-.profile-info {
+.icon-profile {
+  height: 3.5rem;
+  width: 3.5rem;
+  padding: 0.3rem 0.6rem;
+  background: #00b88d;
+  border-radius: 40%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.15);
+}
+
+.icon-profile img {
+  height: 2.5rem;
   cursor: pointer;
+}
+
+.profile-settings-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .main-content {
@@ -70,20 +83,7 @@ body {
   justify-content: center;
 }
 
-.rocket-container {
-  margin-top: 7rem;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-.card-user-communities p {
-  font-size: 1.1rem;
-}
-.card input[type="date"]::placeholder {
-  content: "Inserisci la scadenza"; /* Nome specifico */
-}
+.rocket-container,
 .globe-container {
   margin-top: 3rem;
   text-align: center;
@@ -95,38 +95,82 @@ body {
 .rocket-img {
   max-height: 18rem;
   width: auto;
-  height: auto;
 }
 
 .globe-img {
   max-height: 15rem;
   width: auto;
-  height: auto;
 }
 
-.profile-settings-container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.card {
+  justify-content: center;
+  text-align: center;
+  font-family: 'Afacad Flux', serif;
+  background-color: #f8fcee;
+  color: #00664e;
+  border-radius: 50px;
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.35);
+  padding: 1.7rem 2.4rem;
+  flex: 1 1 calc(33.33% - 2rem);
+  max-width: 400px;
+  min-width: 380px;
+  gap: 1rem;
 }
 
-.icon-settings img {
-  height: 1rem;
-  cursor: pointer;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
-.icon-profile img {
-  height: 2rem;
-  cursor: pointer;
+.card input,
+.card textarea {
+  font-family: 'Afacad Flux', serif;
+  text-align: center;
+  font-size: 1.2rem;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border: none;
+  border-radius: 25px;
+  background: #f8fcee;
 }
 
-.icon-profile {
-  padding: 0.2rem 0.5rem;
+.card input:focus,
+.card textarea:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
+}
+
+.card button {
+  font-weight: bold;
+  font-size: 1.3rem;
+  width: 100%;
   background: #00b88d;
-  border-radius: 40%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card button:hover {
+  background: #008a69;
+}
+
+.card button:disabled {
+  background: #00b88d !important;
+  color: #666666;
+  cursor: not-allowed;
+
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .modal-overlay {
@@ -142,31 +186,44 @@ body {
   z-index: 1000;
 }
 
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-
 .modal-window {
   line-height: 1.8;
   font-family: 'Afacad Flux', serif;
   color: #696969;
   background: #f8fcee;
-  padding: 2rem;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 4rem;
+  border-radius: 55px;
   width: 25rem;
   height: 19rem;
   text-align: center;
   position: relative;
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.2);
+}
+.modal-window a{
+  color: #00b88d;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: block;
+  font-weight: bold;
 }
 
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #696969;
+  background: transparent;
+  border: none;
+}
 
+.no-communities-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #00664e;
+}
 .modal-window button {
   font-size: 1rem;
   margin: 1rem;
@@ -174,16 +231,20 @@ body {
   border: none;
   border-radius: 15px;
   cursor: pointer;
-}
-.modal-window h3 {
-  margin-bottom: 1rem;
+  box-shadow: inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
-.modal-window p {
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
+.modal-window p{
+  font-size: 1.1rem;
+
 }
+.modal-window h3{
+  font-size: 1.3rem;
+
+}
+
 .logout-btn {
+  font-weight: bold;
   background: #dc3545;
   color: white;
 }
@@ -193,143 +254,44 @@ body {
 }
 
 ul {
-  list-style: none; /* Rimuove i puntini */
+  list-style: none;
   padding: 0;
 }
 
 .community-link {
   font-size: 1.1rem;
-  text-decoration: none; /* Rimuove la sottolineatura */
-  color: #00664e; /* Colore del testo */
-  font-weight: bold; /* Testo in grassetto */
-  transition: color 0.3s ease; /* Animazione colore */
+  text-decoration: none;
+  color: #00664e;
+  font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 .community-link:hover {
-  color: #00b88d; /* Cambia colore al passaggio del mouse */
+  color: #00b88d;
 }
+.error{
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 1.1rem;
 
-
-.profile-info {
-  position: relative;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
 }
-
-
-
-.card {
-  justify-content: center;
-  font-family: 'Afacad Flux', serif;
-  background-color: #f8fcee;
+.success{
   color: #00664e;
-  border-radius: 25px;
-  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
-  padding-left: 2.4rem;
-  padding-right: 2.2rem;
-  padding-top: 1.7rem;
-  padding-bottom: 2rem;
-  flex: 1 1 calc(33.33% - 2rem);
-  max-width: 400px;
-  min-width: 380px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  gap: 1rem;
-}
-
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
-}
-
-
-.card input,
-.card textarea {
-  font-family: 'Afacad Flux', serif;
-  font-size: 1.2rem;
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 1rem;
-  border: none;
-  border-radius: 25px;
-  background: #f8fcee;
+  font-weight: bold;
+  font-size: 1.1rem;
 
 }
-
-.card input:focus,
-.card textarea:focus {
-  outline: none;
-  border: 1px #00b88d;
-  box-shadow: 0 0 5px rgba(0, 184, 141, 0.5);
-}
-
-.card input::placeholder {
-  opacity: 1;
-}
-
-
-.input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-
-.card button {
-  font-size: 1.3rem;
-  width: 100%;
-  background: #00b88d;
-  color: white;
-  border: none;
-  padding: 0.7rem;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.card button:hover {
-  background: #008a69;
-}
-
-.card h3 {
-  font-size: 1.4rem; /* Dimensione del testo del titolo */
-  font-weight: bold; /* Per un testo più marcato */
-  margin-bottom: 1rem; /* Spazio sotto il titolo */
-}
-
-.card p {
-  font-size: 1.2rem; /* Dimensione del testo del paragrafo */
-  line-height: 1.5; /* Migliora la leggibilità aumentando lo spazio tra le righe */
-}
-
-.card a{
-  font-size: 1.2rem; /* Dimensione del testo del paragrafo */
-  line-height: 1.5;
-}
-
-.Impostazioni {
-  height: 1rem;
-}
-
-
-
-
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .header {
     flex-direction: row;
-    align-items: flex-start;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 1rem;
   }
 
   .main-content {
+    padding: 0.05rem;
     flex-direction: column;
     gap: 1.5rem;
-  }
-
-  .rocket-img {
-    max-height: 9rem;
-    width: auto;
-    height: auto;
   }
 
   .card {
@@ -337,29 +299,73 @@ ul {
     min-width: 100%;
   }
 
-  .logo-gift-container img {
-    height: 3.5rem;
-  }
-
-  .profile-img{
-    height: 1rem;
-  }
-
-  .Impostazioni{
-    height: 1rem;
-  }
-
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  .main-content {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: space-around;
+  .rocket-img,
+  .globe-img {
+    max-height: 9rem;
   }
 
   .logo-img {
-    height: 8rem;
+    height: 5rem;
+  }
+
+  .profile-settings-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .modal-window {
+    width: 90%;
+    height: auto;
+    padding: 2rem;
+  }
+
+  .modal-window h3 {
+    font-size: 1.2rem;
+  }
+
+  .modal-window p,
+  .modal-window a {
+    font-size: 1rem;
+  }
+
+  .card button {
+    font-size: 1.1rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .logo-img {
+    height: 6rem;
+  }
+
+  .rocket-img,
+  .globe-img {
+    max-height: 7rem;
+  }
+
+  .card {
+    padding: 2rem;
+    border-radius:50px;
+  }
+
+  .card h3 {
+    font-size: 1.2rem;
+  }
+
+  .card input,
+  .card textarea {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .card button {
+    font-size: 1rem;
+    padding: 0.6rem;
+  }
+
+  .profile-settings-container {
+    gap: 0.5rem;
   }
 }

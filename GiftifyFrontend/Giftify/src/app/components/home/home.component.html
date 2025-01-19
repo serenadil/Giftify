@@ -11,15 +11,15 @@
 <div class="home-container">
   <div class="header">
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
-      <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
+      <img src="../../../assets/pics/logo.png" alt="Logo" class="logo-img"/>
     </div>
     <div>
       <div class="profile-settings-container">
         <div class="icon-profile" (click)="openSettingsModal()">
-          <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img"/>
+          <img src="../../../assets/pics/set.png" alt="Impostazioni" class="settings-img"/>
         </div>
         <div class="icon-profile" (click)="openProfileModal()">
-          <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
+          <img src="../../../assets/pics/profilo.png" alt="Profilo" class="profile-img"/>
         </div>
       </div>
       <div class="modal-overlay" *ngIf="isSettingsModalOpen">
@@ -30,7 +30,7 @@
             <li><a href="">Privacy e Sicurezza</a></li>
             <li><a href="">Informazioni</a></li>
             <li><a href="">Accessibilità</a></li>
-            <li><a href="">Lingua</a></li>
+            <li><a href="/">Lingua</a></li>
           </ul>
         </div>
       </div>
@@ -65,7 +65,7 @@
       </ng-container>
 
       <ng-template #noCommunities>
-        <p>Non appartieni a nessuna community! Dobbiamo rimediare...</p>
+        <p class="no-communities-text">Non appartieni a nessuna community! Dobbiamo rimediare...</p>
         <br>
         <br>
       </ng-template>
@@ -106,7 +106,8 @@
           </p><br>
         </div>
 
-        <button (click)="joinCommunity()" class="btn btn-primary">
+        <button (click)="joinCommunity()" [disabled]="
+      userCommunityNameInput.invalid || joinCodeInput.invalid" class="btn btn-primary">
           Unisciti
         </button>
         <div class="globe-container">
@@ -114,6 +115,7 @@
         </div>
         <br>
         <br>
+        <p class="success" *ngIf="joinSuccessMessage">{{joinSuccessMessage}}</p>
         <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
       </div>
     </div>
@@ -128,7 +130,7 @@
         pattern="[a-zA-Z0-9._\-]+"
         #communityNameInput="ngModel"
       />
-      <div *ngIf="communityNameInput.invalid && communityNameInput.touched" class="error">
+      <div *ngIf="communityNameInput.touched && communityNameInput.errors" class="error">
         <p *ngIf="communityNameInput.errors?.['pattern']">
           Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
         </p>
@@ -137,10 +139,10 @@
       <textarea
         [(ngModel)]="newCommunity.communityNote"
         placeholder="Descrizione"
-        pattern="^[\\w\\s\\.,!?-]*$"
+        pattern="^[a-zA-Z0-9\sàèìòùÀÈÌÒÙ.,!?-]*$"
         #communityNoteInput="ngModel"
       ></textarea>
-      <div *ngIf="communityNoteInput.invalid && communityNoteInput.touched" class="error">
+      <div *ngIf="communityNoteInput.touched && communityNoteInput.errors" class="error">
         <p *ngIf="communityNoteInput.errors?.['pattern']">
           La descrizione può contenere solo lettere, numeri, spazi, e caratteri come .,!?-.
         </p>
@@ -154,9 +156,8 @@
         required
         #budgetInput="ngModel"
       />
-      <div *ngIf="budgetInput.invalid && budgetInput.touched" class="error">
+      <div *ngIf="budgetInput.touched && budgetInput.errors" class="error">
         <p *ngIf="budgetInput.errors?.['min']">Il budget deve essere almeno 1.</p>
-        <p *ngIf="budgetInput.errors?.['required']">Il budget è obbligatorio.</p>
       </div>
 
       <input
@@ -166,9 +167,6 @@
         required
         #deadlineInput="ngModel"
       />
-      <div *ngIf="deadlineInput.invalid && deadlineInput.touched" class="error">
-        <p *ngIf="deadlineInput.errors?.['required']">La deadline è obbligatoria.</p>
-      </div>
 
       <input
         type="text"
@@ -177,13 +175,23 @@
         pattern="[a-zA-Z0-9._\-]+"
         #newUserCommunityNameInput="ngModel"
       />
-      <div *ngIf="newUserCommunityNameInput.invalid && newUserCommunityNameInput.touched" class="error">
+      <div *ngIf="newUserCommunityNameInput.touched && newUserCommunityNameInput.errors" class="error">
         <p *ngIf="newUserCommunityNameInput.errors?.['pattern']">
           Il nome può contenere solo lettere, numeri, trattini (-), underscore (_) e punti (.).
         </p>
       </div>
       <br><br>
-      <button (click)="createCommunity()" class="btn btn-success">
+
+      <button
+        (click)="createCommunity()"
+        class="btn btn-success"
+        [disabled]="
+      communityNameInput.invalid ||
+      communityNoteInput.invalid ||
+      budgetInput.invalid ||
+      deadlineInput.invalid ||
+      newUserCommunityNameInput.invalid
+    ">
         Crea
       </button>
       <br>
@@ -191,6 +199,8 @@
       <p class="error" *ngIf="createErrorMessage">{{ createErrorMessage }}</p>
       <p class="success" *ngIf="createSuccessMessage">{{ createSuccessMessage }}</p>
     </div>
+
   </div>
+
 </div>
 </body>

@@ -111,10 +111,11 @@ body {
   flex-direction: row;
   justify-content: center;
   gap: 2rem;
-  margin-top: 1.5rem;
+  margin-top: 0rem;
 }
 
 .final-btn button {
+font-weight: bold;
   padding: 0.75rem 1.5rem;
   font-size: 1.2rem;
   color: white;
@@ -123,9 +124,18 @@ body {
   border-radius: 2rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
 .final-btn button:hover {
+  background-color: #008a69;
+  transform: scale(1.05);
+}
+
+.final-btn button:disabled {
+  cursor: not-allowed;
+  color: #f8fcee;
   background-color: #008a69;
   transform: scale(1.05);
 }
@@ -137,22 +147,26 @@ body {
 }
 
 .icon-settings img {
-  height: 1rem;
+  height: 1.5rem;
   cursor: pointer;
 }
 
 .icon-profile img {
-  height: 2rem;
+  height: 2.5rem;
   cursor: pointer;
 }
 
 .icon-profile {
+  height: 3.5rem;
+  width: 3.5rem;
   padding: 0.2rem 0.5rem;
   background: #00b88d;
   border-radius: 40%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
 .add-wish-container {
@@ -168,6 +182,7 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0.3rem 0;
+
 }
 
 .button-grid {
@@ -177,14 +192,14 @@ body {
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 30px;
   text-align: center;
+
 }
 
 .button-grid img {
@@ -198,6 +213,8 @@ body {
   transform: scale(1.05);
   border: 2px solid #00b88d;
   color: #f8fcee;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.15);
 }
 
 ul {
@@ -245,13 +262,15 @@ ul {
 
 
 .modal-wish-window {
+  text-align: center;
   line-height: 1.8;
   font-family: 'Afacad Flux', serif;
   color: #696969;
   background: #f8fcee;
   padding: 3rem;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 50px;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
   width: 35rem;
   height: 40rem;
   text-align: center;
@@ -260,31 +279,36 @@ ul {
 
 
 .modal-wish-window button {
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin: 1rem;
   padding: 16px 24px;
   border: none;
-  border-radius: 15px;
+  border-radius: 25px;
   cursor: pointer;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
 .modal-wish-window h3 {
+  font-size: 1.3rem;
   color: #00664e;
   margin-bottom: 1rem;
 }
 
 .modal-wish-window p {
-  margin: 0.5rem 0;
+
+  margin-bottom: 1rem;
 }
 
 .modal-wish-overlay input[type="text"] {
+  text-align: center;
   font-family: 'Afacad Flux', serif;
   font-size: 1.2rem;
   width: 100%;
   margin: 0.5rem 0;
   padding: 1rem;
-  border: 1px solid #008a69;
-  border-radius: 15px;
+border: none;
+  border-radius: 25px;
   background: #f8fcee;
   color: #00664e;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -344,6 +368,7 @@ ul {
   align-self: revert;
   font-size: 1.2rem !important;
   text-align: right !important;
+  box-shadow: none !important;
 }
 
 .modal-overlay {
@@ -361,10 +386,13 @@ ul {
 
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.2rem;
+  top: 1rem;
+  right: 2rem;
+  font-size: 2rem;
   cursor: pointer;
+  color: #696969;
+  background: transparent;
+  border: none;
 }
 
 .modal-window {
@@ -373,8 +401,9 @@ ul {
   color: #696969;
   background: #f8fcee;
   padding: 3rem;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 50px;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.35);
   width: 25rem;
   height: 19rem;
   text-align: center;
@@ -388,8 +417,10 @@ ul {
   margin: 1rem;
   padding: 16px 24px;
   border: none;
-  border-radius: 15px;
+  border-radius: 25px;
   cursor: pointer;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
 .modal-window h3 {
@@ -415,12 +446,12 @@ ul {
   z-index: 1000;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.2rem;
-  cursor: pointer;
+.modal-window a{
+  color: #00b88d;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: block;
+  font-weight: bold;
 }
 
 .modal-whisList-window {
@@ -429,8 +460,9 @@ ul {
   color: #696969;
   background: #f8fcee;
   padding: 3rem;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 50px;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
   width: 23rem;
   height: auto;
   text-align: center;
@@ -448,6 +480,7 @@ ul {
 }
 
 .logout-btn {
+  font-weight: bold;
   background: #dc3545;
   color: white;
 }
@@ -457,12 +490,16 @@ ul {
 }
 
 .btn-success {
+  font-weight: bold;
+  font-size: 1.1rem;
   background: #00b88d;
   color: white;
   border: none;
-  padding: 16px 24px;
+  width: 80%;
   border-radius: 25px;
   cursor: pointer;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 
 }
 
@@ -477,14 +514,16 @@ ul {
   font-family: 'Afacad Flux', serif;
   background-color: #f8fcee;
   color: #00664e;
-  border-radius: 25px;
-  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  border-radius: 50px;
+text-align: center;
   padding: 1.7rem 2.4rem 2rem;
   flex: 1 1 calc(33.33% - 2rem);
   max-width: 400px;
   min-width: 370px;
   min-height: 10rem;
   max-height: 38rem;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.35);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   gap: 1rem;
 }
@@ -514,6 +553,7 @@ ul {
 }
 
 .card button {
+  font-weight: bold;
   font-size: 1.2rem;
   width: 100%;
   background: #00b88d;
@@ -523,6 +563,8 @@ ul {
   border-radius: 25px;
   cursor: pointer;
   transition: background 0.3s ease;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
 }
 
 .card button:hover {
@@ -546,8 +588,70 @@ ul {
 }
 
 .card a {
+  color: #00664e;
   font-size: 1.2rem;
   line-height: 1.5;
+}
+
+.modal-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-confirm-window {
+  padding: 3rem;
+  font-family: 'Afacad Flux', serif;
+  color: #00664e;
+  background-color: #f8fcee;
+  height: 18rem !important;
+  width: 20rem !important;
+
+  border-radius: 50px;
+  text-align: center;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.35);
+}
+
+.modal-confirm-window p {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirmation-buttons .btn {
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow:
+    inset 0px -10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.confirmation-buttons .btn-success {
+  background-color: #00b88d;
+  color: white;
+  border: none;
+}
+
+.confirmation-buttons .btn-secondary {
+  background-color: #c82333;
+  color: white;
+  border: none;
 }
 
 @media (max-width: 768px) {

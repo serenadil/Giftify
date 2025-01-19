@@ -28,6 +28,14 @@ export class CommunityComponent implements OnInit {
   isNewWishFormOpen: boolean = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  successCloseMessage: string | null = null;
+  errorCloseMessage: string | null = null;
+  successRemoveUserMessage: string | null = null;
+  errorRemoveUserMessage: string | null = null;
+  successDeleteMessage: string | null = null;
+  errordeleteMessage: string | null = null;
+  successRemovedMessage: string | null = null;
+  errorRemovedMessage: string | null = null;
   isSuccessPopupVisible: boolean = false;
   accountInfo: any = null;
   userRole: string | null = null;
@@ -36,18 +44,22 @@ export class CommunityComponent implements OnInit {
     category: '',
   }
   categories = [
-    { key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png' },
-    { key: 'CARE', img: '../../../assets/pics/care-pic.png' },
-    { key: 'GYM', img: '../../../assets/pics/gym-pic.png' },
-    { key: 'READING', img: '../../../assets/pics/book-pic.png' },
-    { key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png' },
-    { key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png' },
-    { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
-    { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
+    {key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png'},
+    {key: 'CARE', img: '../../../assets/pics/care-pic.png'},
+    {key: 'GYM', img: '../../../assets/pics/gym-pic.png'},
+    {key: 'READING', img: '../../../assets/pics/book-pic.png'},
+    {key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png'},
+    {key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png'},
+    {key: 'IT', img: '../../../assets/pics/laptop-pic.png'},
+    {key: 'OTHER', img: '../../../assets/pics/other-pic.png'}
   ];
   filteredParticipants: any[] = [];
   createSuccessMessage: string | null = null;
   createErrorMessage: string | null = null;
+  isConfirmationPopupOpen: boolean = false;
+  isDeleteConfirmPopupVisible: boolean = false;
+  isDeleteUserConfirmPopupVisible: boolean = false;
+  userToDelete: string | null = null;
 
 
   constructor(private communityService: CommunityService, private homeService: HomeService, private authService: AuthService, private wishService: WishService, private route: ActivatedRoute, private router: Router) {
@@ -70,6 +82,7 @@ export class CommunityComponent implements OnInit {
 
     });
   }
+
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
@@ -103,7 +116,8 @@ export class CommunityComponent implements OnInit {
       });
     } else {
       this.errorMessage = 'ID della community non trovato.';
-    } this.loadMyWishList();
+    }
+    this.loadMyWishList();
   }
 
   getCategoryImage(category: string): string | null {
@@ -116,10 +130,10 @@ export class CommunityComponent implements OnInit {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
       this.communityService.viewDrawnName(communityId).subscribe({
-        next: (name) =>  {
-        this.drawnName = name;
+        next: (name) => {
+          this.drawnName = name;
 
-      },
+        },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
           console.error(err);
@@ -136,30 +150,32 @@ export class CommunityComponent implements OnInit {
       this.communityService.closeCommunity(communityId).subscribe({
         next: (message) => {
           alert(message);
-          this.successMessage = 'Community chiusa con successo';
+          this.successCloseMessage = 'Community chiusa con successo';
         },
         error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.';
+          this.errorCloseMessage = err.error || 'Si è verificato un errore.';
         }
       });
     } else {
-      this.errorMessage = 'errore';
-    }this.loadCommunity();
+      this.errorCloseMessage = 'errore';
+    }
+    this.loadCommunity();
   }
 
   removeUserFromCommunity(userToRemove: string | null) {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      this.communityService.removeUserFromCommunity(communityId,userToRemove ).subscribe({
+      this.communityService.removeUserFromCommunity(communityId, userToRemove).subscribe({
         next: (message) => {
           alert(message);
-          this.successMessage = 'Partecipante rimosso con successo';
+          this.successRemoveUserMessage = 'Partecipante rimosso con successo';
         },
         error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.'+ err;
+          this.errorRemoveUserMessage = err.error || 'Si è verificato un errore.' + err;
         }
       });
-    }this.loadCommunity();
+    }
+    this.loadCommunity();
   }
 
   deleteCommunity() {
@@ -168,13 +184,14 @@ export class CommunityComponent implements OnInit {
       this.communityService.deleteCommunity(communityId).subscribe({
         next: (message) => {
           alert(message);
-          this.successMessage = 'Community eliminata con successo';
+          this.successDeleteMessage = 'Community eliminata con successo';
         },
         error: (err) => {
-          this.errorMessage = err.error || 'Si è verificato un errore.';
+          this.errordeleteMessage = err.error || 'Si è verificato un errore.';
         }
       });
     }
+    this.isDeleteConfirmPopupVisible = true;
   }
 
   loadMyWishList() {
@@ -183,11 +200,11 @@ export class CommunityComponent implements OnInit {
       this.communityService.viewUserCommunityName(communityId).subscribe({
         next: (data) => {
           this.userCommunityName = data;
-          console.log(this.userCommunityName)
+
           this.communityService.viewParticipantList(communityId, this.userCommunityName).subscribe({
             next: (data) => {
               this.myWishList = data;
-              console.log(this.myWishList)
+
             },
             error: (err) => {
               this.errorMessage = err.error || 'Errore nel caricamento del nome ';
@@ -206,12 +223,11 @@ export class CommunityComponent implements OnInit {
     if (communityId) {
       this.communityService.viewParticipantList(communityId, accountCommunityName).subscribe({
         next: (data) => {
-          console.log('Dati ricevuti dalla wishlist del partecipante:', data);
-          this.userWishList = data; // Assicurati che "data" sia un array valido
+
+          this.userWishList = data;
           this.openWishListModal();
         },
         error: (err) => {
-          console.error('Errore durante il recupero della wishlist del partecipante:', err);
           this.errorMessage = err.error || 'Errore nel recupero della wishlist del partecipante.';
         }
       });
@@ -254,11 +270,11 @@ export class CommunityComponent implements OnInit {
         this.errorMessage = '';
         this.loadMyWishList();
         setTimeout(() => {
-          this.successMessage = '';
+          this.successRemovedMessage = '';
         }, 3000);
       },
       error: (err) => {
-        this.errorMessage = err.error || 'Errore durante l\'eliminazione del desiderio';
+        this.errordeleteMessage = err.error || 'Errore durante l\'eliminazione del desiderio';
         this.successMessage = '';
         setTimeout(() => {
           this.errorMessage = '';
@@ -266,7 +282,51 @@ export class CommunityComponent implements OnInit {
       }
     });
   }
+  confirmDeleteUser() {
+    if (this.userToDelete) {
+      this.removeUserFromCommunity(this.userToDelete);
+      this.isDeleteUserConfirmPopupVisible = false;
 
+    }
+  }
+  deleteUser(userCommunityName: string) {
+    this.userToDelete = userCommunityName;
+    this.isDeleteUserConfirmPopupVisible = true; }
+
+  cancelDeleteUser() {
+    this.isDeleteUserConfirmPopupVisible = false;
+  }
+
+  confirmDeleteCommunity() {
+    this.deleteCommunity();
+    this.isDeleteConfirmPopupVisible = false;
+    this.goBack();
+  }
+
+  cancelDelete() {
+    this.isDeleteConfirmPopupVisible = false;
+  }
+
+
+  get isEvenNumberOfParticipants() {
+    return this.filteredParticipants.length + 1 % 2 === 0;
+  }
+
+  openConfirmationPopup() {
+    this.isConfirmationPopupOpen = true;
+  }
+
+
+  closeConfirmationPopup() {
+    this.isConfirmationPopupOpen = false;
+  }
+
+
+  confirmCloseCommunity() {
+    this.closeCommunity();
+    this.isConfirmationPopupOpen = false;
+
+  }
 
 
   openProfileModal() {

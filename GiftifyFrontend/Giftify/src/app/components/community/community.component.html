@@ -11,16 +11,16 @@
 <div class="community-container">
   <div class="header">
     <div class="logo-gift-container animate__animated animate__bounceInLeft">
-      <img src="../../../assets/pics/whiteLogo.png" alt="Logo" class="logo-img"/>
+      <img src="../../../assets/pics/logo.png" alt="Logo" class="logo-img"/>
 
     </div>
     <div>
       <div class="profile-settings-container">
         <div class="icon-profile" (click)="openSettingsModal()">
-          <img src="../../../assets/pics/impostazioni.png" alt="Impostazioni" class="settings-img"/>
+          <img src="../../../assets/pics/set.png" alt="Impostazioni" class="settings-img"/>
         </div>
         <div class="icon-profile" (click)="openProfileModal()">
-          <img src="../../../assets/pics/profile.png" alt="Profilo" class="profile-img"/>
+          <img src="../../../assets/pics/profilo.png" alt="Profilo" class="profile-img"/>
         </div>
       </div>
       <div class="modal-overlay" *ngIf="isSettingsModalOpen">
@@ -105,10 +105,7 @@
         <button (click)="openNewWishForm()">Aggiungi</button>
       </div>
       <br>
-      <div class="message-container">
-        <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-        <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
-      </div>
+
     </div>
 
 
@@ -120,9 +117,9 @@
               (click)="viewParticipantWishlist(accountName.userCommunityName)">
             <div class="wish-conteiner">
               <p>{{ accountName.userCommunityName }}</p>
-              <button *ngIf="userRole === 'ADMIN'" class="remove-wish-btn" (click)="removeUserFromCommunity(accountName.userCommunityName)">
-                <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon">
-              </button>
+              <button *ngIf="userRole === 'ADMIN'" class="remove-wish-btn"
+                      (click)="deleteUser(accountName.userCommunityName)">
+                <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon"></button>
             </div>
           </li>
         </ul>
@@ -141,7 +138,10 @@
 
     <div class="final-btn animate__animated animate__bounceInUp">
       <button (click)="goBack()">Torna alla home</button>
-      <button *ngIf="userRole === 'ADMIN'" (click)="closeCommunity()">Chiudi la community
+      <button *ngIf="userRole === 'ADMIN'"
+              (click)="openConfirmationPopup()"
+              [disabled]="!isEvenNumberOfParticipants">
+        Chiudi la community
       </button>
       <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community
       </button>
@@ -160,7 +160,7 @@
       <input
         type="text"
         [(ngModel)]="newWish.name"
-        placeholder="Nome del desiderio"
+        placeholder="Inserisci desiderio"
         pattern="[a-zA-Z0-9._\-]+"
         #wishNameInput="ngModel"
       />
@@ -223,13 +223,40 @@
         </li>
       </ul>
     </div>
-
     <ng-template #noWishes>
       <p>L'utente non ha ancora aggiunto desideri alla sua wishlist.</p>
     </ng-template>
   </div>
 </div>
+<div class="modal-confirm-overlay" *ngIf="isConfirmationPopupOpen">
+  <div class="modal-confirm-window">
+    <h3>Conferma chiusura community</h3>
+    <p>Sei sicuro di voler chiudere la community? Questa azione è irreversibile.</p>
+    <div class="confirmation-buttons">
+      <button (click)="confirmCloseCommunity()" class="btn btn-success">Conferma</button>
+      <button (click)="closeConfirmationPopup()" class="btn btn-secondary">Annulla</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="isDeleteConfirmPopupVisible" class="modal-confirm-overlay">
+  <div class="modal-confirm-window">
+    <p>Sei sicuro di voler eliminare questa community?</p>
+    <div class="confirmation-buttons">
+      <button (click)="confirmDeleteCommunity()" class="btn btn-success">Sì, elimina</button>
+      <button (click)="cancelDelete()" class="btn btn-secondary">Annulla</button>
+    </div>
+  </div>
+</div>
 
+<div *ngIf="isDeleteUserConfirmPopupVisible" class="modal-confirm-overlay">
+  <div class="modal-confirm-window">
+    <p>Sei sicuro di voler rimuovere {{ userToDelete }} dalla community?</p>
+    <div class="confirmation-buttons">
+      <button (click)="confirmDeleteUser()" class="btn btn-success">Sì, elimina</button>
+      <button (click)="cancelDeleteUser()" class="btn btn-secondary">Annulla</button>
+    </div>
+  </div>
+</div>
 
 </body>
 
