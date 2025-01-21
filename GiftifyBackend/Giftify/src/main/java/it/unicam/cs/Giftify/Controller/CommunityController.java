@@ -114,7 +114,7 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore  "+e);
         }
     }
 
@@ -125,7 +125,7 @@ public class CommunityController {
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
             Community community = communityService.getCommunityById(id);
-            if (admin.getRoleForCommunity(community).equals(Role.ADMIN)) {
+            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN) || community.isClose()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             if (community != null) {
@@ -135,7 +135,7 @@ public class CommunityController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
         }
     }
 

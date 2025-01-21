@@ -27,9 +27,9 @@ export class LoginComponent {
         this.router.navigate(['/home']);
       }, error: (error: HttpErrorResponse) => {
         if (error.error && typeof error.error === 'string') {
-          this.errorMessage = error.error;
+          this.errorMessage = "Ops qualcosa è andato storto...";
         } else {
-          this.errorMessage = error.message;
+          this.errorMessage = "Ops qualcosa è andato storto...";
         }
       },
     });

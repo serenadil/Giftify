@@ -28,10 +28,10 @@
           <span class="close-btn" (click)="closeSettingsModal()">&times;</span>
           <h3>Impostazioni</h3>
           <ul>
-            <li><a href="">Privacy e Sicurezza</a></li>
-            <li><a href="">Informazioni</a></li>
-            <li><a href="">Accessibilità</a></li>
-            <li><a href="">Lingua</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Privacy e Sicurezza</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Informazioni</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Accessibilità</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Lingua</a></li>
           </ul>
         </div>
       </div>
@@ -117,7 +117,7 @@
               (click)="viewParticipantWishlist(accountName.userCommunityName)">
             <div class="wish-conteiner">
               <p>{{ accountName.userCommunityName }}</p>
-              <button *ngIf="userRole === 'ADMIN'" class="remove-wish-btn"
+              <button *ngIf="userRole === 'ADMIN' && !communityInfo.close" class="remove-wish-btn"
                       (click)="deleteUser(accountName.userCommunityName)">
                 <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon"></button>
             </div>
@@ -133,25 +133,34 @@
           <p>C'è troppo silenzio qui... non c'è ancora nessuno oltre te!</p>
         </ng-template>
       </div>
+
+      <div class="message-container">
+        <p class="error" *ngIf="errorRemoveUserMessage">{{ createErrorMessage }}</p>
+        <p class="success" *ngIf="successRemoveUserMessage">{{ createSuccessMessage }}</p>
+      </div>
     </div>
-
-
-    <div class="final-btn animate__animated animate__bounceInUp">
-      <button (click)="goBack()">Torna alla home</button>
-      <button *ngIf="userRole === 'ADMIN'"
-              (click)="openConfirmationPopup()"
-              [disabled]="!isEvenNumberOfParticipants">
-        Chiudi la community
-      </button>
-      <button *ngIf="userRole === 'ADMIN'" (click)="deleteCommunity()">Elimina community
-      </button>
-      <button *ngIf="userRole === 'MEMBER'" (click)="removeUserFromCommunity(userCommunityName)">Abbandona la community
-      </button>
-    </div>
-
 
   </div>
+  <div class="final-btn animate__animated animate__bounceInUp">
+    <button (click)="goBack()">Torna alla home</button>
+    <button *ngIf="userRole === 'ADMIN' && !communityInfo.close "
+            (click)="openConfirmationPopup()"
+            [disabled]="!isEvenNumberOfParticipants">
+      Chiudi la community
+    </button>
+    <button *ngIf="userRole === 'ADMIN'"
+            [disabled]="communityInfo?.close"
+            (click)="openDeleteModal()">Elimina community
+    </button>
+    <button *ngIf="userRole === 'MEMBER'" [disabled]="communityInfo?.close"
+            (click)="removeUserFromCommunity(userCommunityName)">Abbandona la community
+    </button>
+  </div>
 </div>
+
+
+
+
 <div class="modal-wish-overlay" *ngIf="isNewWishFormOpen">
   <div class="modal-wish-window">
     <span class="close-btn" (click)="closeNewWishForm()">&times;</span>
@@ -203,7 +212,8 @@
     </div>
   </div>
 </div>
-<div class="modal-whisList-overlay" *ngIf="isWishListModalOpen">
+
+<div class="modal-whisList-overlay" *ngIf="isWishListModalOpen && isUserInCommunity(userWishList.userCommunityName)">
   <div class="modal-whisList-window">
     <span class="close-btn" (click)="closeWishListModal()">&times;</span>
     <h3>Wishlist:</h3>
@@ -228,6 +238,7 @@
     </ng-template>
   </div>
 </div>
+
 <div class="modal-confirm-overlay" *ngIf="isConfirmationPopupOpen">
   <div class="modal-confirm-window">
     <h3>Conferma chiusura community</h3>

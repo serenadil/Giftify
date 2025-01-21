@@ -137,4 +137,7 @@ export class HomeComponent implements OnInit {
   }
 
 
+  onSettingsLinkClick($event: MouseEvent) {
+
+  }
 }

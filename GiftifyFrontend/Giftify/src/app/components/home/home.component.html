@@ -27,10 +27,10 @@
           <span class="close-btn" (click)="closeSettingsModal()">&times;</span>
           <h3>Impostazioni</h3>
           <ul>
-            <li><a href="">Privacy e Sicurezza</a></li>
-            <li><a href="">Informazioni</a></li>
-            <li><a href="">Accessibilità</a></li>
-            <li><a href="/">Lingua</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Privacy e Sicurezza</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Informazioni</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Accessibilità</a></li>
+            <li><a (click)="onSettingsLinkClick($event)">Lingua</a></li>
           </ul>
         </div>
       </div>
