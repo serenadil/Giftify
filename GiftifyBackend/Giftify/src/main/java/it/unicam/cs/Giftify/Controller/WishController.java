@@ -17,10 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+/**
+ * Classe Controller per gestire le operazioni relative ai desideri.
+ */
 @RestController
 public class WishController {
 
@@ -32,9 +33,16 @@ public class WishController {
 
     @Autowired
     private CommunityService communityService;
+    @Autowired
+    private WishListService wishListService;
 
-
-
+    /**
+     * Aggiunge un desiderio alla wishlist di un utente in una community specifica.
+     *
+     * @param wishDTO i dettagli del desiderio (nome e categoria)
+     * @param id      l'UUID della community
+     * @return un messaggio di successo o errore
+     */
     @PostMapping("/wish/addWish/{id}")
     public ResponseEntity<String> addWish(@RequestBody WishDTO wishDTO, @PathVariable UUID id) {
         try {
@@ -49,42 +57,57 @@ public class WishController {
             System.out.println(community.getuserWishList(community.getCommunityNameByAccount(user)).getWishes().size());
             return ResponseEntity.status(HttpStatus.CREATED).body("Desiderio aggiunto con successo alla tua lista");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
 
-    @DeleteMapping("/wish/deleteWish/{id}")
-    public ResponseEntity<String> deleteWish(@PathVariable Long id) {
+    /**
+     * Elimina un desiderio dalla wishlist di un utente.
+     *
+     * @param id l'ID del desiderio da eliminare
+     * @return un messaggio di successo o errore
+     */
+    @DeleteMapping("/wish/deleteWish/{communityId}/{id}")
+    public ResponseEntity<String> deleteWish(@PathVariable Long id, @PathVariable UUID communityId) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account user = (Account) authentication.getPrincipal();
             user = accountService.getAccountById(user.getId());
             Optional<Wish> wish = wishService.getWish(id);
-            if (wish.get().getWishList().getUser().getId() != user.getId()) {
+            Community community =communityService.getCommunityById(communityId);
+            if (community.getuserWishList(community.getCommunityNameByAccount(user)) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             if (wish.isPresent()) {
                 wishService.deleteWish(wish.get());
                 return ResponseEntity.ok("Wish deleted successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("desiderio non trovato");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Desiderio non trovato");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
-
     }
 
-    @PutMapping("/wish/editWish/{id}")
-    public ResponseEntity<String> editWish(@RequestBody WishDTO wishDTO, @PathVariable Long id) {
+    /**
+     * Modifica i dettagli di un desiderio esistente.
+     *
+     * @param wishDTO i nuovi dettagli del desiderio (nome e categoria)
+     * @param id      l'ID del desiderio da modificare
+     * @return un messaggio di successo o errore
+     */
+    @PutMapping("/wish/editWish/{communityId}/{id}")
+    public ResponseEntity<String> editWish(@RequestBody WishDTO wishDTO, @PathVariable Long id, @PathVariable UUID communityId) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account user = (Account) authentication.getPrincipal();
             user = accountService.getAccountById(user.getId());
             Optional<Wish> wishOptional = wishService.getWish(id);
+
             if (wishOptional.isPresent()) {
                 Wish wish = wishOptional.get();
-                if (wish.getWishList().getUser().getId() != user.getId()) {
+                Community community =communityService.getCommunityById(communityId);
+                if (community.getuserWishList(community.getCommunityNameByAccount(user)) == null) {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
                 if (wishDTO.getName() != null) {
@@ -94,14 +117,13 @@ public class WishController {
                     wish.setCategory(wishDTO.getCategory());
                 }
                 wishService.updateWish(wish);
-                return ResponseEntity.ok("desiderio aggiornato con successo");
+                return ResponseEntity.ok("Desiderio aggiornato con successo");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("desiderio non trovato");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Desiderio non trovato");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
-
 
 }

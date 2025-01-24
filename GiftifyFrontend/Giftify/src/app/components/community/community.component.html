@@ -66,11 +66,8 @@
         <h3>Il mio nome estratto</h3>
         <p *ngIf="communityInfo?.close; else communityStillOpen">
           {{ drawnName }} </p>
-
         <ng-template #communityStillOpen>
-
           <p>La community è ancora aperta!</p>
-
         </ng-template>
       </div>
 
@@ -112,18 +109,20 @@
     <div class="card card-participants">
       <div class="participants-name">
         <h3>Partecipanti</h3>
-        <ul *ngIf="communityInfo?.communityNames?.length > 1; else noOtherParticipants">
+
+        <ul *ngIf="filteredParticipants.length > 0; else noOtherParticipants">
           <li *ngFor="let accountName of filteredParticipants"
               (click)="viewParticipantWishlist(accountName.userCommunityName)">
             <div class="wish-conteiner">
               <p>{{ accountName.userCommunityName }}</p>
-              <button *ngIf="userRole === 'ADMIN' && !communityInfo.close" class="remove-wish-btn"
-                      (click)="deleteUser(accountName.userCommunityName)">
-                <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon"></button>
+              <button *ngIf="userRole === 'ADMIN' && !communityInfo.close"
+                      class="remove-wish-btn"
+                      (click)="deleteUser(accountName.userCommunityName); $event.stopPropagation()">
+                <img src="../../../assets/pics/remove.png" alt="Remove" class="remove-icon">
+              </button>
             </div>
           </li>
         </ul>
-
         <div *ngIf="filteredParticipants.length <= 5" class="astro-container">
           <img src="../../../assets/pics/astro.png" alt="astro"
                class="astro-img animate__animated animate__zoomInLeft">
@@ -132,6 +131,7 @@
         <ng-template #noOtherParticipants>
           <p>C'è troppo silenzio qui... non c'è ancora nessuno oltre te!</p>
         </ng-template>
+
       </div>
 
       <div class="message-container">
@@ -213,7 +213,7 @@
   </div>
 </div>
 
-<div class="modal-whisList-overlay" *ngIf="isWishListModalOpen && isUserInCommunity(userWishList.userCommunityName)">
+<div class="modal-whisList-overlay" *ngIf="isWishListModalOpen ">
   <div class="modal-whisList-window">
     <span class="close-btn" (click)="closeWishListModal()">&times;</span>
     <h3>Wishlist:</h3>

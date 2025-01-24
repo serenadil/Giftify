@@ -38,8 +38,8 @@ export class CommunityService {
     return this.http.put(`${this.apiUrl}/updateCommunity/${communityId}`, communityUpdateData, {responseType: 'text'});
   }
 
-  getGeneralInfo(communityId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/infoCommunity/${communityId}`);
+  getGeneralInfo(communityId: string): Observable<Community> {
+    return this.http.get<Community>(`${this.apiUrl}/infoCommunity/${communityId}`);
   }
 
   viewDrawnName(communityId: string): Observable<string> {

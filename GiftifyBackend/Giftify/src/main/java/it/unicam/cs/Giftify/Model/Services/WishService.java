@@ -31,7 +31,7 @@ public class WishService {
      * @param wishList La lista dei desideri alla quale aggiungere il desiderio.
      */
     public void createWish(String name, WishCategory category, WishList wishList) {
-        Wish wish = new Wish(name, category, wishList);
+        Wish wish = new Wish(name, category, wishList.getId());
         wishRepository.save(wish);
         wishListService.addWish(wish);
     }
@@ -52,12 +52,12 @@ public class WishService {
      * @param wish Il desiderio da eliminare.
      */
     public void deleteWish(Wish wish) {
+        WishList wishList = wishListService.getWishList(wish.getId());
+        wishListService.removeWishFromWishList(wishList, wish);
 
-        wishListService.removeWishFromWishList(wish);
-
-        wish.getWishList().removeWish(wish);
 
     }
+
 
     /**
      * Aggiorna le informazioni di un desiderio.
@@ -66,7 +66,7 @@ public class WishService {
      */
     public void updateWish(Wish wish) {
         wishRepository.save(wish);
-        wishListService.updateWishList(wish.getWishList());
+        wishListService.updateWishList(wishListService.getWishList(wish.getId()));
     }
 }
 

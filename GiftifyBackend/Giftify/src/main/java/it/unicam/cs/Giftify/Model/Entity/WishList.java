@@ -1,6 +1,7 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,31 +22,32 @@ public class WishList {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     /**
      * Insieme dei desideri presenti nella wishlist.
      * I desideri sono rimossi automaticamente se eliminati dalla wishlist.
      */
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "wishList")
+    @JsonManagedReference
     @Setter
     private Set<Wish> wishes;
 
     /**
      * Utente proprietario della wishlist.
      */
-    @JsonIgnore
-    @ManyToOne
-    private Account user;
+
+    private String userEmail;
 
     /**
      * Costruttore per creare una nuova wishlist associata a un utente.
      *
-     * @param user Utente proprietario della wishlist.
+     * @param userEmail Utente proprietario della wishlist.
      */
-    public WishList(@NonNull Account user) {
+    public WishList(@NonNull String userEmail) {
         wishes = new HashSet<>();
-        this.user = user;
+        this.userEmail = userEmail;
     }
 
     /**

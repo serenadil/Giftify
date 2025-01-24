@@ -19,6 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Classe Controller per gestire le operazioni relative alle community.
+ */
 @RestController
 public class CommunityController {
 
@@ -28,7 +31,12 @@ public class CommunityController {
     @Autowired
     private AccountService accountService;
 
-
+    /**
+     * Ottiene il ruolo dell'account autenticato per una specifica community.
+     *
+     * @param communityId l'UUID della community
+     * @return il ruolo dell'account nella community o una risposta di errore
+     */
     @GetMapping("community/role/{communityId}")
     public ResponseEntity<?> getRoleForCommunity(@PathVariable UUID communityId) {
         try {
@@ -45,12 +53,17 @@ public class CommunityController {
         }
     }
 
+    /**
+     * Crea una nuova community con i dettagli specificati.
+     *
+     * @param communityDto i dettagli della community da creare
+     * @return un messaggio di successo o di errore
+     */
     @PostMapping("/community/createCommunity")
     public ResponseEntity<String> createCommunity(@RequestBody CommunityCreateDTO communityDto) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
-            System.out.println("Utente autenticato: " + admin.getEmail());
             admin = accountService.getAccountById(admin.getId());
             communityService.createCommunity(
                     admin,
@@ -68,7 +81,13 @@ public class CommunityController {
         }
     }
 
-
+    /**
+     * Rimuove un utente da una community specifica.
+     *
+     * @param communityId         l'UUID della community
+     * @param accountCommunityName il nome dell'account nella community
+     * @return un messaggio di successo o di errore
+     */
     @DeleteMapping("/community/removeUser/{communityId}/{accountCommunityName}")
     public ResponseEntity<String> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable String accountCommunityName) {
         try {
@@ -90,15 +109,19 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!"+ e);
         }
     }
 
-
+    /**
+     * Chiude una community specificata.
+     *
+     * @param id l'UUID della community
+     * @return un messaggio di successo o di errore
+     */
     @PostMapping("/community/closeCommunity/{id}")
     public ResponseEntity<String> closeCommunity(@PathVariable UUID id) {
         try {
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
@@ -114,10 +137,16 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore  "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore " + e.getMessage());
         }
     }
 
+    /**
+     * Elimina una community specificata.
+     *
+     * @param id l'UUID della community
+     * @return un messaggio di successo o di errore
+     */
     @DeleteMapping("/community/deleteCommunity/{id}")
     public ResponseEntity<String> deleteCommunity(@PathVariable UUID id) {
         try {
@@ -125,7 +154,8 @@ public class CommunityController {
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
             Community community = communityService.getCommunityById(id);
-            if (!admin.getRoleForCommunity(community).equals(Role.ADMIN) || community.isClose()) {
+            System.out.println(admin.getCommunityRoles().size());
+            if (! (admin.getRoleForCommunity(community)==Role.ADMIN) || community.isClose()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             if (community != null) {
@@ -133,12 +163,19 @@ public class CommunityController {
                 return ResponseEntity.ok("Community eliminata con successo.");
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!" );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!"+ e.getMessage());
         }
     }
 
+
+    /**
+     * Aggiorna le informazioni di una community esistente.
+     *
+     * @param id                l'UUID della community
+     * @param communityUpdateDto i dettagli aggiornati della community
+     * @return un messaggio di successo o di errore
+     */
     @PutMapping("/community/updateCommunity/{id}")
     public ResponseEntity<String> updateCommunity(
             @PathVariable UUID id,
@@ -172,7 +209,12 @@ public class CommunityController {
         }
     }
 
-
+    /**
+     * Ottiene l'elenco dei partecipanti di una community.
+     *
+     * @param id l'UUID della community
+     * @return una lista di utenti partecipanti o un errore
+     */
     @GetMapping("/community/participants/{id}")
     public ResponseEntity<?> getParticipants(@PathVariable UUID id) {
         try {
@@ -192,6 +234,12 @@ public class CommunityController {
         }
     }
 
+    /**
+     * Ottiene informazioni generali su una community.
+     *
+     * @param id l'UUID della community
+     * @return le informazioni della community o un errore
+     */
     @GetMapping("/community/infoCommunity/{id}")
     public ResponseEntity<?> getGeneralInfo(@PathVariable UUID id) {
         System.out.println(id);
@@ -212,21 +260,33 @@ public class CommunityController {
         }
     }
 
+    /**
+     * Visualizza il nome estratto per un determinato utente nella community.
+     *
+     * @param id l'UUID della community
+     * @return il nome dell'utente estratto o un errore
+     */
     @GetMapping("/community/drawnName/{id}")
     public ResponseEntity<String> viewDrawnName(@PathVariable UUID id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();
             account = accountService.getAccountById(account.getId());
-            String userReceiverCommName= communityService.getReceiverName(account, id);
+            String userReceiverCommName = communityService.getReceiverName(account, id);
+
             return ResponseEntity.ok(userReceiverCommName);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
 
-
-
+    /**
+     * Ottiene la wishlist di un partecipante in una community specifica.
+     *
+     * @param communityId         l'UUID della community
+     * @param accountCommunityName il nome dell'account del partecipante
+     * @return la wishlist del partecipante o un errore
+     */
     @GetMapping("/community/{communityId}/participantList/{accountCommunityName}")
     public ResponseEntity<?> viewParticipantList(@PathVariable UUID communityId, @PathVariable String accountCommunityName) {
         try {
@@ -247,6 +307,12 @@ public class CommunityController {
         }
     }
 
+    /**
+     * Ottiene il nome utente di un account per una specifica community.
+     *
+     * @param communityId l'UUID della community
+     * @return il nome utente nella community o un errore
+     */
     @GetMapping("/community/getName/{communityId}")
     public ResponseEntity<String> viewUserCommunityName(@PathVariable UUID communityId) {
         try {
@@ -257,14 +323,19 @@ public class CommunityController {
             if (community == null || account.getRoleForCommunity(community) == null) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            String userCommunityName= community.getCommunityNameByAccount(account);
+            String userCommunityName = community.getCommunityNameByAccount(account);
             return ResponseEntity.ok(userCommunityName);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server: " + e.getMessage());
         }
     }
 
-
+    /**
+     * Ottiene tutte le wishlist degli utenti di una specifica community.
+     *
+     * @param id l'UUID della community
+     * @return l'insieme delle wishlist o un errore
+     */
     @GetMapping("/community/wishlists/{id}")
     public ResponseEntity<?> getWishlists(@PathVariable UUID id) {
         try {
@@ -284,6 +355,4 @@ public class CommunityController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
-
-
 }

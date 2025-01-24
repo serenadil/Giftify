@@ -5,14 +5,18 @@ import it.unicam.cs.Giftify.Model.Entity.Community;
 import it.unicam.cs.Giftify.Model.Entity.Wish;
 import it.unicam.cs.Giftify.Model.Repository.WishListRepository;
 import it.unicam.cs.Giftify.Model.Entity.WishList;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class WishListService {
 
     @Autowired
     private WishListRepository wishListRepository;
+
 
     /**
      * Crea una nuova lista dei desideri per un utente.
@@ -21,7 +25,7 @@ public class WishListService {
      * @return La lista dei desideri appena creata.
      */
     public WishList createWishList(Account user) {
-        WishList wishList = new WishList(user);
+        WishList wishList = new WishList(user.getEmail());
         wishListRepository.save(wishList);
         return wishList;
     }
@@ -32,16 +36,12 @@ public class WishListService {
      * @param wish Il desiderio da aggiungere.
      */
     public void addWish(Wish wish) {
-        wish.getWishList().addWish(wish);
-        wishListRepository.save(wish.getWishList());
+        WishList wishList =this.getWishList(wish.getWishList());
+        wishList.addWish(wish);
+        wishListRepository.save(wishList);
     }
 
 
-
-    public void removeWishFromWishList(Wish wish) {
-        wish.getWishList().removeWish(wish);
-        wishListRepository.save(wish.getWishList());
-    }
 
     /**
      * Rimuove un desiderio dalla lista dei desideri.
@@ -51,6 +51,7 @@ public class WishListService {
      */
     public void removeWishFromWishList(WishList wishList, Wish wish) {
         wishList.removeWish(wish);
+
         wishListRepository.save(wishList);
     }
 
@@ -69,6 +70,14 @@ public class WishListService {
      * @param wishList La lista dei desideri da eliminare.
      */
     public void deleteWishList(WishList wishList) {
+
         wishListRepository.delete(wishList);
     }
+
+
+    public WishList getWishList(Long id) {
+        return wishListRepository.findById(id).get();
+    }
+
+
 }

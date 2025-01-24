@@ -2,7 +2,6 @@ package it.unicam.cs.Giftify.Model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.unicam.cs.Giftify.Model.Util.AccessCodeGeneretor;
 import jakarta.persistence.*;
@@ -97,14 +96,14 @@ public class Community {
      */
     @OneToMany
     @Setter
-    @JsonIgnore
+    @JsonManagedReference
     private Set<GiftAssignment> giftAssignments;
 
     /**
      * Elenco delle wishlist degli utenti nella comunità.
      */
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIgnore
+    @JsonManagedReference
     private Set<WishList> wishlists;
 
     @Getter
@@ -153,8 +152,8 @@ public class Community {
      */
     public void removeUser(@NonNull Account user) {
         userList.remove(user);
-        wishlists.removeIf(wishList -> wishList.getUser().getEmail().equals(user.getEmail()));
-        communityNames.removeIf(acn -> acn.getAccount().getEmail().equals(user.getEmail()));
+        wishlists.removeIf(wishList -> wishList.getUserEmail().equals(user.getEmail()));
+        communityNames.removeIf(acn -> acn.getAccountEmail().equals(user.getEmail()));
         giftAssignments.removeIf(giftAssignment ->
                 giftAssignment.getGiverEmail().equals(user.getEmail()) ||
                         giftAssignment.getReceiverEmail().equals(user.getEmail())
@@ -195,9 +194,9 @@ public class Community {
      */
 
     public WishList getuserWishList(@NonNull String accountCommunityName) {
-        Account account = this.getAccountByCommunityName(accountCommunityName);
+        Account account =  this.getAccountByCommunityName(accountCommunityName);
         for (WishList wishList : wishlists) {
-            String wishListEmail = wishList.getUser().getEmail();
+            String wishListEmail = wishList.getUserEmail();
             String accountEmail = account.getEmail();
             if (wishListEmail != null && accountEmail != null
                     && wishListEmail.trim().equals(accountEmail.trim())) {
@@ -215,7 +214,7 @@ public class Community {
      */
     public String getCommunityNameByAccount(@NonNull Account account) {
         for (AccountCommunityName acn : communityNames) {
-            if (acn.getAccount().equals(account)) {
+            if (acn.getAccountEmail().equals(account.getEmail())) {
                 return acn.getUserCommunityName();
             }
         }
@@ -228,10 +227,10 @@ public class Community {
      * @param communityName Nome utente nella comunità.
      * @return Account associato o null se non trovato.
      */
-    public Account getAccountByCommunityName(@NonNull String communityName) {
+    public String getEmailAccountByCommunityName(@NonNull String communityName) {
         for (AccountCommunityName acn : communityNames) {
             if (acn.getUserCommunityName().equals(communityName)) {
-                return acn.getAccount();
+                return acn.getAccountEmail();
             }
         }
         return null;
@@ -249,6 +248,27 @@ public class Community {
         userList.add(user);
         communityNames.add(communityName);
         wishlists.add(wishList);
+    }
+
+    /**
+     * Ottiene l'account associato a un nome utente nella comunità, cercando per email.
+     *
+     * @param communityName Nome utente nella comunità.
+     * @return Account associato o null se non trovato.
+     */
+    public Account getAccountByCommunityName(@NonNull String communityName) {
+        for (AccountCommunityName acn : communityNames) {
+            if (acn.getUserCommunityName().equals(communityName)) {
+
+                String email = acn.getAccountEmail();
+                for (Account account : userList) {
+                    if (account.getEmail().equals(email)) {
+                        return account;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

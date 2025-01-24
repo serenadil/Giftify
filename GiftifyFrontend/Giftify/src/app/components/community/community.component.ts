@@ -5,7 +5,8 @@ import {HomeService} from '../../services/home.service';
 import {AuthService} from '../../services/auth.service';
 import {WishService} from '../../services/wish.service';
 import {Role} from '../../../model/Role';
-import {CacheService} from '../../services/cacheService';
+import {ChangeDetectorRef} from '@angular/core';
+
 
 @Component({
   selector: 'app-community',
@@ -43,14 +44,14 @@ export class CommunityComponent implements OnInit {
     category: '',
   }
   categories = [
-    { key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png' },
-    { key: 'CARE', img: '../../../assets/pics/care-pic.png' },
-    { key: 'GYM', img: '../../../assets/pics/gym-pic.png' },
-    { key: 'READING', img: '../../../assets/pics/book-pic.png' },
-    { key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png' },
-    { key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png' },
-    { key: 'IT', img: '../../../assets/pics/laptop-pic.png' },
-    { key: 'OTHER', img: '../../../assets/pics/other-pic.png' }
+    {key: 'KITCHEN', img: '../../../assets/pics/kitchen-pic.png'},
+    {key: 'CARE', img: '../../../assets/pics/care-pic.png'},
+    {key: 'GYM', img: '../../../assets/pics/gym-pic.png'},
+    {key: 'READING', img: '../../../assets/pics/book-pic.png'},
+    {key: 'CINEMA', img: '../../../assets/pics/cinema-pic.png'},
+    {key: 'CLOTHES', img: '../../../assets/pics/hat-pic.png'},
+    {key: 'IT', img: '../../../assets/pics/laptop-pic.png'},
+    {key: 'OTHER', img: '../../../assets/pics/other-pic.png'}
   ];
   filteredParticipants: any[] = [];
   createSuccessMessage: string | null = null;
@@ -67,66 +68,68 @@ export class CommunityComponent implements OnInit {
     private wishService: WishService,
     private route: ActivatedRoute,
     private router: Router,
-    private cacheService: CacheService
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit() {
     this.loadAccountInfo();
     this.loadCommunity();
-    this.loadMyWishList();
   }
 
   loadAccountInfo() {
-    const cachedAccountInfo = this.cacheService.get('accountInfo');
-    if (cachedAccountInfo) {
-      this.accountInfo = cachedAccountInfo;
-    } else {
-      this.communityService.getAccountInfo().subscribe({
-        next: (data) => {
-          this.accountInfo = data;
-          this.cacheService.set('accountInfo', data);
-        },
-        error: (err) => {
-          console.error('Errore nel caricamento del profilo:', err);
-        }
-      });
-    }
+    this.communityService.getAccountInfo().subscribe({
+      next: (data) => {
+        this.accountInfo = data;
+        console.log(this.accountInfo);
+
+      },
+      error: (err) => {
+        console.error('Errore nel caricamento del profilo:', err);
+      }
+    });
   }
+
 
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      const cachedCommunityInfo = this.cacheService.get(`communityInfo-${communityId}`);
-      if (cachedCommunityInfo) {
-        this.communityInfo = cachedCommunityInfo;
-        this.filteredParticipants = this.communityInfo.communityNames.filter(
-          (participant: any) => participant.userCommunityName !== this.userCommunityName
-        );
-        if (this.communityInfo.close) {
-          this.viewDrawnName();
-        }
-        return; // Usa la cache e esci dalla funzione
-      }
       this.communityService.getGeneralInfo(communityId).subscribe({
         next: (data) => {
+
+
           this.communityInfo = data;
-          this.cacheService.set(`communityInfo-${communityId}`, data);
+
+          this.userCommunityName = this.communityInfo.communityNames?.find((participant: any) =>
+            participant.accountEmail === this.accountInfo?.email
+          )?.userCommunityName || null;
+          this.myWishList = this.communityInfo.wishlists?.find((wishList: any) =>
+            wishList.userEmail === this.accountInfo?.email
+          ) || null;
+          this.userRole = this.accountInfo.communityRoles.find((role: any) =>
+            role.community === this.communityInfo?.id
+          ).role || null;
+
           if (this.communityInfo.communityNames) {
             this.filteredParticipants = this.communityInfo.communityNames.filter(
               (participant: any) => participant.userCommunityName !== this.userCommunityName
             );
+
           }
           if (this.communityInfo.close) {
-            this.viewDrawnName();
-          }
-          this.communityService.getRoleForCommunity(communityId).subscribe({
-            next: (roleData) => {
-              this.userRole = roleData;
-            },
-            error: (err) => {
-              this.errorMessage = err.error || 'Errore nel caricare il ruolo dell\'utente.';
+            const giftAssignment = this.communityInfo.giftAssignments.find((drawn: any) =>
+              drawn.giverEmail === this.accountInfo?.email
+            );
+            if (giftAssignment) {
+
+              const receiver = this.communityInfo.communityNames.find((participant: any) =>
+                participant.accountEmail === giftAssignment.receiverEmail
+              );
+              this.drawnName = receiver ? receiver.userCommunityName : null;
+
+
             }
-          });
+          }
         },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
@@ -135,8 +138,10 @@ export class CommunityComponent implements OnInit {
     } else {
       this.errorMessage = 'ID della community non trovato.';
     }
-    this.loadMyWishList();
+
+
   }
+
 
   getCategoryImage(category: string): string | null {
     const foundCategory = this.categories.find(cat => cat.key === category);
@@ -144,21 +149,17 @@ export class CommunityComponent implements OnInit {
   }
 
   viewDrawnName(): void {
+    console.log('view');
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      const cachedDrawnName = this.cacheService.get(`drawnName-${communityId}`);
-      if (cachedDrawnName) {
-        this.drawnName = cachedDrawnName;
-        return;
-      }
       this.communityService.viewDrawnName(communityId).subscribe({
-        next: (name) => {
-          this.drawnName = name;
-          this.cacheService.set(`drawnName-${communityId}`, name);
+        next: (response) => {
+          this.drawnName = response || null;
+          console.log('Nome estratto aggiornato:', this.drawnName);
         },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
-          console.error(err);
+          console.error('Errore durante il recupero del nome estratto:', err);
         }
       });
     } else {
@@ -172,12 +173,9 @@ export class CommunityComponent implements OnInit {
       this.communityService.closeCommunity(communityId).subscribe({
         next: (message) => {
           this.successCloseMessage = 'Community chiusa con successo';
-
-          this.router.navigate([this.router.url]).then(() => {
-            setTimeout(() => {
-              this.successCloseMessage = '';
-            }, 3000);
-          });
+          setTimeout(() => {
+            this.successCloseMessage = '';
+          }, 3000);
         },
         error: (err) => {
           this.errorCloseMessage = err.error || 'Si è verificato un errore.';
@@ -192,6 +190,9 @@ export class CommunityComponent implements OnInit {
         this.errorCloseMessage = '';
       }, 3000);
     }
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 
 
@@ -201,14 +202,18 @@ export class CommunityComponent implements OnInit {
       this.communityService.removeUserFromCommunity(communityId, userToRemove).subscribe({
         next: () => {
           this.successRemoveUserMessage = 'Partecipante rimosso con successo';
-          this.cacheService.clear(`communityInfo-${communityId}`);
+          this.filteredParticipants = this.filteredParticipants.filter(
+            (participant: any) => participant.userCommunityName !== userToRemove
+          );
+          console.log("topi" + this.filteredParticipants.length);
+
         },
         error: (err) => {
           this.errorRemoveUserMessage = err.error || 'Si è verificato un errore.' + err;
         }
       });
     }
-    this.loadCommunity();
+
   }
 
   deleteCommunity() {
@@ -217,7 +222,7 @@ export class CommunityComponent implements OnInit {
       this.communityService.deleteCommunity(communityId).subscribe({
         next: () => {
           this.successDeleteMessage = 'Community eliminata con successo';
-          this.cacheService.clear(`communityInfo-${communityId}`);
+
         },
         error: (err) => {
           this.errordeleteMessage = err.error || 'Si è verificato un errore.';
@@ -230,18 +235,14 @@ export class CommunityComponent implements OnInit {
   loadMyWishList() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      const cachedMyWishList = this.cacheService.get(`myWishList-${communityId}`);
-      if (cachedMyWishList) {
-        this.myWishList = cachedMyWishList;
-        return;
-      }
+
       this.communityService.viewUserCommunityName(communityId).subscribe({
         next: (data) => {
           this.userCommunityName = data;
           this.communityService.viewParticipantList(communityId, this.userCommunityName).subscribe({
             next: (data) => {
               this.myWishList = data;
-              this.cacheService.set(`myWishList-${communityId}`, data);
+
             },
             error: (err) => {
               this.errorMessage = err.error || 'Errore nel caricamento del nome ';
@@ -256,28 +257,29 @@ export class CommunityComponent implements OnInit {
   }
 
   viewParticipantWishlist(accountCommunityName: string): void {
+
     const communityId = this.route.snapshot.paramMap.get('id');
+
     if (communityId) {
-      const cachedUserWishList = this.cacheService.get(`userWishList-${communityId}-${accountCommunityName}`);
-      if (cachedUserWishList) {
-        this.userWishList = cachedUserWishList;
-        this.openWishListModal();
-        return;
-      }
       this.communityService.viewParticipantList(communityId, accountCommunityName).subscribe({
         next: (data) => {
-          this.userWishList = data;
-          this.cacheService.set(`userWishList-${communityId}-${accountCommunityName}`, data);
+
+          this.userWishList = data || {wishes: []};
           this.openWishListModal();
         },
         error: (err) => {
-          this.errorMessage = err.error || 'Errore nel recupero della wishlist del partecipante.';
+          console.error('Errore durante il recupero della wishlist:', err);
+          this.userWishList = {wishes: []};
+          this.openWishListModal();
         }
       });
     } else {
-      console.error('Community ID mancante nella route!');
+      console.error('ID community non trovato nella route.');
+      this.userWishList = {wishes: []};
+      this.openWishListModal();
     }
   }
+
 
   addWish() {
     const communityId = this.route.snapshot.paramMap.get('id');
@@ -297,7 +299,7 @@ export class CommunityComponent implements OnInit {
           setTimeout(() => {
             this.createSuccessMessage = '';
           }, 3000);
-          this.cacheService.clear(`myWishList-${communityId}`);
+
           this.loadMyWishList();
         },
         error: (err) => {
@@ -313,12 +315,12 @@ export class CommunityComponent implements OnInit {
   deleteWish(wishId: number): void {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
-      this.wishService.deleteWish(wishId).subscribe({
+      this.wishService.deleteWish(communityId, wishId).subscribe({
         next: () => {
-
+          console.log('scemo')
           this.successMessage = 'Desiderio rimosso con successo';
 
-          this.cacheService.clear(`myWishList-${communityId}`);
+
           this.loadMyWishList();
           setTimeout(() => {
             this.successMessage = '';
@@ -338,6 +340,7 @@ export class CommunityComponent implements OnInit {
       }, 3000);
     }
   }
+
   confirmDeleteUser() {
     if (this.userToDelete) {
       this.removeUserFromCommunity(this.userToDelete);
@@ -345,9 +348,11 @@ export class CommunityComponent implements OnInit {
 
     }
   }
+
   deleteUser(userCommunityName: string) {
     this.userToDelete = userCommunityName;
-    this.isDeleteUserConfirmPopupVisible = true; }
+    this.isDeleteUserConfirmPopupVisible = true;
+  }
 
   cancelDeleteUser() {
     this.isDeleteUserConfirmPopupVisible = false;
@@ -356,7 +361,7 @@ export class CommunityComponent implements OnInit {
   confirmDeleteCommunity() {
     this.deleteCommunity();
     this.isDeleteConfirmPopupVisible = false;
-    this.goBack();
+    this.goBackReload();
   }
 
   openDeleteModal() {
@@ -390,6 +395,7 @@ export class CommunityComponent implements OnInit {
 
   confirmCloseCommunity() {
     this.closeCommunity();
+    this.cdr.detectChanges();
     this.isConfirmationPopupOpen = false;
 
   }
@@ -412,7 +418,9 @@ export class CommunityComponent implements OnInit {
   }
 
   openWishListModal() {
+
     this.isWishListModalOpen = true;
+
   }
 
   closeWishListModal() {
@@ -429,6 +437,15 @@ export class CommunityComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  goBackReload() {
+
+    window.location.href = '/home';
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 
   goBack() {

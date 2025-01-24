@@ -27,6 +27,7 @@ public class Account implements UserDetails {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     /**
@@ -57,7 +58,6 @@ public class Account implements UserDetails {
      * Insieme dei ruoli associati all'utente nelle varie comunità.
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<AccountCommunityRole> communityRoles;
 
     /**
@@ -150,7 +150,7 @@ public class Account implements UserDetails {
      */
     public Role getRoleForCommunity(Community community) {
         return communityRoles.stream()
-                .filter(role -> role.getCommunity().equals(community))
+                .filter(role -> role.getCommunity().equals(community.getId()))
                 .map(AccountCommunityRole::getRole)
                 .findFirst()
                 .orElse(Role.STANDARD);
@@ -172,7 +172,7 @@ public class Account implements UserDetails {
      */
     public void removeRoleForCommunity(@NonNull Community community) {
         Optional<AccountCommunityRole> roleToRemove = communityRoles.stream()
-                .filter(role -> role.getCommunity().equals(community))
+                .filter(role -> role.getCommunity().equals(community.getId()))
                 .findFirst();
         roleToRemove.ifPresent(communityRoles::remove);
     }
@@ -188,7 +188,7 @@ public class Account implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("ROLE_STANDARD"));
         if (communityRoles != null) {
             for (AccountCommunityRole role : communityRoles) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().name() + "_" + role.getCommunity().getId()));
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().name() + "_" + role.getCommunity()));
             }
         }
         return authorities;

@@ -62,37 +62,41 @@ public class CommunityService {
             communityRepository.delete(community);
             throw new IllegalArgumentException("Il nome utente nella comunità è già in uso: " + communityName);
         }
-        AccountCommunityName acn = new AccountCommunityName(community, communityName, admin);
+        AccountCommunityName acn = new AccountCommunityName(community, communityName, admin.getEmail());
         accountCommunitynameRepository.save(acn);
         community.addUser(admin, wishList, acn);
         communityRepository.save(community);
-        AccountCommunityRole accountCommunityRole = new AccountCommunityRole(admin, community, Role.ADMIN);
+        AccountCommunityRole accountCommunityRole = new AccountCommunityRole(admin.getEmail(), community.getId(), Role.ADMIN);
         accountCommunityRoleRepository.save(accountCommunityRole);
         admin.addOrUpdateRoleForCommunity(accountCommunityRole);
         admin.addCommunity(community);
         accountServices.saveAccount(admin);
     }
 
-    /**
-     * Elimina una community e rimuove tutti gli utenti associati.
-     *
-     * @param community la community da eliminare
-     */
     @Transactional
     public void deleteGroup(@NonNull Community community) {
-        for (Account account : community.getUserList()) {
-            Set<AccountCommunityRole> rolesToRemove = account.getCommunityRoles()
-                    .stream()
-                    .filter(role -> role.getCommunity().equals(community))
-                    .collect(Collectors.toSet());
-            rolesToRemove.forEach(role -> {
-                account.removeRoleForCommunity(community);
-                accountCommunityRoleRepository.delete(role);
-            });
-            account.removeCommunity(community);
-            accountServices.saveAccount(account);
+
+        if (community.getGiftAssignments() != null && !community.getGiftAssignments().isEmpty()) {
+            giftAssigmentRepository.deleteAll(community.getGiftAssignments());
         }
+        if (community.getUserList() != null && !community.getUserList().isEmpty()) {
+            for (Account account : community.getUserList()) {
+                Set<AccountCommunityRole> rolesToRemove = account.getCommunityRoles()
+                        .stream()
+                        .filter(role -> role.getCommunity().equals(community.getId()))
+                        .collect(Collectors.toSet());
+                rolesToRemove.forEach(role -> {
+                    account.removeRoleForCommunity(community);
+                    accountCommunityRoleRepository.delete(role);
+                });
+
+                account.removeCommunity(community);
+                accountServices.saveAccount(account);
+            }
+        }
+
         codeGeneretor.removeCode(community.getAccessCode());
+
         communityRepository.delete(community);
     }
 
@@ -180,12 +184,12 @@ public class CommunityService {
             throw new IllegalArgumentException("Il nome utente nella comunità è già in uso: " + userName);
         }
         if (!community.getUserList().contains(user)) {
-            AccountCommunityName acn = new AccountCommunityName(community, userName, user);
+            AccountCommunityName acn = new AccountCommunityName(community, userName, user.getEmail());
             accountCommunitynameRepository.save(acn);
             community.addUser(user, wishListService.createWishList(user), acn);
             communityRepository.save(community);
             user.addCommunity(community);
-            AccountCommunityRole accountCommunityRole = new AccountCommunityRole(user, community, Role.MEMBER);
+            AccountCommunityRole accountCommunityRole = new AccountCommunityRole(user.getEmail(), community.getId(), Role.MEMBER);
             accountCommunityRoleRepository.save(accountCommunityRole);
             user.addOrUpdateRoleForCommunity(accountCommunityRole);
             accountServices.saveAccount(user);

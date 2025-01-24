@@ -173,6 +173,8 @@
         [(ngModel)]="newCommunity.userCommunityName"
         placeholder="Inserisci il tuo nome nella community"
         pattern="[a-zA-Z0-9._\-]+"
+        maxlength="8"
+        required
         #newUserCommunityNameInput="ngModel"
       />
       <div *ngIf="newUserCommunityNameInput.touched && newUserCommunityNameInput.errors" class="error">

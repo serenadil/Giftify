@@ -17,6 +17,7 @@ public class AccountCommunityName {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @ManyToOne
@@ -24,14 +25,13 @@ public class AccountCommunityName {
     @JsonBackReference
     private Community community;
 
-    @ManyToOne
-    private Account account;
+    private String accountEmail;
 
     private String userCommunityName;
 
-    public AccountCommunityName(Community community, String userCommunityName, Account account) {
+    public AccountCommunityName(Community community, String userCommunityName, String accountEmail) {
         this.community = community;
-        this.account = account;
+        this.accountEmail = accountEmail;
         this.userCommunityName = userCommunityName;
     }
 }

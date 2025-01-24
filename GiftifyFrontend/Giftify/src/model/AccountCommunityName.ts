@@ -6,12 +6,12 @@ export class AccountCommunityName {
 
   account: Account;
 
-  userCommunityName: String;
+  userCommunityName: string;
 
   constructor(
     id: number,
     account: Account,
-    userCommunityName: String
+    userCommunityName: string
   ) {
     this.id = id;
     this.account = account;

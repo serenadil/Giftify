@@ -1,5 +1,7 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class GiftAssignment {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     /**
@@ -35,7 +38,7 @@ public class GiftAssignment {
     /**
      * Comunità a cui appartiene l'assegnazione.
      */
-    @ManyToOne
+    @ManyToOne @JsonIgnore
     private Community community;
 
     /**

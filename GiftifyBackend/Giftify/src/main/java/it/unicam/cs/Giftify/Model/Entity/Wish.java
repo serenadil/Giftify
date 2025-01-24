@@ -1,6 +1,7 @@
 package it.unicam.cs.Giftify.Model.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,6 +20,7 @@ public class Wish {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     /**
@@ -36,9 +38,8 @@ public class Wish {
      * Wishlist a cui appartiene il desiderio.
      */
     @Setter
-    @ManyToOne
-    @JsonIgnore
-    private WishList wishList;
+
+    private long wishList;
 
     /**
      * Costruttore per creare un nuovo desiderio.
@@ -47,7 +48,7 @@ public class Wish {
      * @param category Categoria di immagini associata al desiderio.
      * @param wishList  Wishlist di appartenenza.
      */
-    public Wish(@NonNull String name, @NonNull WishCategory category, @NonNull WishList wishList) {
+    public Wish(@NonNull String name, @NonNull WishCategory category, long wishList) {
         this.name = name;
         this.category = category;
         this.wishList = wishList;

@@ -20,12 +20,10 @@ export class WishService {
     return this.http.post(`${this.apiUrl}/wish/addWish/${communityId}`, wishData, {responseType: 'text'});
   }
 
-  deleteWish(wishId: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/wish/deleteWish/${wishId}`, {responseType: 'text'});
+  deleteWish(communityId: string, wishId: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/wish/deleteWish/${communityId}/${wishId}`, {responseType: 'text'});
   }
 
-  editWish(wishId: number, wishData: any): Observable<string> {
-    return this.http.put(`${this.apiUrl}/wish/editWish/${wishId}`, wishData, {responseType: 'text'});
-  }
+
 
 }

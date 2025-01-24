@@ -44,4 +44,38 @@ export class Community {
     this.active = active;
     this.close = close;
   }
+
+  getUserWishListByCommunityName(accountCommunityName: string): WishList | null {
+    const account = this.getAccountByCommunityName(accountCommunityName);
+    console.log(account?.email)
+    if (!account) return null;
+
+    for (const wishList of this.wishlists) {
+      if (wishList.user.email === account.email) {
+        console.log(wishList);
+        return wishList;
+      }
+    }
+    return null;
+  }
+
+  getCommunityNameByAccount(account: Account): AccountCommunityName | null {
+    console.log(account);
+    for (const acn of this.communityNames) {
+      if (acn.account.email === account.email) {
+        return acn;
+      }
+    }
+    return null;
+  }
+
+
+  getAccountByCommunityName(communityName: string): Account | null {
+    for (const acn of this.communityNames) {
+      if (acn.userCommunityName === communityName) {
+        return acn.account;
+      }
+    }
+    return null;
+  }
 }

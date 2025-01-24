@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Classe Controller per gestire le operazioni relative all'ayenticazione degli utenti.
+ */
 @RestController
 public class AutenticationController {
 
