@@ -154,7 +154,7 @@ public class CommunityController {
             Account admin = (Account) authentication.getPrincipal();
             admin = accountService.getAccountById(admin.getId());
             Community community = communityService.getCommunityById(id);
-            System.out.println(admin.getCommunityRoles().size());
+
             if (! (admin.getRoleForCommunity(community)==Role.ADMIN) || community.isClose()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
@@ -242,7 +242,6 @@ public class CommunityController {
      */
     @GetMapping("/community/infoCommunity/{id}")
     public ResponseEntity<?> getGeneralInfo(@PathVariable UUID id) {
-        System.out.println(id);
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account account = (Account) authentication.getPrincipal();

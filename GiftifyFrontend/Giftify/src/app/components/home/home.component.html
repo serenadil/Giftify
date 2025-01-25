@@ -91,7 +91,7 @@
           type="text"
           [(ngModel)]="userCommunityName"
           placeholder="Inserisci il tuo nome nella community"
-          pattern="[a-zA-Z0-9._\-]+"
+          pattern="[a-zA-Z0-9._\-]{1,8}"
           maxlength="8"
           required
           #userCommunityNameInput="ngModel"
@@ -115,7 +115,7 @@
         </div>
         <br>
         <br>
-        <p class="success" *ngIf="joinSuccessMessage">{{joinSuccessMessage}}</p>
+        <p class="success" *ngIf="joinSuccessMessage">{{ joinSuccessMessage }}</p>
         <p class="error" *ngIf="joinErrorMessage">{{ joinErrorMessage }}</p>
       </div>
     </div>
@@ -127,7 +127,7 @@
         type="text"
         [(ngModel)]="newCommunity.communityName"
         placeholder="Nome della community"
-        pattern="[a-zA-Z0-9._\-]+"
+        pattern="[a-zA-Z0-9._\-]{1.15}"
         #communityNameInput="ngModel"
       />
       <div *ngIf="communityNameInput.touched && communityNameInput.errors" class="error">
@@ -139,7 +139,7 @@
       <textarea
         [(ngModel)]="newCommunity.communityNote"
         placeholder="Descrizione"
-        pattern="^[a-zA-Z0-9\sàèìòùÀÈÌÒÙ.,!?-]*$"
+        pattern="^[a-zA-Z0-9\sàèìòùÀÈÌÒÙ.,!?-]{1,25}$"
         #communityNoteInput="ngModel"
       ></textarea>
       <div *ngIf="communityNoteInput.touched && communityNoteInput.errors" class="error">
@@ -172,7 +172,7 @@
         type="text"
         [(ngModel)]="newCommunity.userCommunityName"
         placeholder="Inserisci il tuo nome nella community"
-        pattern="[a-zA-Z0-9._\-]+"
+        pattern="[a-zA-Z0-9._\-]{1,8}"
         maxlength="8"
         required
         #newUserCommunityNameInput="ngModel"

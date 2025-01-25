@@ -59,17 +59,4 @@ export class CommunityService {
     this.router.navigate(['/home']);
   }
 
-  // getUserCommunityByName(name: string): Observable<any> {
-  //   return this.http.get<any>(`${this.apiUrl}/communityInfo/${name}`);
-
-
-  getRoleForCommunity(communityId: string): Observable<any> {
-    return this.http.get<any[]>(`${this.apiUrl}/role/${communityId}`);
-  }
-
-  saveIds(community: Community): void {
-    sessionStorage.clear();
-    sessionStorage.setItem('id', String(community.id));
-  }
-
 }

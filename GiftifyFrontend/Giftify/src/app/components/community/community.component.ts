@@ -81,7 +81,6 @@ export class CommunityComponent implements OnInit {
     this.communityService.getAccountInfo().subscribe({
       next: (data) => {
         this.accountInfo = data;
-        console.log(this.accountInfo);
 
       },
       error: (err) => {
@@ -149,13 +148,11 @@ export class CommunityComponent implements OnInit {
   }
 
   viewDrawnName(): void {
-    console.log('view');
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
       this.communityService.viewDrawnName(communityId).subscribe({
         next: (response) => {
           this.drawnName = response || null;
-          console.log('Nome estratto aggiornato:', this.drawnName);
         },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
@@ -205,7 +202,6 @@ export class CommunityComponent implements OnInit {
           this.filteredParticipants = this.filteredParticipants.filter(
             (participant: any) => participant.userCommunityName !== userToRemove
           );
-          console.log("topi" + this.filteredParticipants.length);
 
         },
         error: (err) => {
@@ -317,7 +313,6 @@ export class CommunityComponent implements OnInit {
     if (communityId) {
       this.wishService.deleteWish(communityId, wishId).subscribe({
         next: () => {
-          console.log('scemo')
           this.successMessage = 'Desiderio rimosso con successo';
 
 

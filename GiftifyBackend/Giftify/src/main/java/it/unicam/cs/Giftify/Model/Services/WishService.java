@@ -52,21 +52,12 @@ public class WishService {
      * @param wish Il desiderio da eliminare.
      */
     public void deleteWish(Wish wish) {
-        WishList wishList = wishListService.getWishList(wish.getId());
-        wishListService.removeWishFromWishList(wishList, wish);
-
-
+        WishList wishList = wishListService.getWishList(wish.getWishList());
+        wishList.removeWish(wish);
+        wishListService.updateWishList(wishList);
+        wishRepository.delete(wish);
     }
 
 
-    /**
-     * Aggiorna le informazioni di un desiderio.
-     *
-     * @param wish Il desiderio da aggiornare.
-     */
-    public void updateWish(Wish wish) {
-        wishRepository.save(wish);
-        wishListService.updateWishList(wishListService.getWishList(wish.getId()));
-    }
 }
 

@@ -38,7 +38,6 @@ public class Wish {
      * Wishlist a cui appartiene il desiderio.
      */
     @Setter
-
     private long wishList;
 
     /**

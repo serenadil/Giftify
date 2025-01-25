@@ -51,7 +51,6 @@ public class WishListService {
      */
     public void removeWishFromWishList(WishList wishList, Wish wish) {
         wishList.removeWish(wish);
-
         wishListRepository.save(wishList);
     }
 
@@ -70,7 +69,6 @@ public class WishListService {
      * @param wishList La lista dei desideri da eliminare.
      */
     public void deleteWishList(WishList wishList) {
-
         wishListRepository.delete(wishList);
     }
 

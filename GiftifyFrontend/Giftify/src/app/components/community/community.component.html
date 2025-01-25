@@ -170,7 +170,7 @@
         type="text"
         [(ngModel)]="newWish.name"
         placeholder="Inserisci desiderio"
-        pattern="[a-zA-Z0-9._\-]+"
+        pattern="[a-zA-Z0-9 ._\-]{1,15}+"
         #wishNameInput="ngModel"
       />
       <div *ngIf="wishNameInput.invalid && wishNameInput.touched" class="error">

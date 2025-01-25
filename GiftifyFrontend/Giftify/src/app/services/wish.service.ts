@@ -12,10 +12,6 @@ export class WishService {
   constructor(private http: HttpClient) {
   }
 
-  viewMyWishlist(communityId: string) {
-    return this.http.get(`${this.apiUrl}/community/${communityId}/myWishlist`);
-  }
-
   addWish(communityId: string, wishData: any): Observable<string> {
     return this.http.post(`${this.apiUrl}/wish/addWish/${communityId}`, wishData, {responseType: 'text'});
   }

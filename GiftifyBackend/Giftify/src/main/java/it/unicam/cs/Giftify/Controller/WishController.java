@@ -54,7 +54,6 @@ public class WishController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             wishService.createWish(wishDTO.getName(), wishDTO.getCategory(), community.getuserWishList(community.getCommunityNameByAccount(user)));
-            System.out.println(community.getuserWishList(community.getCommunityNameByAccount(user)).getWishes().size());
             return ResponseEntity.status(HttpStatus.CREATED).body("Desiderio aggiunto con successo alla tua lista");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
@@ -85,45 +84,9 @@ public class WishController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Desiderio non trovato");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!"+ e.getMessage());
         }
     }
 
-    /**
-     * Modifica i dettagli di un desiderio esistente.
-     *
-     * @param wishDTO i nuovi dettagli del desiderio (nome e categoria)
-     * @param id      l'ID del desiderio da modificare
-     * @return un messaggio di successo o errore
-     */
-    @PutMapping("/wish/editWish/{communityId}/{id}")
-    public ResponseEntity<String> editWish(@RequestBody WishDTO wishDTO, @PathVariable Long id, @PathVariable UUID communityId) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account user = (Account) authentication.getPrincipal();
-            user = accountService.getAccountById(user.getId());
-            Optional<Wish> wishOptional = wishService.getWish(id);
-
-            if (wishOptional.isPresent()) {
-                Wish wish = wishOptional.get();
-                Community community =communityService.getCommunityById(communityId);
-                if (community.getuserWishList(community.getCommunityNameByAccount(user)) == null) {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-                }
-                if (wishDTO.getName() != null) {
-                    wish.setName(wishDTO.getName());
-                }
-                if (wishDTO.getCategory() != null) {
-                    wish.setCategory(wishDTO.getCategory());
-                }
-                wishService.updateWish(wish);
-                return ResponseEntity.ok("Desiderio aggiornato con successo");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Desiderio non trovato");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
-        }
-    }
 
 }

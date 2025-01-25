@@ -13,11 +13,4 @@ export class WishList {
     this.user = user;
   }
 
-  addWish (wish: Wish) {
-    return this.wishes.push(wish);
-  }
-
-  removeWish (wish: Wish) {
-    this.wishes.filter(s => s.id !== wish.id);
-  }
 }
