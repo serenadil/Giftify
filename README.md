@@ -1,1 +1,1 @@
-Applicazione per lo scambio di regali in anonimo
+Applicazione web per lo scambio di regali in anonimo
