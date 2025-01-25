@@ -205,4 +205,11 @@
   </div>
 
 </div>
+<div *ngIf="isErrorAccountPopupVisible" class="modal-confirm-overlay">
+  <div class="modal-confirm-window">
+    <h2>Errore nel caricamento del profilo</h2>
+    <p>Si è verificato un errore. Ti reindirizzeremo alla home.</p>
+    <button (click)="closeErrorPopup()">Torna al login</button>
+  </div>
+</div>
 </body>

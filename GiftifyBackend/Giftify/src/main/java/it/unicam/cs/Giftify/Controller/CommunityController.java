@@ -95,6 +95,7 @@ public class CommunityController {
             Account account = (Account) authentication.getPrincipal();
             account = accountService.getAccountById(account.getId());
             Community community = communityService.getCommunityById(communityId);
+
             Account user = community.getAccountByCommunityName(accountCommunityName);
             if (account.getRoleForCommunity(community).equals(Role.ADMIN)) {
                 communityService.removeUserFromCommunity(user, community);
@@ -109,7 +110,8 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!"+ e);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
 
@@ -137,7 +139,7 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore ");
         }
     }
 
@@ -164,7 +166,7 @@ public class CommunityController {
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community non trovata.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!"+ e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ops sembra ci sia stato un errore!");
         }
     }
 
@@ -248,6 +250,7 @@ public class CommunityController {
             account = accountService.getAccountById(account.getId());
             Community community = communityService.getCommunityById(id);
             if (account.getRoleForCommunity(community) == null) {
+
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             if (community != null) {
@@ -302,7 +305,7 @@ public class CommunityController {
             }
             return ResponseEntity.ok(wishList);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server ");
         }
     }
 
@@ -325,7 +328,7 @@ public class CommunityController {
             String userCommunityName = community.getCommunityNameByAccount(account);
             return ResponseEntity.ok(userCommunityName);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore interno del server");
         }
     }
 

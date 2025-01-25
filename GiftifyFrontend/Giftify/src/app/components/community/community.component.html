@@ -153,7 +153,7 @@
             (click)="openDeleteModal()">Elimina community
     </button>
     <button *ngIf="userRole === 'MEMBER'" [disabled]="communityInfo?.close"
-            (click)="removeUserFromCommunity(userCommunityName)">Abbandona la community
+            (click)="quitCommunity()">Abbandona la community
     </button>
   </div>
 </div>
@@ -170,7 +170,7 @@
         type="text"
         [(ngModel)]="newWish.name"
         placeholder="Inserisci desiderio"
-        pattern="[a-zA-Z0-9 ._\-]{1,15}+"
+        pattern="[a-zA-Z0-9 ._\-]{1,15}"
         #wishNameInput="ngModel"
       />
       <div *ngIf="wishNameInput.invalid && wishNameInput.touched" class="error">
@@ -266,6 +266,21 @@
       <button (click)="confirmDeleteUser()" class="btn btn-success">Sì, elimina</button>
       <button (click)="cancelDeleteUser()" class="btn btn-secondary">Annulla</button>
     </div>
+  </div>
+</div>
+<div *ngIf="isPopVisible" class="modal-confirm-overlay">
+  <div class="modal-confirm-window">
+    <p>{{ errorMessage }}</p>
+    <div class="confirmation-buttons">
+      <button (click)="closePopup()" class="btn btn-secondary">Torna alla home</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="isErrorAccountPopupVisible" class="modal-confirm-overlay">
+  <div class="modal-confirm-window">
+    <h2>Errore nel caricamento del profilo</h2>
+    <p>Si è verificato un errore. Ti reindirizzeremo alla home.</p>
+    <button (click)="closeErrorPopup()">Torna al login</button>
   </div>
 </div>
 

@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
 
   };
   joinSuccessMessage: string ='';
+  isErrorAccountPopupVisible: boolean = false;
 
 
   constructor(private homeService: HomeService, private authService: AuthService, private router : Router) {}
@@ -45,8 +46,14 @@ export class HomeComponent implements OnInit {
 
   loadAccountInfo() {
     this.homeService.getAccountInfo().subscribe({
-      next: (data) => (this.accountInfo = data),
-      error: (err) => console.error('Errore nel caricamento del profilo:', err),
+      next: (data) => {
+        this.accountInfo = data;
+
+      },
+      error: (err) => {
+        console.error('Errore nel caricamento del profilo:', err);
+        this.isErrorAccountPopupVisible = true;
+      }
     });
   }
 
@@ -139,5 +146,12 @@ export class HomeComponent implements OnInit {
 
   onSettingsLinkClick($event: MouseEvent) {
 
+  }
+
+
+  closeErrorPopup() {
+    this.isErrorAccountPopupVisible = false;
+    this.logout()
+    this.router.navigate(['/login']);
   }
 }

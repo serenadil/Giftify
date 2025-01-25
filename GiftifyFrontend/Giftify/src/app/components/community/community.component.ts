@@ -37,6 +37,7 @@ export class CommunityComponent implements OnInit {
   successRemovedMessage: string | null = null;
   errorRemovedMessage: string | null = null;
   isSuccessPopupVisible: boolean = false;
+  isPopVisible: boolean = false;
   accountInfo: any = null;
   userRole: string | null = null;
   newWish = {
@@ -60,6 +61,7 @@ export class CommunityComponent implements OnInit {
   isDeleteConfirmPopupVisible: boolean = false;
   isDeleteUserConfirmPopupVisible: boolean = false;
   userToDelete: string | null = null;
+  isErrorAccountPopupVisible: boolean = false;
 
   constructor(
     private communityService: CommunityService,
@@ -85,62 +87,75 @@ export class CommunityComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore nel caricamento del profilo:', err);
+        this.isErrorAccountPopupVisible = true;
       }
     });
   }
-
 
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (communityId) {
       this.communityService.getGeneralInfo(communityId).subscribe({
         next: (data) => {
-
-
           this.communityInfo = data;
 
-          this.userCommunityName = this.communityInfo.communityNames?.find((participant: any) =>
-            participant.accountEmail === this.accountInfo?.email
-          )?.userCommunityName || null;
-          this.myWishList = this.communityInfo.wishlists?.find((wishList: any) =>
-            wishList.userEmail === this.accountInfo?.email
-          ) || null;
+          if (!this.communityInfo) {
+            this.errorMessage = "La community non è stata trovata.";
+            this.isPopVisible = true;
+            return;
+          }
+
           this.userRole = this.accountInfo.communityRoles.find((role: any) =>
             role.community === this.communityInfo?.id
-          ).role || null;
+          )?.role || null;
 
-          if (this.communityInfo.communityNames) {
-            this.filteredParticipants = this.communityInfo.communityNames.filter(
-              (participant: any) => participant.userCommunityName !== this.userCommunityName
-            );
-
+          if (this.userRole === null) {
+            this.errorMessage = 'Non hai il permesso per accedere a questa community.';
+            this.isPopVisible = true;
+            return;
           }
-          if (this.communityInfo.close) {
-            const giftAssignment = this.communityInfo.giftAssignments.find((drawn: any) =>
-              drawn.giverEmail === this.accountInfo?.email
-            );
-            if (giftAssignment) {
 
-              const receiver = this.communityInfo.communityNames.find((participant: any) =>
-                participant.accountEmail === giftAssignment.receiverEmail
-              );
-              this.drawnName = receiver ? receiver.userCommunityName : null;
+          this.communityService.viewUserCommunityName(communityId).subscribe({
+            next: (name) => {
+              this.userCommunityName = name;
 
+              if (this.communityInfo.communityNames) {
+                this.filteredParticipants = this.communityInfo.communityNames.filter(
+                  (participant: any) => participant.userCommunityName !== this.userCommunityName
+                );
+              }
+              this.myWishList = this.communityInfo.wishlists?.find((wishList: any) =>
+                wishList.userEmail === this.accountInfo?.email
+              ) || null;
 
+              if (this.communityInfo.close) {
+                const giftAssignment = this.communityInfo.giftAssignments.find((drawn: any) =>
+                  drawn.giverEmail === this.accountInfo?.email
+                );
+                if (giftAssignment) {
+                  const receiver = this.communityInfo.communityNames.find((participant: any) =>
+                    participant.accountEmail === giftAssignment.receiverEmail
+                  );
+                  this.drawnName = receiver ? receiver.userCommunityName : null;
+                }
+              }
+            },
+            error: (err) => {
+              this.errorMessage = 'Si è verificato un errore nel recupero del nome della community.';
+              console.error(err);
             }
-          }
+          });
         },
         error: (err) => {
           this.errorMessage = err.error || 'Si è verificato un errore.';
+          this.isPopVisible = true;
         }
       });
     } else {
       this.errorMessage = 'ID della community non trovato.';
+      this.isPopVisible = true;
     }
-
-
   }
-
 
   getCategoryImage(category: string): string | null {
     const foundCategory = this.categories.find(cat => cat.key === category);
@@ -336,6 +351,24 @@ export class CommunityComponent implements OnInit {
     }
   }
 
+  getUserCommunityName(communityId: string): void {
+    this.communityService.viewUserCommunityName(communityId).subscribe({
+      next: (name) => {
+        this.userCommunityName = name;
+        console.log('Nome della community:', this.userCommunityName);
+        if (this.communityInfo.communityNames) {
+          this.filteredParticipants = this.communityInfo.communityNames.filter(
+            (participant: any) => participant.userCommunityName !== this.userCommunityName
+          );
+        }
+      },
+      error: (err) => {
+        this.errorMessage = 'Si è verificato un errore nel recupero del nome della community.';
+        console.error(err);
+      }
+    });
+  }
+
   confirmDeleteUser() {
     if (this.userToDelete) {
       this.removeUserFromCommunity(this.userToDelete);
@@ -451,5 +484,22 @@ export class CommunityComponent implements OnInit {
 
   onSettingsLinkClick($event: MouseEvent) {
 
+  }
+
+  closePopup() {
+    this.isPopVisible = false;
+    this.goBackReload();
+  }
+
+
+  quitCommunity() {
+    this.removeUserFromCommunity(this.userCommunityName);
+    this.goBackReload()
+  }
+
+  closeErrorPopup() {
+    this.isErrorAccountPopupVisible = false;
+    this.logout()
+    this.router.navigate(['/login']);
   }
 }

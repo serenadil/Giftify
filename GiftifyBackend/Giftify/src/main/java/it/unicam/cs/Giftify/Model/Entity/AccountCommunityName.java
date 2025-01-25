@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @EqualsAndHashCode
@@ -20,16 +22,14 @@ public class AccountCommunityName {
     @JsonIgnore
     private Long id;
 
-    @ManyToOne
-    @JsonIgnore
-    @JsonBackReference
-    private Community community;
+
+    private UUID community;
 
     private String accountEmail;
 
     private String userCommunityName;
 
-    public AccountCommunityName(Community community, String userCommunityName, String accountEmail) {
+    public AccountCommunityName(UUID community, String userCommunityName, String accountEmail) {
         this.community = community;
         this.accountEmail = accountEmail;
         this.userCommunityName = userCommunityName;
