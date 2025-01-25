@@ -127,7 +127,7 @@
         type="text"
         [(ngModel)]="newCommunity.communityName"
         placeholder="Nome della community"
-        pattern="[a-zA-Z0-9._\-]{1.15}"
+        pattern="^[a-zA-Z0-9._\-]{1,15}$"
         #communityNameInput="ngModel"
       />
       <div *ngIf="communityNameInput.touched && communityNameInput.errors" class="error">
